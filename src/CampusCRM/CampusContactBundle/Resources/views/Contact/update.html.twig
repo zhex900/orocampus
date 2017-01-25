@@ -71,21 +71,13 @@
     'data': [
     form_row(form.firstName),
     form_row(form.lastName),
+    form_row(form.gender),
     form_row(form.description),
     form_row(form.assignedTo),
     form_row(form.reportsTo),
     form_row(form.emails),
     form_row(form.phones),
-    form_row(form.fax),
-    form_row(form.skype),
-    form_row(form.method),
-    form_row(form.twitter),
-    form_row(form.facebook),
-    form_row(form.googlePlus),
-    form_row(form.linkedIn),
-    form_row(form.jobTitle),
     form_row(form.birthday),
-    form_row(form.gender),
     form_row(form.source),
     form_row(form.picture)
     ]
@@ -95,9 +87,28 @@
     'data': [
     form_widget(form.addresses),
     ]
-    },
+    }
     ]
     }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Social'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'Contact Information'|trans,
+    'data': [
+    form_row(form.skype),
+    form_row(form.method),
+    form_row(form.twitter),
+    form_row(form.facebook),
+    form_row(form.googlePlus),
+    form_row(form.linkedIn),
+    form_row(form.picture)
+    ]
+    }
+    ]
+    }]) %}
 
     {% set additionalData = [] %}
     {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
