@@ -1,4 +1,5 @@
 oro:
     contact:
-            date_of_baptism.label:  Date of Baptism
-            student_id.label:       Student ID
+            date_of_baptism.label:        Date of Baptism
+            student_id.label:             Student ID
+            country_of_birth.label:       Country of Birth
