@@ -67,18 +67,12 @@
     'class': 'active',
     'subblocks': [
     {
-    'title': 'Contact Information'|trans,
+    'title': 'General Information'|trans,
     'data': [
     form_row(form.firstName),
     form_row(form.lastName),
     form_row(form.gender),
     form_row(form.description),
-    form_row(form.assignedTo),
-    form_row(form.reportsTo),
-    form_row(form.emails),
-    form_row(form.phones),
-    form_row(form.birthday),
-    form_row(form.source),
     form_row(form.picture)
     ]
     },
@@ -92,11 +86,81 @@
     }] %}
 
     {% set dataBlocks = dataBlocks|merge([{
-    'title': 'Social'|trans,
+    'title': 'Personal'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'Personal Information'|trans,
+    'data': [
+    form_row(form.country_of_birth),
+    form_row(form.birthday)
+    ]
+    }
+    ]
+    }]) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Contact'|trans,
     'class': 'active',
     'subblocks': [
     {
     'title': 'Contact Information'|trans,
+    'data': [
+    form_row(form.emails),
+    form_row(form.phones)
+    ]
+    }
+    ]
+    }]) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Academic'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'Academic Information'|trans,
+    'data': [
+    form_row(form.student_id)
+    ]
+    }
+    ]
+    }]) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Spiritual'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'Spiritual Information'|trans,
+    'data': [
+    form_row(form.date_of_baptism)
+    ]
+    }
+    ]
+    }]) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Campus Work'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'Campus Work Information'|trans,
+    'data': [
+    form_row(form.source),
+    form_row(form.assignedTo),
+    form_row(form.owner)
+
+    ]
+    }
+    ]
+    }]) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Social'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'Social Information'|trans,
     'data': [
     form_row(form.skype),
     form_row(form.method),
@@ -109,21 +173,6 @@
     }
     ]
     }]) %}
-
-    {% set additionalData = [] %}
-    {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
-        {% set additionalData = additionalData|merge([form_row(child)]) %}
-    {% endfor %}
-    {% if additionalData is not empty %}
-        {% set dataBlocks = dataBlocks|merge([{
-        'title': 'Additional'|trans,
-        'subblocks': [{
-        'title': '',
-        'useSpan': false,
-        'data' : additionalData
-        }]
-        }] ) %}
-    {% endif %}
 
     {% if form.groups is defined and form.groups.children|length > 0 %}
         {% set dataBlocks = dataBlocks|merge([{
