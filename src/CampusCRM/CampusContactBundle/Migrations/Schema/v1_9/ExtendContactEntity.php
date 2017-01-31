@@ -65,5 +65,133 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
                 ]
             ]
         );
+
+        $table->addColumn(
+            'year_of_birth',
+            'integer',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+
+        $table->addColumn(
+            'int_student',
+            'boolean',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+        $table->addColumn(
+            'out_of_town',
+            'boolean',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+
+        $table->addColumn(
+            'christian',
+            'boolean',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+
+        $table->addColumn(
+            'believed_thr_us',
+            'boolean',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+
+        $table->addColumn(
+            'baptised_by_us',
+            'boolean',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+
+        $table->addColumn(
+            'first_contact_date',
+            'date',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+
+        $table->addColumn(
+            'date_believed',
+            'date',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+
+        $table->addColumn(
+            'duration',
+            'float',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+        $table->addColumn(
+            'year_of_commencement',
+            'integer',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
     }
 }

@@ -4,3 +4,15 @@ oro:
             student_id.label:             Student ID
             country_of_birth.label:       Country of Birth
             source.label:                 Source of Contact
+            year_of_birth.label:          Year of Birth
+            int_student.label:            International Student
+            out_of_town.label:            Out of Town
+            christian.label:              Christian?
+            believed_thr_us.label:        Believed through Us
+            baptised_by_us.label:         Baptised by Us
+            first_contact_date.label:     Date of First Contact
+            date_believed.label:          Date Believed
+            duration.label:               Duration
+            year_of_commencement.label:   Year of Commecement
+
+

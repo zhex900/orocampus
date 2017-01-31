@@ -72,7 +72,8 @@
     form_row(form.firstName),
     form_row(form.lastName),
     form_row(form.gender),
-    form_row(form.description),
+    form_row(form.emails),
+    form_row(form.phones),
     form_row(form.picture)
     ]
     },
@@ -93,21 +94,10 @@
     'title': 'Personal Information'|trans,
     'data': [
     form_row(form.country_of_birth),
-    form_row(form.birthday)
-    ]
-    }
-    ]
-    }]) %}
-
-    {% set dataBlocks = dataBlocks|merge([{
-    'title': 'Contact'|trans,
-    'class': 'active',
-    'subblocks': [
-    {
-    'title': 'Contact Information'|trans,
-    'data': [
-    form_row(form.emails),
-    form_row(form.phones)
+    form_row(form.birthday),
+    form_row(form.year_of_birth),
+    form_row(form.int_student),
+    form_row(form.out_of_town)
     ]
     }
     ]
@@ -120,7 +110,9 @@
     {
     'title': 'Academic Information'|trans,
     'data': [
-    form_row(form.student_id)
+    form_row(form.student_id),
+    form_row(form.duration),
+    form_row(form.year_of_commencement)
     ]
     }
     ]
@@ -133,7 +125,11 @@
     {
     'title': 'Spiritual Information'|trans,
     'data': [
-    form_row(form.date_of_baptism)
+    form_row(form.date_of_baptism),
+    form_row(form.christian),
+    form_row(form.believed_thr_us),
+    form_row(form.baptised_by_us),
+    form_row(form.date_believed)
     ]
     }
     ]
@@ -148,7 +144,8 @@
     'data': [
     form_row(form.source),
     form_row(form.assignedTo),
-    form_row(form.owner)
+    form_row(form.owner),
+    form_row(form.first_contact_date)
 
     ]
     }
