@@ -6,13 +6,13 @@
  * Time: 1:07 PM
  */
 
-namespace CampusCRM\CampusContactBundle\Migrations\Schema\v1_9;
+namespace CampusCRM\CampusContactBundle\Migrations\Schema\v2_0;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 use Oro\Bundle\EntityExtendBundle\EntityConfig\ExtendScope;
-use Oro\Bundle\EntityBundle\EntityConfig\DatagridScope;
+//use Oro\Bundle\EntityBundle\EntityConfig\DatagridScope;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 
@@ -24,45 +24,19 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
     {
         $this->extendExtension = $extendExtension;
     }
-    /**
-     * {@inheritdoc}
-     */
+
     public function up(Schema $schema, QueryBag $queries)
     {
-
-        $this->extendExtension->addManyToOneRelation(
-            $schema,
-            'orocrm_contact',
-            'country_of_birth',
-            'oro_dictionary_country',
-            'name',
-            ['extend' => ['without_default' => true, 'is_extend' => true, 'owner' => ExtendScope::OWNER_CUSTOM]]
-        );
-
         $table = $schema->getTable('orocrm_contact');
-
-        $table->addColumn(
-            'date_of_baptism',
-            'date',
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'ethnicity', // new field name
+            'ethnicity_source', // enum code
+            false, // only one option can be selected
+            false, // an administrator can add new options and remove existing ones
             [
-                'oro_options' => [
-                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
-                    'merge' => ['display' => true],
-                    'dataaudit' => ['auditable' => true]
-                ]
-            ]
-        );
-        $table->addColumn(
-            'student_id',
-            'integer',
-            [
-                'oro_options' => [
-                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
-                    'merge' => ['display' => true],
-                    'dataaudit' => ['auditable' => true]
-                ]
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
             ]
         );
     }

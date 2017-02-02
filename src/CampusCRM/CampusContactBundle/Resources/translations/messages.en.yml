@@ -14,5 +14,6 @@ oro:
             date_believed.label:          Date Believed
             duration.label:               Duration
             year_of_commencement.label:   Year of Commecement
+            ethnicity.label:              Ethnicity
 
 
