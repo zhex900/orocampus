@@ -4,27 +4,11 @@ namespace CampusCRM\CampusContactBundle\Migrations\Data\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Oro\Bundle\EntityExtendBundle\Entity\Repository\EnumValueRepository;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class LoadEthnicitySourceData extends AbstractFixture
 {
-    /** @var array */
-    protected $data = [
-        'Caucasian' => false,
-        'Chinese Asian' => false,
-        'Southern Asian' => false,
-        'African' => false,
-        'Arab' => false,
-        'Hispanic' => false,
-        'Jewish' => false,
-        'Australian Aboriginal' => false,
-        'Torres Strait Islander' => false,
-        'Other' => false
-
-    ];
-
     /**
      * @param ObjectManager $manager
      */
@@ -36,11 +20,18 @@ class LoadEthnicitySourceData extends AbstractFixture
         $enumRepo = $manager->getRepository($className);
 
         $priority = 1;
-        foreach ($this->data as $name => $isDefault) {
-            $enumOption = $enumRepo->createEnumValue($name, $priority++, $isDefault);
-            $manager->persist($enumOption);
+        $dir = getcwd() . "/src/CampusCRM/CampusContactBundle/Migrations/Data/ORM/dictionaries/";
+        $handle = fopen($dir . "ethnicity.csv", "r");
+
+        while (!feof($handle)) {
+            $data = fgets($handle);
+            if (!empty($data)) {
+                $enumOption = $enumRepo->createEnumValue($data, $priority++, false);
+                $manager->persist($enumOption);
+            }
         }
 
+        fclose($handle);
         $manager->flush();
     }
 }
