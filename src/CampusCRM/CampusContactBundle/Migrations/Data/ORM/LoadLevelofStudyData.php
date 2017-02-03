@@ -21,7 +21,7 @@ class LoadLevelofStudyData extends AbstractFixture
 
         $priority = 1;
         $dir = getcwd() . "/src/CampusCRM/CampusContactBundle/Migrations/Data/ORM/dictionaries/";
-        $handle = fopen($dir . "level_of_study.csv", "r");
+        $handle = fopen($dir . "levelofstudy.csv", "r");
 
         while (!feof($handle)) {
             $data = fgets($handle);
