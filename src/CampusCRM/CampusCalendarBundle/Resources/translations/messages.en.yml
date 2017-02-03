@@ -1,0 +1,5 @@
+oro:
+    calendar:
+      calendarevent:
+            event_name.label:         Event Name
+            event_category.label:     Event Category
