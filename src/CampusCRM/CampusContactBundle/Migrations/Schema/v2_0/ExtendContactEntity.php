@@ -12,7 +12,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 use Oro\Bundle\EntityExtendBundle\EntityConfig\ExtendScope;
-//use Oro\Bundle\EntityBundle\EntityConfig\DatagridScope;
+use Oro\Bundle\EntityBundle\EntityConfig\DatagridScope;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 
@@ -34,9 +34,117 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
             'ethnicity', // new field name
             'ethnicity_source', // enum code
             false, // only one option can be selected
-            false, // an administrator can add new options and remove existing ones
+            true, // an administrator can add new options and remove existing ones
             [
-                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
+            ]
+        );
+
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'marital_status', // new field name
+            'marital_status_source', // enum code
+            false, // only one option can be selected
+            true, // an administrator can add new options and remove existing ones
+            [
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
+            ]
+        );
+
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'contact_source', // new field name
+            'contact_source_source', // enum code
+            false, // only one option can be selected
+            true, // an administrator can add new options and remove existing ones
+            [
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
+            ]
+        );
+
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'contact_status', // new field name
+            'contact_status_source', // enum code
+            false, // only one option can be selected
+            true, // an administrator can add new options and remove existing ones
+            [
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
+            ]
+        );
+
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'degrees', // new field name
+            'degrees_source', // enum code
+            false, // only one option can be selected
+            true, // an administrator can add new options and remove existing ones
+            [
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
+            ]
+        );
+
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'level_of_study', // new field name
+            'level_of_study_source', // enum code
+            false, // only one option can be selected
+            true, // an administrator can add new options and remove existing ones
+            [
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
+            ]
+        );
+
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'month_of_commencement', // new field name
+            'month_of_comm_source', // enum code
+            false, // only one option can be selected
+            true, // an administrator can add new options and remove existing ones
+            [
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
+            ]
+        );
+
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'institutions', // new field name
+            'institutions_source', // enum code
+            false, // only one option can be selected
+            true, // an administrator can add new options and remove existing ones
+            [
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
             ]
         );
     }
