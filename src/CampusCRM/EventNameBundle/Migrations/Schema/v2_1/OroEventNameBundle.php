@@ -1,6 +1,6 @@
 <?php
 
-namespace CampusCRM\EventNameBundle\Migrations\Schema\v2_0;
+namespace CampusCRM\EventNameBundle\Migrations\Schema\v2_1;
 
 use Doctrine\DBAL\Schema\Schema;
 
@@ -59,16 +59,10 @@ class EventNameBundle implements Migration
         $table = $schema->createTable('orocrm_eventname_to_event');
         $table->addColumn('eventname_id', 'integer', []);
         $table->addColumn('event_id', 'integer', []);
-        $table->setPrimaryKey(['eventname_id', 'event_id']);
-        $table->addIndex(['eventname_id'], 'IDX_65B8FBEC9B6B5FBZ', []);
-        // $table->addIndex(['name_id'], 'IDX_65B8FBECE7A1254A', []);
+        $table->setPrimaryKey(['eventname_id']);
+        $table->addIndex(['event_id']);//, 'IDX_65B8FBEC9B6B5FBZ', []);
         /** End of generate table oro_account_to_contact **/
 
-        /** Generate foreign keys for table eventname **/
-        //$table = $schema->getTable('orocrm_eventname');
-        //$table->addForeignKeyConstraint($schema->getTable('oro_calendar_event'), ['id'], ['onDelete' => 'SET NULL', 'onUpdate' => null]);
-        //$table->addForeignKeyConstraint($schema->getTable('oro_user'), ['user_owner_id'], ['id'], ['onDelete' => 'SET NULL', 'onUpdate' => null]);
-        /** End of generate foreign keys for table eventname **/
 
         /** Generate foreign keys for table orocrm_eventname_to_event **/
         $table = $schema->getTable('orocrm_eventname_to_event');

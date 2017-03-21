@@ -1,5 +1,8 @@
 Addresses: Addresses
 Basic Information: Basic Information
+campuscrm:
+    eventname:
+      entity_label:               Event Name
 oro:
     dashboard:
         my_eventnames_activity:

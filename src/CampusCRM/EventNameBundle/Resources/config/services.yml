@@ -10,6 +10,14 @@ parameters:
     event_name.activity_widget_provider.class:    %oro_activity.widget_provider.activities.menu.class%
 
 services:
+    event_name.form.autocomplete.account.search_handler:
+            parent: oro_form.autocomplete.search_handler
+            arguments:
+                - %event_name.entity.eventname.class%
+                - ["name"]
+            tags:
+                - { name: oro_form.autocomplete.search_handler, alias: eventnames, acl_resource: oro_eventname_view }
+
     event_name.form.eventname:
         class:                                      Symfony\Component\Form\Form
         factory_method: createNamed

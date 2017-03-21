@@ -35,7 +35,7 @@ use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
  *          "security"={
  *              "type"="ACL",
  *              "group_name"="",
- *              "category"="account_management",
+ *              "category"="eventname_management",
  *              "field_acl_supported" = "true"
  *          },
  *          "merge"={
@@ -79,7 +79,7 @@ class EventName extends ExtendEventName implements NameInterface
      *
      * @var ArrayCollection $events
      *
-     * @ORM\ManyToMany(targetEntity="Oro\Bundle\CalendarBundle\Entity\CalendarEvent", inversedBy="eventnames")
+     * @ORM\OneToMany(targetEntity="Oro\Bundle\CalendarBundle\Entity\CalendarEvent", mappedBy="eventname")
      * @ORM\JoinTable(name="orocrm_eventname_to_event")
      * @ConfigField(
      *      defaultValues={
@@ -320,25 +320,6 @@ class EventName extends ExtendEventName implements NameInterface
         return $this;
     }
 
-    /**
-     * @return EventName
-     */
-    public function getReferredBy()
-    {
-        return $this->referredBy;
-    }
-
-    /**
-     * @param EventName $referredBy
-     *
-     * @return EventName
-     */
-    public function setReferredBy(EventName $referredBy = null)
-    {
-        $this->referredBy = $referredBy;
-
-        return $this;
-    }
 
     /**
      * Add specified event
@@ -413,7 +394,7 @@ class EventName extends ExtendEventName implements NameInterface
      *
      * @param Organization $organization
      *
-     * @return Account
+     * @return EventName
      */
     public function setOrganization(Organization $organization = null)
     {
