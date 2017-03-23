@@ -6,7 +6,7 @@
  * Time: 1:07 PM
  */
 
-namespace CampusCRM\CampusCalendarBundle\Migrations\Schema\v2_0;
+namespace CampusCRM\CampusCalendarBundle\Migrations\Schema\v2_1;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
@@ -27,23 +27,13 @@ class ExtendCalendarEntity implements Migration, ExtendExtensionAwareInterface
 
     public function up(Schema $schema, QueryBag $queries)
     {
+
         $this->extendExtension->addManyToOneRelation(
             $schema,
-            'orocrm_eventname', // owning side table
-            'eventname_id', // owning side field name
-            'oro_calendar_event', // inverse side table
-            'eventname_id', // column name is used to show related entity
-            ['extend' => ['owner' => ExtendScope::OWNER_CUSTOM]]
-        );
-        $this->extendExtension->addManyToOneInverseRelation(
-            $schema,
-            'orocrm_eventname', // owning side table
-            'eventname_id', // owning side field name
-            'oro_calendar_event', // inverse side table
-            'eventname_id', // inverse side field name
-            ['title'], // column names are used to show a title of owning side entity
-            ['description'], // column names are used to show detailed info about owning side entity
-            ['title'], // Column names are used to show owning side entity in a grid
+            'oro_calendar_event', // owning side table
+            'oro_eventname', // owning side field name
+            'orocrm_eventname', // inverse side table
+            'name', // column name is used to show related entity
             ['extend' => ['owner' => ExtendScope::OWNER_CUSTOM]]
         );
     }
