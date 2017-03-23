@@ -1,0 +1,8 @@
+CampusCRM\EventNameBundle\Entity\EventName:
+    exclusion_policy: ALL
+    properties:
+        name:
+            expose: true
+            type: string
+            serialized_name: Name
+            groups: [export, import]

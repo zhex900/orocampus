@@ -1,5 +1,5 @@
+oro.event_name.form.choose:      'Choose an event name...'
 oro:
     calendar:
       calendarevent:
-            event_name.label:         Event Name
-            event_category.label:     Event Category
+            oro_eventname.label:              Event Name

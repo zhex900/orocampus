@@ -1,0 +1,103 @@
+parameters:
+    event_name.entity.eventname.class:            CampusCRM\EventNameBundle\Entity\EventName
+    event_name.type.eventname.class:              CampusCRM\EventNameBundle\Form\Type\EventNameType
+    event_name.handler.eventname.class:           CampusCRM\EventNameBundle\Form\Handler\EventNameHandler
+    event_name.form.type.eventname_select.class:  CampusCRM\EventNameBundle\Form\Type\EventNameSelectType
+
+    event_name.eventname.manager.api.class:       Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager
+    event_name.type.eventname.api.class:          CampusCRM\EventNameBundle\Form\Type\EventNameApiType
+
+    event_name.activity_widget_provider.class:    %oro_activity.widget_provider.activities.menu.class%
+
+services:
+    event_name.form.autocomplete.account.search_handler:
+            parent: oro_form.autocomplete.search_handler
+            arguments:
+                - %event_name.entity.eventname.class%
+                - ["name"]
+            tags:
+                - { name: oro_form.autocomplete.search_handler, alias: eventnames, acl_resource: oro_eventname_view }
+
+    event_name.form.eventname:
+        class:                                      Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["oro_eventname_form", "event_name", null]
+
+    event_name.form.type.eventname:
+        class:                                      %event_name.type.eventname.class%
+        arguments:
+            - "@router"
+            - "@oro_entity.entity_name_resolver"
+            - "@oro_security.security_facade"
+        tags:
+            - { name: form.type, alias: event_name }
+
+    event_name.form.handler.eventname:
+        class:                                      %event_name.handler.eventname.class%
+        scope: request
+        arguments:
+            - "@event_name.form.eventname"
+            - "@request"
+            - "@doctrine.orm.entity_manager"
+
+    # Form type
+    event_name.form.type.eventname_select:
+        class:                                      %event_name.form.type.eventname_select.class%
+        tags:
+            - { name: form.type, alias: oro_eventname_select }
+
+    # eventname API
+    event_name.eventname.manager.api:
+        class:                                      %event_name.eventname.manager.api.class%
+        parent: oro_soap.manager.entity_manager.abstract
+        arguments:
+            - %event_name.entity.eventname.class%
+            - "@doctrine.orm.entity_manager"
+
+    event_name.form.type.eventname.api:
+        class:                                      %event_name.type.eventname.api.class%
+        arguments:
+            - "@router"
+            - "@oro_entity.entity_name_resolver"
+            - "@oro_security.security_facade"
+        tags:
+            - { name: form.type, alias: eventname }
+
+    event_name.form.eventname.api:
+        class:                                      Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["eventname", "eventname", null]
+
+    event_name.form.handler.eventname.api:
+        class: %event_name.handler.eventname.class%
+        scope: request
+        arguments:
+            - "@event_name.form.eventname.api"
+            - "@request"
+            - "@doctrine.orm.entity_manager"
+
+    event_name.activity_widget_provider:
+        class: %event_name.activity_widget_provider.class%
+        arguments:
+           - "@oro_entity.entity_identifier_accessor"
+           - "@oro_ui.twig.tab_extension"
+           - 'eventname_activity_tab_panel'
+           - %event_name.entity.eventname.class%
+        tags:
+           - { name: oro_activity.activity_widget_provider, priority: -10 }
+
+    event_name.event_listener.datagrid.my_eventnames_activity:
+        class: Oro\Bundle\UserBundle\Datagrid\WidgetOwnerListener
+        arguments:
+            - '@oro_user.dashboard.owner_helper'
+            - '@oro_dashboard.widget_configs'
+            - 'owner'
+        tags:
+            - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.before.dashboard-my-eventnames-activity-grid, method: onResultBefore }
+
+    event_name.eventnames_view_list:
+        class: CampusCRM\EventNameBundle\Datagrid\EventNamesViewList
+        arguments:
+            - @translator
