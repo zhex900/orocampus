@@ -1,0 +1,16 @@
+/app
+/bin
+/vendor
+/web
+*.md
+*.dist
+*.json
+*.swp
+*.htaccess
+.idea
+*.xml
+.DS_Store
+LICENSE
+composer.lock
+dev.lock
+src/.DS_Store
