@@ -54,21 +54,5 @@ class EventNameBundle implements Migration
         );
 
         /** End of generate table eventname **/
-
-        /** Generate table orocrm_eventname_to_event **/
-        $table = $schema->createTable('orocrm_eventname_to_event');
-        $table->addColumn('eventname_id', 'integer', []);
-        $table->addColumn('event_id', 'integer', []);
-        $table->setPrimaryKey(['eventname_id']);
-        $table->addIndex(['event_id']);//, 'IDX_65B8FBEC9B6B5FBZ', []);
-        /** End of generate table oro_account_to_contact **/
-
-
-        /** Generate foreign keys for table orocrm_eventname_to_event **/
-        $table = $schema->getTable('orocrm_eventname_to_event');
-        $table->addForeignKeyConstraint($schema->getTable('oro_calendar_event'), ['event_id'], ['id'], ['onDelete' => 'CASCADE', 'onUpdate' => null]);
-        $table->addForeignKeyConstraint($schema->getTable('orocrm_eventname'), ['eventname_id'], ['id'], ['onDelete' => 'CASCADE', 'onUpdate' => null]);
-        /** End of generate foreign keys for table orocrm_eventname_to_event **/
-        // @codingStandardsIgnoreEnd
     }
 }
