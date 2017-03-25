@@ -4,11 +4,6 @@ namespace CampusCRM\CampusCalendarBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Choice;
-
-use Oro\Bundle\CalendarBundle\Form\EventListener\CalendarEventRecurrenceSubscriber;
-use Oro\Bundle\CalendarBundle\Form\EventListener\CalendarUidSubscriber;
-use Oro\Bundle\CalendarBundle\Form\Type\CalendarEventType;
 
 class CalendarEventTypeExtension extends AbstractTypeExtension
 {
