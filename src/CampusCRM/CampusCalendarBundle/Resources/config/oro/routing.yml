@@ -1,5 +1,5 @@
 # src/CampusCRM/CampusCalendarBundle/Resources/config/oro/routing.yml
 campuscrm_parent_bundle:
-    resource:     "@OroCalendarBundle/Controller"
+    resource:     "@!OroCalendarBundle/Controller"
     type:         annotation
     prefix:       /calendar

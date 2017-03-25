@@ -51,6 +51,8 @@
     }
     } %}
 
+    {{ form_widget(form.title, {'value' : 'Default title'}) }}
+
     {% set dataBlocks = [{
     'title': 'General Information'|trans,
     'class': 'active',
@@ -58,7 +60,6 @@
     {
     'title': '',
     'data':  [
-    form_row(form.title),
     form_row(form.oro_eventname),
     form_row(form.description),
     form_row(form.backgroundColor),

@@ -1,0 +1,18 @@
+parameters:
+    campus_calendar.system_calendar.form.handler.class:           Oro\Bundle\CalendarBundle\Form\Handler\SystemCalendarHandler
+    campus_calendar.calendar_event.form.type.class:               CampusCRM\CampusCalendarBundle\Form\Type\CalendarEventType
+
+services:
+    campus.calendar_event.form.type:
+            class: '%campus_calendar.calendar_event.form.type.class%'
+            arguments:
+                - '@oro_calendar.calendar_event.notification_manager'
+            tags:
+                - { name: form.type, alias: oro_calendar_event }
+
+    campus_calendar.calendar_event.form.handler:
+        class: 'CampusCRM\CampusCalendarBundle\Form\Handler\CalendarEventHandler'
+        parent: 'oro_calendar.calendar_event.form.handler.abstract'
+        calls:
+            - ['setForm', ['@oro_calendar.calendar_event.form']]
+            - ['setEntityRoutingHelper', ['@oro_entity.routing_helper']]
