@@ -1,0 +1,8 @@
+services:
+    campus_calendar.calendar_event.form.extension.type:
+            class: 'CampusCRM\CampusCalendarBundle\Form\Extension\CalendarEventTypeExtension'
+            public: true
+            arguments:
+                - "@doctrine"
+            tags:
+                - { name: form.type_extension, alias: oro_calendar_event }
