@@ -1,0 +1,45 @@
+datagrids:
+    campuscalendar-event-grid:
+        acl_resource: oro_calendar_event_view
+        source:
+            type: orm
+            query:
+                select:
+                      - lead.id
+                      - CONCAT(lead.firstName, ' ', lead.lastName) as Name
+                from:
+                      - { table: %oro_calendar.calendar_event.entity.class%, alias: event }
+                where:
+                    and:
+                      - event.id = :eventId
+                join:
+                    inner:
+                      - { join: event.lead_23c40e3e, alias: lead }
+            bind_parameters:
+                eventId: viewEventId
+        columns:
+            Name:
+                label: 'Name'
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      oro_sales_lead_view
+                params:     [ id ]
+        sorters:
+            columns:
+                Name:
+                    data_name: Name
+        actions:
+            view:
+                type:          navigate
+                acl_resource:  oro_sales_lead_view
+                label:         oro.grid.action.view
+                icon:          eye
+                link:          view_link
+                rowAction:     true
+        filters:
+            columns:
+                name:
+                    type: string
+                    data_name: Name
