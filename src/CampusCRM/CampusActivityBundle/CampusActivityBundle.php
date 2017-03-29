@@ -6,7 +6,7 @@
  * Time: 10:11 PM
  */
 
-namespace CampusCRM\ActivityBundle;
+namespace CampusCRM\CampusActivityBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

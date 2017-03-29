@@ -3,3 +3,4 @@ oro:
     calendar:
       calendarevent:
             oro_eventname.label:              Event Name
+            add_attendance.label:             Add attendance
