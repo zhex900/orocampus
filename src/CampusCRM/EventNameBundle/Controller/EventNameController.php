@@ -30,7 +30,6 @@ class EventNameController extends Controller
         return [
             'entity' => $eventname
         ];
-
     }
 
     /**

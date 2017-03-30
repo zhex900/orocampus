@@ -3,8 +3,8 @@
 namespace CampusCRM\EventNameBundle\Entity;
 
 use CampusCRM\EventNameBundle\Model\ExtendEventName;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
@@ -78,23 +78,8 @@ class EventName extends ExtendEventName implements NameInterface
      * Events storage
      *
      * @var ArrayCollection $events
-     *
-     * @ORM\OneToMany(targetEntity="Oro\Bundle\CalendarBundle\Entity\CalendarEvent", mappedBy="eventname")
-     * @ORM\JoinTable(name="orocrm_eventname_to_event")
-     * @ConfigField(
-     *      defaultValues={
-     *          "merge"={
-     *              "display"=true
-     *          },
-     *          "importexport"={
-     *              "order"=50,
-     *              "short"=true
-     *          }
-     *      }
-     * )
      */
     protected $events;
-
 
     /**
      * @var Organization
@@ -185,6 +170,7 @@ class EventName extends ExtendEventName implements NameInterface
     public function __construct()
     {
         parent::__construct();
+        $this->events = new ArrayCollection();
     }
 
     /**
@@ -320,24 +306,6 @@ class EventName extends ExtendEventName implements NameInterface
         return $this;
     }
 
-
-    /**
-     * Add specified event
-     *
-     * @param CalendarEvent $event
-     *
-     * @return EventName
-     */
-    public function addEvent(CalendarEvent $event)
-    {
-        if (!$this->getEvents()->contains($event)) {
-            $this->getEvents()->add($event);
-            // $event->addEvent($this);
-        }
-
-        return $this;
-    }
-
     /**
      * Get events collection
      *
@@ -346,37 +314,6 @@ class EventName extends ExtendEventName implements NameInterface
     public function getEvents()
     {
         return $this->events;
-    }
-
-    /**
-     * Set events collection
-     *
-     * @param Collection $events
-     *
-     * @return EventName
-     */
-    public function setEvents(Collection $events)
-    {
-        $this->$events = $events;
-
-        return $this;
-    }
-
-    /**
-     * Remove specified event
-     *
-     * @param CalendarEvent $event
-     *
-     * @return EventName
-     */
-    public function removeEvent(CalendarEvent $event)
-    {
-        if ($this->getEvents()->contains($event)) {
-            $this->getEvents()->removeElement($event);
-            //$event->removeAccount($this);
-        }
-
-        return $this;
     }
 
     /**
