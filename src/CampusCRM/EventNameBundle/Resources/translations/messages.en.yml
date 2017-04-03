@@ -12,7 +12,7 @@ oro:
 
     eventname:
         menu:
-            customers_tab.label: Customers
+            eventname_tab.label: Event Names
             account_list.description: List of accounts
             shortcut_new_account.label: Create new eventname
             shortcut_new_account.description: Create new eventname instance
