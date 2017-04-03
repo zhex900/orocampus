@@ -34,7 +34,10 @@ class ExtendCalendarEntity implements Migration, ExtendExtensionAwareInterface
             'oro_eventname', // owning side field name
             'orocrm_eventname', // inverse side table
             'name', // column name is used to show related entity
-            ['extend' => ['owner' => ExtendScope::OWNER_CUSTOM]]
+            [
+                'entity' => ['label' => 'oro.calendar.calendarevent.oro_eventname.label'],
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
+            ]
         );
 
         $this->extendExtension->addManyToOneInverseRelation(
