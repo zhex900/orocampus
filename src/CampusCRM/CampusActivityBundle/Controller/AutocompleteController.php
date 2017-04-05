@@ -59,7 +59,7 @@ class AutocompleteController extends BaseController
 
             throw new HttpException($code, implode(', ', $result['errors']));
         }
-        file_put_contents('/tmp/calendar.log', 'hi controller ');
+        
         /** @var ContextSearchHandler $searchHandler */
         $searchHandler = $this->get('campus_activity.form.handler.autocomplete');
         $searchHandler->setClass($activity);
