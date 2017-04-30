@@ -1,0 +1,10 @@
+parameters:
+    oro_contact.form_type_extension.class: CampusCRM\CampusContactBundle\Form\Extension\CampusContactTypeExtension
+
+services:
+    oro_contact.form_type_extension:
+        class: %oro_contact.form_type_extension.class%
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: form.type_extension, alias: oro_contact }

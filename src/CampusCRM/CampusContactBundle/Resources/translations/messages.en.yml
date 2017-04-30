@@ -22,3 +22,4 @@ oro:
             level_of_study.label:         Level of Study
             month_of_commencement.label:  Month of Commencement
             institutions.label:           Institutions
+            semester_contacted.label:     Semester Contacted
