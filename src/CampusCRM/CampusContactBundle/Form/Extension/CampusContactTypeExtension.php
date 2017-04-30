@@ -12,6 +12,14 @@ use Oro\Bundle\UserBundle\Entity\User;
 
 class CampusContactTypeExtension extends AbstractTypeExtension
 {
+    const FT = 'Full-timer';
+    const NONE_FT = 'None Full-timer';
+    const NEW_ONE = 'New One';
+    const ADMIN = 'admin';
+
+    /** @var String */
+    protected $current_semester;
+
     /** @var EntityManager */
     protected $em;
 
@@ -21,6 +29,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+        $this->current_semester='2017A';
     }
 
     /**
@@ -35,7 +44,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                 $contact = $event->getData();
                 $this->defaultFirstContactDate($contact);
                 $this->defaultSemContacted($contact);
-                if ( $contact->getOwner()->getUsername() == 'admin' )
+                if ( $contact->getOwner()->getUsername() == self::ADMIN )
                 {
                     $this->allocateUser($contact);
                 }
@@ -82,7 +91,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
         // the first user should be the assigned user.
         $assigned_id = $assigned_user['id'];
 
-        if ( $assigned_user['group_name'] == 'Full-timer')
+        if ( $assigned_user['group_name'] == self::FT)
         {
             // allocate to the user with least number of owned contacts.
             $assigned_id=$owner_id;
@@ -129,17 +138,18 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                       INNER join orocrm_contact_group AS c_g ON cc_g.contact_group_id=c_g.id  
                       WHERE  c_g.label= :contact_group AND cc.semester_contacted= :contact_sem
                     ) AS c ON u.id=c.assigned_to_user_id 
-                WHERE ( a_g.name= :FT  OR a_g.name = :None_FT ) AND u.enabled = 1 AND u.username != \'admin\'
+                WHERE ( a_g.name= :FT  OR a_g.name = :None_FT ) AND u.enabled = 1 AND u.username != :admin
                 GROUP BY u.id 
                 ORDER BY num_contact, group_name DESC 
                 LIMIT 1
                 ';
 
         $stmt = $connection->prepare($assigned_sql);
-        $stmt->execute(array('contact_group'=>'New One',
-            'contact_sem'=>'2017A',
-            'FT'=>'Full-timer',
-            'None_FT'=>'None Full-timer'));
+        $stmt->execute(array('contact_group'=>self::NEW_ONE,
+            'contact_sem'=>$this->current_semester,
+            'FT'=>self::FT,
+            'None_FT'=>self::NONE_FT,
+            'admin'=>self::ADMIN));
         return $stmt->fetch();
     }
 
@@ -161,16 +171,17 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                       INNER join orocrm_contact_group AS c_g ON cc_g.contact_group_id=c_g.id  
                       WHERE  c_g.label= :contact_group AND cc.semester_contacted= :contact_sem
                     ) AS c ON u.id=c.user_owner_id
-                WHERE a_g.name= :FT AND u.enabled = 1 AND u.username != \'admin\'
+                WHERE a_g.name= :FT AND u.enabled = 1 AND u.username != :admin
                 GROUP BY u.id 
                 ORDER BY num_contact, group_name DESC 
                 LIMIT 1
                 ';
 
         $stmt = $connection->prepare($owner_sql);
-        $stmt->execute(array('contact_group'=>'New One',
-            'contact_sem'=>'2017A',
-            'FT'=>'Full-timer'));
+        $stmt->execute(array('contact_group'=>self::NEW_ONE,
+            'contact_sem'=>$this->current_semester,
+            'FT'=>self::FT,
+            'admin'=>self::ADMIN));
 
         return $stmt->fetch();
     }
