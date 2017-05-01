@@ -1,0 +1,46 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: jake
+ * Date: 27/1/17
+ * Time: 1:07 PM
+ */
+
+namespace CampusCRM\CampusUserBundle\Migrations\Schema\v1_0;
+
+use Doctrine\DBAL\Schema\Schema;
+use Oro\Bundle\MigrationBundle\Migration\Migration;
+use Oro\Bundle\MigrationBundle\Migration\QueryBag;
+use Oro\Bundle\EntityBundle\EntityConfig\DatagridScope;
+use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
+use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
+use Oro\Bundle\EntityExtendBundle\EntityConfig\ExtendScope;
+
+class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
+{
+    protected $extendExtension;
+
+    public function setExtendExtension(ExtendExtension $extendExtension)
+    {
+        $this->extendExtension = $extendExtension;
+    }
+
+    public function up(Schema $schema, QueryBag $queries)
+    {
+        $table = $schema->getTable('oro_user');
+        $this->extendExtension->addEnumField(
+            $schema,
+            $table,
+            'gender', // field name
+            'gender_source', // enum code
+            false, // only one option can be selected
+            false, // an administrator can add new options and remove existing ones
+            [
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
+                'merge' => ['display' => true],
+                'dataaudit' => ['auditable' => true]
+            ]
+        );
+    }
+}
