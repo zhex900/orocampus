@@ -85,28 +85,42 @@ class CampusContactTypeExtension extends AbstractTypeExtension
      */
     public function allocateUser(Contact $contact)
     {
-        $assigned_user = $this->findAssignedUser();
-        $owner_id = $this->findOwnerUser()['id'];
+        $assigned_user = $this->findAssignedUser($contact->getGender());
+        $owner_user = $this->findOwnerUser($contact->getGender());
 
-        // the first user should be the assigned user.
-        $assigned_id = $assigned_user['id'];
+        $owner_id = $owner = $assigned = null;
 
-        if ( $assigned_user['group_name'] == self::FT)
-        {
-            // allocate to the user with least number of owned contacts.
-            $assigned_id=$owner_id;
+        if (!empty($owner_user)) {
+            $owner_id = $owner_user['id'];
+            /** @var User $owner */
+            $owner = $this->em->getRepository('OroUserBundle:User')->findUsersByIds(array($owner_id))[0];
         }
 
-        /** @var User $assigned */
-        $assigned = ($this->em->getRepository('OroUserBundle:User')->findUsersByIds(array($assigned_id)))[0];
-        /** @var User $owner */
-        $owner = ($this->em->getRepository('OroUserBundle:User')->findUsersByIds(array($owner_id)))[0];
+        if (!empty($assigned_user)) {
+            // the first user should be the assigned user.
+            $assigned_id = $assigned_user['id'];
 
-        if ($assigned != null  && $owner != null)
-        {
-            $contact->setAssignedTo($assigned);
-            $contact->setOwner($owner);
+            if ($assigned_user['group_name'] == self::FT && $owner_id != null) {
+                // allocate to the user with least number of owned contacts.
+                $assigned_id = $owner_id;
+            }
+            /** @var User $assigned */
+            $assigned = $this->em->getRepository('OroUserBundle:User')->findUsersByIds(array($assigned_id))[0];
         }
+
+        if ($assigned == null or $owner == null) {
+            /** @var User $admin */
+            $admin = ($this->em->getRepository('OroUserBundle:User')->findUsersByUsernames(array(self::ADMIN)))[0];
+
+            if ($assigned == null) {
+                $assigned = $admin;
+            }
+            if ($owner == null) {
+                $owner = $admin;
+            }
+        }
+        $contact->setAssignedTo($assigned);
+        $contact->setOwner($owner);
     }
 
     /** @param \DateTime $dateTime */
@@ -120,7 +134,12 @@ class CampusContactTypeExtension extends AbstractTypeExtension
         }
     }
 
-    private function findAssignedUser()
+   /**
+    * Find an user that
+    * @param String $gender
+    * @return array
+    */
+    private function findAssignedUser($gender)
     {
         $connection = $this->em->getConnection();
         /*
@@ -138,7 +157,8 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                       INNER join orocrm_contact_group AS c_g ON cc_g.contact_group_id=c_g.id  
                       WHERE  c_g.label= :contact_group AND cc.semester_contacted= :contact_sem
                     ) AS c ON u.id=c.assigned_to_user_id 
-                WHERE ( a_g.name= :FT  OR a_g.name = :None_FT ) AND u.enabled = 1 AND u.username != :admin
+                WHERE ( a_g.name= :FT  OR a_g.name = :None_FT ) 
+                AND u.enabled = 1 AND u.username != :admin AND u.gender_id = :gender
                 GROUP BY u.id 
                 ORDER BY num_contact, group_name DESC 
                 LIMIT 1
@@ -149,11 +169,17 @@ class CampusContactTypeExtension extends AbstractTypeExtension
             'contact_sem'=>$this->current_semester,
             'FT'=>self::FT,
             'None_FT'=>self::NONE_FT,
-            'admin'=>self::ADMIN));
+            'admin'=>self::ADMIN,
+            'gender'=>$gender));
         return $stmt->fetch();
     }
 
-    private function findOwnerUser()
+    /**
+     * Find an user that
+     * @param String $gender
+     * @return array
+     */
+    private function findOwnerUser($gender)
     {
         $connection = $this->em->getConnection();
         /*
@@ -171,7 +197,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                       INNER join orocrm_contact_group AS c_g ON cc_g.contact_group_id=c_g.id  
                       WHERE  c_g.label= :contact_group AND cc.semester_contacted= :contact_sem
                     ) AS c ON u.id=c.user_owner_id
-                WHERE a_g.name= :FT AND u.enabled = 1 AND u.username != :admin
+                WHERE a_g.name= :FT AND u.enabled = 1 AND u.username != :admin AND u.gender_id = :gender
                 GROUP BY u.id 
                 ORDER BY num_contact, group_name DESC 
                 LIMIT 1
@@ -181,7 +207,8 @@ class CampusContactTypeExtension extends AbstractTypeExtension
         $stmt->execute(array('contact_group'=>self::NEW_ONE,
             'contact_sem'=>$this->current_semester,
             'FT'=>self::FT,
-            'admin'=>self::ADMIN));
+            'admin'=>self::ADMIN,
+            'gender'=>$gender));
 
         return $stmt->fetch();
     }
