@@ -4,6 +4,9 @@ namespace CampusCRM\CampusCalendarBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 
 class CalendarEventTypeExtension extends AbstractTypeExtension
 {
@@ -33,5 +36,14 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                     'label'    => 'oro.calendar.calendarevent.title.label'
                 ]
             );
+
+        $builder->addEventListener(
+            FormEvents::SUBMIT,
+            function (FormEvent $event) {
+                /** @var CalendarEvent $calendar_event */
+                $calendar_event = $event->getData();
+                $calendar_event->setTitle($calendar_event->getOroEventname());
+            }
+        );
     }
 }
