@@ -8,5 +8,10 @@
                 {{ UI.renderProperty('oro.eventname.name.label'|trans, eventname.name) }}
             </div>
         {% endif %}
+        {% if  resource_granted('VIEW', eventname, 'system_calendar') %}
+            <div class="responsive-block">
+                {{ UI.renderProperty('campuscrm.eventname.system_calendar.label'|trans, eventname.systemCalendar) }}
+            </div>
+        {% endif %}
     </div>
 </div>

@@ -3,6 +3,7 @@ Basic Information: Basic Information
 campuscrm:
     eventname:
       entity_label:               Event Name
+      system_calendar.label:      System Calendar
 oro:
     dashboard:
         my_eventnames_activity:
@@ -11,6 +12,7 @@ oro:
             description:            This widget displays the list of recently accessed eventnames
 
     eventname:
+
         menu:
             eventname_tab.label: Event Names
             account_list.description: List of accounts

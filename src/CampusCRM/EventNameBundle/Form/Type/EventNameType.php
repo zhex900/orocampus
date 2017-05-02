@@ -4,6 +4,7 @@ namespace CampusCRM\EventNameBundle\Form\Type;
 
 use Doctrine\Common\Collections\Collection;
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -59,7 +60,17 @@ class EventNameType extends AbstractType
             'name',
             'text',
             array(
-                'label' => 'oro.account.name.label',
+                'label' => 'campuscrm.eventname.entity_label',
+                'required' => true,
+            )
+        );
+
+        // system calendar
+        $builder->add(
+            'system_calendar',
+            CheckboxType::class,
+            array(
+                'label' => 'campuscrm.eventname.system_calendar.label',
                 'required' => true,
             )
         );
@@ -102,37 +113,6 @@ class EventNameType extends AbstractType
     public function getBlockPrefix()
     {
         return 'event_name';
-    }
-
-    /**
-     * @param Collection $contacts
-     * @param int|null $default
-     * @return array
-     */
-    protected function getInitialElements(Collection $contacts, $default)
-    {
-        $result = array();
-        if ($this->canViewContact) {
-            /** @var Contact $contact */
-            foreach ($contacts as $contact) {
-                if (!$contact->getId()) {
-                    continue;
-                }
-                $primaryPhone = $contact->getPrimaryPhone();
-                $primaryEmail = $contact->getPrimaryEmail();
-                $result[] = array(
-                    'id' => $contact->getId(),
-                    'label' => $this->entityNameResolver->getName($contact),
-                    'link' => $this->router->generate('oro_contact_info', array('id' => $contact->getId())),
-                    'extraData' => array(
-                        array('label' => 'Phone', 'value' => $primaryPhone ? $primaryPhone->getPhone() : null),
-                        array('label' => 'Email', 'value' => $primaryEmail ? $primaryEmail->getEmail() : null),
-                    ),
-                    'isDefault' => $default == $contact->getId()
-                );
-            }
-        }
-        return $result;
     }
 }
 
