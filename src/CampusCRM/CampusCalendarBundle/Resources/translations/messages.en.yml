@@ -4,3 +4,5 @@ oro:
       calendarevent:
             oro_eventname.label:              Event Name
             add_attendance.label:             Add attendance
+            teaching_week.label:      Teaching Week
+            semester.label:           Semester

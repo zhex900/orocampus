@@ -27,6 +27,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->remove('title');
+        $builder->remove('title');
         $builder
             ->add(
                 'title',
@@ -43,6 +44,21 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 /** @var CalendarEvent $calendar_event */
                 $calendar_event = $event->getData();
                 $calendar_event->setTitle($calendar_event->getOroEventname());
+                // get the service.
+
+                // $week = findWeek($calendar_event->getStart());
+                //$semester = findSemester($calendar_event->getStart());
+                // $calendar_event->setTeachingWeek($week);
+                //$calendar_event->setSemester($semester);
+            }
+        );
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $form->remove('teaching_week');
+                $form->remove('semester');
             }
         );
     }
