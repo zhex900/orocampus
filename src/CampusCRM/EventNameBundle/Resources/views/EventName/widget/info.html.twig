@@ -10,7 +10,7 @@
         {% endif %}
         {% if  resource_granted('VIEW', eventname, 'system_calendar') %}
             <div class="responsive-block">
-                {{ UI.renderProperty('campuscrm.eventname.system_calendar.label'|trans, eventname.systemCalendar) }}
+                {{ UI.renderProperty('campuscrm.eventname.system_calendar.label'|trans, eventname.systemCalendar ? 'Yes' : 'No') }}
             </div>
         {% endif %}
     </div>

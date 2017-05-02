@@ -2,8 +2,6 @@
 
 namespace CampusCRM\EventNameBundle\Form\Type;
 
-use Doctrine\Common\Collections\Collection;
-
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -15,8 +13,7 @@ use Symfony\Component\Form\FormView;
 
 use Oro\Bundle\EntityBundle\Provider\EntityNameResolver;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
-use Oro\Bundle\ContactBundle\Entity\Contact;
-use CampusCRM\EventNameBundle\Entity\EventName;
+use Symfony\Component\Form\CallbackTransformer;
 
 class EventNameType extends AbstractType
 {
