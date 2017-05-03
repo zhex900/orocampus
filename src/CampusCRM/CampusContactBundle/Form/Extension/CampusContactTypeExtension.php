@@ -9,6 +9,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManager;
 use Oro\Bundle\UserBundle\Entity\User;
+use CampusCRM\CampusCalendarBundle\Provider\AcademicCalendar;
+use Symfony\Component\DependencyInjection\Container;
 
 class CampusContactTypeExtension extends AbstractTypeExtension
 {
@@ -23,13 +25,17 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     /** @var EntityManager */
     protected $em;
 
+    /** @var  Container */
+    private $container;
+
     /**
      * @param EntityManager $em
+     * @param Container $container
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Container $container)
     {
         $this->em = $em;
-        $this->current_semester='2017A';
+        $this->container = $container;
     }
 
     /**
@@ -73,9 +79,12 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     {
         // if the semester contacted is empty set the value from first contacted date
         if($contact->getSemesterContacted()==null){
-            $date = $contact->getFirstContactDate();
-            $sem = $date->format("Y") . $this->getSemester($date);
-            $contact->setSemesterContacted($sem);
+
+            $contact->setSemesterContacted(
+                $this->container
+                    ->get('academic_calendar')
+                    ->getSemester($contact->getFirstContactDate())
+            );
         }
     }
 
@@ -121,17 +130,6 @@ class CampusContactTypeExtension extends AbstractTypeExtension
         }
         $contact->setAssignedTo($assigned);
         $contact->setOwner($owner);
-    }
-
-    /** @param \DateTime $dateTime */
-    private function getSemester(\DateTime $dateTime){
-        $break = new \DateTime('2017-07-01');
-        if( $dateTime < $break){
-            return 'A';
-        }
-        else {
-            return 'B';
-        }
     }
 
    /**

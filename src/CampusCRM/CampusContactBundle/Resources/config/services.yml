@@ -6,5 +6,6 @@ services:
         class: %oro_contact.form_type_extension.class%
         arguments:
             - '@doctrine.orm.entity_manager'
+            - '@service_container'
         tags:
             - { name: form.type_extension, alias: oro_contact }
