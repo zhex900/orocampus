@@ -2,4 +2,4 @@ services:
       academic_calendar:
         class:  CampusCRM\CampusCalendarBundle\Provider\AcademicCalendar
         arguments:
-                - '@doctrine.orm.entity_manager'
+                  - '@doctrine.orm.entity_manager'

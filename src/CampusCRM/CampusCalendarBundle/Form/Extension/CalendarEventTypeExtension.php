@@ -7,9 +7,20 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
+use Symfony\Component\DependencyInjection\Container;
 
 class CalendarEventTypeExtension extends AbstractTypeExtension
 {
+    /** @var  Container */
+    private $container;
+
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Returns the name of the type being extended.
@@ -44,12 +55,16 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 /** @var CalendarEvent $calendar_event */
                 $calendar_event = $event->getData();
                 $calendar_event->setTitle($calendar_event->getOroEventname());
-                // get the service.
 
-                // $week = findWeek($calendar_event->getStart());
-                //$semester = findSemester($calendar_event->getStart());
-                // $calendar_event->setTeachingWeek($week);
-                //$calendar_event->setSemester($semester);
+                $calendar_event->setTeachingWeek($this
+                        ->container
+                        ->get('academic_calendar')
+                        ->getTeachingWeek($calendar_event->getStart()));
+
+                $calendar_event->setSemester($this
+                    ->container
+                    ->get('academic_calendar')
+                    ->getSemester($calendar_event->getStart()));
             }
         );
 
