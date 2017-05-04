@@ -116,7 +116,6 @@ class EventNameController extends Controller
      */
     public function infoAction(EventName $eventname)
     {
-        // var_dump($eventname->getName()); die();
         return [
             'eventname' => $eventname
         ];

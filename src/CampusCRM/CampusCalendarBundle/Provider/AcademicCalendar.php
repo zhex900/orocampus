@@ -180,7 +180,7 @@ class AcademicCalendar {
         $monday=new \DateTime();
         $monday->setTimestamp(strtotime("monday this week", $date->getTimestamp()));
         $monday->setTimezone($sem_start->getTimezone());
-        var_dump($monday);
+
         $weeks = ($sem_start->diff($monday)->format('%a'))/7;
 
         // if the date is not within the semester period.
