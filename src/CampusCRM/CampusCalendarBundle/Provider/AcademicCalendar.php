@@ -158,11 +158,14 @@ class AcademicCalendar {
      * @param \DateTime $date
      * @return string
      */
-    public function getTeachingWeek($date,$university=self::DEFAULT_UNIVERSITY){
+    public function getTeachingWeek($date, $sem = null, $university=self::DEFAULT_UNIVERSITY){
         $date->setTime(0,0,0);
 
-        // find the semester key
-        $sem=substr($this->getSemester($date), 4);
+        if ($sem == null){
+            // find the semester key
+            $sem=substr($this->getSemester($date), 4);
+        }
+
         $sem_key= array_search($sem,self::SEMESTER_CODE);
 
         // get the start and end dates of the semester

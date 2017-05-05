@@ -56,15 +56,19 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 $calendar_event = $event->getData();
                 $calendar_event->setTitle($calendar_event->getOroEventname());
 
-                $calendar_event->setTeachingWeek($this
+                if ($calendar_event->getSystemCalendar() == null ){
+                    $sem = $this
                         ->container
                         ->get('academic_calendar')
-                        ->getTeachingWeek($calendar_event->getStart()));
+                        ->getSemester($calendar_event->getStart());
+                    $calendar_event->setSemester($sem);
 
-                $calendar_event->setSemester($this
-                    ->container
-                    ->get('academic_calendar')
-                    ->getSemester($calendar_event->getStart()));
+                    $calendar_event
+                        ->setTeachingWeek($this
+                            ->container
+                            ->get('academic_calendar')
+                            ->getTeachingWeek($calendar_event->getStart()),$sem);
+                }
             }
         );
 
