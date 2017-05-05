@@ -31,7 +31,7 @@ class ExtendCalendarEntity implements Migration, ExtendExtensionAwareInterface
         /** Generate table eventname **/
         $table = $schema->getTable('oro_calendar_event');
 
-        $table->addColumn('teaching_week', 'integer',
+        $table->addColumn('teaching_week', 'string',
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
