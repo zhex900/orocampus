@@ -3,3 +3,23 @@ services:
         class:  CampusCRM\CampusCalendarBundle\Provider\AcademicCalendar
         arguments:
                   - '@doctrine.orm.entity_manager'
+
+      campus_calendar.autocomplete.attendee_search_handler:
+        class: CampusCRM\CampusCalendarBundle\Autocomplete\AttendeeSearchHandler
+        parent: oro_activity.form.handler.autocomplete
+        calls:
+                  - [setAttendeeManager, ['@campus_calendar.attendee_manager']]
+
+      campus_calendar.attendee_manager:
+        class: CampusCRM\CampusCalendarBundle\Manager\AttendeeManager
+        arguments:
+                  - '@oro_entity.doctrine_helper'
+                  - '@campus_calendar.attendee_relation_manager'
+
+      campus_calendar.attendee_relation_manager:
+        class: CampusCRM\CampusCalendarBundle\Manager\AttendeeRelationManager
+        arguments:
+                  - '@doctrine'
+                  - '@oro_locale.formatter.name'
+                  - '@oro_locale.dql.formatter.name'
+

@@ -38,7 +38,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->remove('title');
-        $builder->remove('title');
+        $builder->remove('attendees');
         $builder
             ->add(
                 'title',
@@ -46,6 +46,15 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 [
                     'required' => true,
                     'label'    => 'oro.calendar.calendarevent.title.label'
+                ]
+            )
+            ->add(
+                'attendees',
+                'campus_calendar_event_attendees_select',
+                [
+                    'required' => false,
+                    'label'    => 'oro.calendar.calendarevent.attendees.label',
+                    'layout_template' => $options['layout_template'],
                 ]
             );
 

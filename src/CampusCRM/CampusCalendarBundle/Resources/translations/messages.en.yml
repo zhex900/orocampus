@@ -2,7 +2,8 @@ oro.event_name.form.choose:      'Choose an event name...'
 oro:
     calendar:
       calendarevent:
-            oro_eventname.label:              Event Name
-            add_attendance.label:             Add attendance
+            oro_eventname.label:      Event Name
+            add_attendance.label:     Add attendance
             teaching_week.label:      Teaching Week
             semester.label:           Semester
+            attendee.contact.label:   Contact
