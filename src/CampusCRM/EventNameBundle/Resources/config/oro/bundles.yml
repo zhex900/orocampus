@@ -1,2 +1,2 @@
 bundles:
-  - CampusCRM\EventNameBundle\EventNameBundle
+  - {name: CampusCRM\EventNameBundle\EventNameBundle, priority: 1}
