@@ -8,6 +8,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Symfony\Component\DependencyInjection\Container;
+use Doctrine\Common\Collections\Collection;
+use Oro\Bundle\CalendarBundle\Entity\Attendee;
 
 class CalendarEventTypeExtension extends AbstractTypeExtension
 {

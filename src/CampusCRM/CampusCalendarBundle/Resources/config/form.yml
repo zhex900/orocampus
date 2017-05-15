@@ -14,3 +14,10 @@ services:
             - '@campus_calendar.attendee_relation_manager'
         tags:
             - { name: form.type, alias: campus_calendar_event_attendees_select }
+
+    campus_calendar.calendar_event.form.handler:
+        class: CampusCRM\CampusCalendarBundle\Form\Handler\CalendarEventHandler
+        parent: 'oro_calendar.calendar_event.form.handler.abstract'
+        calls:
+            - ['setForm', ['@oro_calendar.calendar_event.form']]
+            - ['setEntityRoutingHelper', ['@oro_entity.routing_helper']]

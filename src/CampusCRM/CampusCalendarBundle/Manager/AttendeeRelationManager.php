@@ -7,6 +7,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
+use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\LocaleBundle\DQL\DQLNameFormatter;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
@@ -49,17 +50,22 @@ class AttendeeRelationManager
      */
     public function setRelatedEntity(Attendee $attendee, $relatedEntity = null)
     {
+        /* @var CalendarEvent event */
+        $event = $attendee->getCalendarEvent();
+
         if ($relatedEntity instanceof User) {
             $attendee
                 ->setUser($relatedEntity)
                 ->setDisplayName($this->nameFormatter->format($relatedEntity))
                 ->setEmail($relatedEntity->getEmail());
+           // $event->addActivityTarget($relatedEntity);
         } elseif ($relatedEntity instanceof Contact) {
             $attendee
                 ->setContact($relatedEntity)
                 ->setDisplayName($this->nameFormatter->format($relatedEntity))
                 ->setEmail($relatedEntity->getEmail());
-            file_put_contents('/tmp/search.log',PHP_EOL . $relatedEntity->getEmail() ,FILE_APPEND);
+            //$event->addActivityTarget($relatedEntity);
+
         } else {
             // Only User is supported as related entity of attendee.
             throw new \InvalidArgumentException(

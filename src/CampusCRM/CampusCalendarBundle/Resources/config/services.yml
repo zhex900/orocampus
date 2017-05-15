@@ -23,3 +23,27 @@ services:
                   - '@oro_locale.formatter.name'
                   - '@oro_locale.dql.formatter.name'
 
+      campus_calendar.calendar_event.update_attendee_manager:
+        class: 'CampusCRM\CampusCalendarBundle\Manager\CalendarEvent\UpdateAttendeeManager'
+        public: false
+        arguments:
+            - '@campus_calendar.attendee_relation_manager'
+            - '@doctrine'
+
+      campus_calendar.calendar_event.update_manager:
+        class: 'CampusCRM\CampusCalendarBundle\Manager\CalendarEvent\UpdateManager'
+        public: false
+        arguments:
+            - '@campus_calendar.calendar_event.update_attendee_manager'
+            - '@oro_calendar.calendar_event.update_child_manager'
+            - '@oro_calendar.calendar_event.update_exception_manager'
+
+      oro_calendar.calendar_event_manager:
+        class: CampusCRM\CampusCalendarBundle\Manager\CalendarEventManager
+        arguments:
+            - '@campus_calendar.calendar_event.update_manager'
+            - '@doctrine'
+            - '@oro_security.security_facade'
+            - '@oro_entity.entity_name_resolver'
+            - '@oro_calendar.system_calendar_config'
+
