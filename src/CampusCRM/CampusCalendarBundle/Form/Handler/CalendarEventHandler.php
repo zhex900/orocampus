@@ -5,6 +5,8 @@ namespace CampusCRM\CampusCalendarBundle\Form\Handler;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\CalendarBundle\Form\Handler\CalendarEventHandler as BaseHandler;
+use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\ContactBundle\Entity\Contact;
 
 class CalendarEventHandler extends BaseHandler
 {
@@ -68,16 +70,36 @@ class CalendarEventHandler extends BaseHandler
         return false;
     }
 
+    /*
+     * @param array $contexts
+     * @param array $attendees
+     *
+     * @return array $contexts
+     */
     private function syncActivityandContext($contexts,$attendees){
+
+        // remove all user and contacts from contexts.
+        $contexts = $this->clearContextUserContact($contexts);
 
         foreach ($attendees as $attendee) {
 
             if ($attendee->getUser()!== null){
-                $contexts = array_merge($contexts, [$attendee->getUser()]);
+                $contexts = array_merge([$attendee->getUser()],$contexts);
             }elseif($attendee->getContact()!==null){
-                $contexts = array_merge($contexts, [$attendee->getContact()]);
+                $contexts = array_merge([$attendee->getContact()],$contexts);
             }
         }
         return $contexts;
+    }
+
+    private function clearContextUserContact($contexts){
+
+        $new_contexts = [];
+        foreach ($contexts as $context) {
+            if (!($context instanceof User or $context instanceof Contact)) {
+                $new_contexts = array_merge($new_contexts, [$context]);
+            }
+        }
+        return $new_contexts;
     }
 }
