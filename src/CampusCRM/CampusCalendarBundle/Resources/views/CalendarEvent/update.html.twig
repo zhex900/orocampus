@@ -1,6 +1,7 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 {% import 'OroCalendarBundle::invitations.html.twig' as invitations %}
 {% import 'OroActivityBundle::macros.html.twig' as AC %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 
 {% oro_title_set({params : {"%entity.title%": entity.title, "%entityName%": 'oro.calendar.calendarevent.entity_label'|trans } }) %}
 {% set entityId = entity.id %}
@@ -88,6 +89,35 @@
     }
     ]
     }] %}
+
+    {% set contact_attendees = [] %}
+    {% for attendee in entity.childAttendees %}
+        {% if attendee.contact is not null  %}
+            {% set contact_attendees = contact_attendees|merge({ (loop.index0):attendee.contact.id}) %}
+        {% endif %}
+    {% endfor %}
+
+    {% set gridName = 'campuscontact-group-contacts-grid' %}
+    {% set gridData = dataGrid.renderGrid(gridName, {attendees: contact_attendees}, { cssClass: 'inner-grid' }) %}
+    {% set dataBlocks = dataBlocks|merge([{
+    'title' : 'Attendance',
+    'subblocks':
+    [
+    {
+    'title' : null,
+    'useSpan': false,
+    'data' : [
+       gridData
+    ]
+    }
+    ]
+    }]) %}
+
+    {#
+    form_widget(form.appendContacts, {'id': 'groupAppendContacts'}),
+    form_widget(form.removeContacts, {'id': 'groupRemoveContacts'}),
+
+    #}
 
     {% set additionalData = [] %}
     {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
