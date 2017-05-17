@@ -5,7 +5,7 @@
 
 CampusCRM is built on [OroCRM][1].
 
-For [system requirements][2] and [installation guide][3] please to the documentation in OroCRM.
+For [system requirements][2] and [installation guide][3] please refer to the documentation in OroCRM.
 
 [1]:    https://github.com/orocrm/crm
 [2]:    https://www.orocrm.com/documentation/index/current/system-requirements
