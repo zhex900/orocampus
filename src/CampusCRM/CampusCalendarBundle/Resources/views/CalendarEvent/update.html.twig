@@ -97,7 +97,7 @@
         {% endif %}
     {% endfor %}
 
-    {% set gridName = 'campuscontact-group-contacts-grid' %}
+    {% set gridName = 'attendance-contacts-grid' %}
     {% set gridData = dataGrid.renderGrid(gridName, {attendees: contact_attendees}, { cssClass: 'inner-grid' }) %}
     {% set dataBlocks = dataBlocks|merge([{
     'title' : 'Attendance',
@@ -107,15 +107,16 @@
     'title' : null,
     'useSpan': false,
     'data' : [
-       gridData
+        form_widget(form.appendContacts, {'id': 'appendContacts'}),
+        form_widget(form.removeContacts, {'id': 'removeContacts'}),
+        gridData
     ]
     }
     ]
     }]) %}
 
     {#
-    form_widget(form.appendContacts, {'id': 'groupAppendContacts'}),
-    form_widget(form.removeContacts, {'id': 'groupRemoveContacts'}),
+
 
     #}
 

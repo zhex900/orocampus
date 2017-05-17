@@ -10,7 +10,6 @@ use Oro\Bundle\ContactBundle\Entity\Contact;
 
 class CalendarEventHandler extends BaseHandler
 {
-
     /**
      * Process form
      *
@@ -92,7 +91,8 @@ class CalendarEventHandler extends BaseHandler
         return $contexts;
     }
 
-    private function clearContextUserContact($contexts){
+    private function clearContextUserContact($contexts)
+    {
 
         $new_contexts = [];
         foreach ($contexts as $context) {

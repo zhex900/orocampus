@@ -8,8 +8,10 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Form\FormInterface;
 use Doctrine\Common\Collections\Collection;
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
+use Oro\Bundle\ContactBundle\Entity\Contact;
 
 class CalendarEventTypeExtension extends AbstractTypeExtension
 {
@@ -60,11 +62,34 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 ]
             );
 
+        $builder
+            ->add(
+                'appendContacts',
+                'oro_entity_identifier',
+                array(
+                    'class'    => 'OroContactBundle:Contact',
+                    'required' => false,
+                    'mapped'   => false,
+                    'multiple' => true,
+                )
+            )
+            ->add(
+                'removeContacts',
+                'oro_entity_identifier',
+                array(
+                    'class'    => 'OroContactBundle:Contact',
+                    'required' => false,
+                    'mapped'   => false,
+                    'multiple' => true,
+                )
+            );
+
         $builder->addEventListener(
             FormEvents::SUBMIT,
             function (FormEvent $event) {
                 /** @var CalendarEvent $calendar_event */
                 $calendar_event = $event->getData();
+
                 $calendar_event->setTitle($calendar_event->getOroEventname());
 
                 if ($calendar_event->getSystemCalendar() == null ){
@@ -79,6 +104,37 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                             ->container
                             ->get('academic_calendar')
                             ->getTeachingWeek($calendar_event->getStart()),$sem);
+                }
+
+                /*
+                 * Add and remove contacts from the attendence selection grid.
+                 * Grid name is attendance-contacts-grid
+                 */
+                /** @var FormInterface $form */
+                $form = $event->getForm();
+                $appendContacts = $form->get('appendContacts')->getData();
+                $removeContacts = $form->get('removeContacts')->getData();
+
+                foreach ($appendContacts as $appendContact) {
+                    if ( $appendContact instanceof Contact ) {
+                        /** @var Attendee $attendee */
+                        $attendee = $this->container
+                            ->get('campus_calendar.attendee_manager')
+                            ->createAttendee($appendContact);
+                        $calendar_event->addAttendee($attendee);
+                    }
+                }
+                foreach ($removeContacts as $removeContact) {
+                    if ( $removeContact instanceof Contact ) {
+                        /** @var Attendee $attendee */
+                        $attendee = $this->container
+                            ->get('campus_calendar.attendee_manager')
+                            ->findAttendeeByContact(
+                            $removeContact,
+                            $calendar_event->getAttendees()
+                        );
+                        $calendar_event->removeAttendee($attendee);
+                    }
                 }
             }
         );
