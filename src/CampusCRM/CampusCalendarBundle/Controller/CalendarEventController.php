@@ -2,15 +2,8 @@
 
 namespace CampusCRM\CampusCalendarBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Oro\Bundle\CalendarBundle\Controller\CalendarEventController as BaseController;
-use Symfony\Component\HttpFoundation\Request;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 
 /**
