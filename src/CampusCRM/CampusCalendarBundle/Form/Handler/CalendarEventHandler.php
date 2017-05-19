@@ -89,19 +89,8 @@ class CalendarEventHandler extends BaseHandler
             if ($attendee->getUser()!== null){
                 $contexts = array_merge([$attendee->getUser()],$contexts);
             }elseif($attendee->getContact()!==null){
-                file_put_contents('/tmp/c.log',$attendee->getContact()->getFirstName(),FILE_APPEND);
                 $contexts = array_merge([$attendee->getContact()],$contexts);
             }
-        }
-
-        foreach ($contexts as $c){
-            if ($c instanceof User){
-                file_put_contents('/tmp/c.log',$c->getFirstName(),FILE_APPEND);
-            }
-            elseif ($c instanceof Contact) {
-                file_put_contents('/tmp/c.log',$c->getFirstName(),FILE_APPEND);
-            }
-
         }
         return $contexts;
     }
