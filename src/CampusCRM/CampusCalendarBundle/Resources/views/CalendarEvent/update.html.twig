@@ -2,6 +2,7 @@
 {% import 'OroCalendarBundle::invitations.html.twig' as invitations %}
 {% import 'OroActivityBundle::macros.html.twig' as AC %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+{% import 'OroCalendarBundle::macros.html.twig' as Calendar %}
 
 {% oro_title_set({params : {"%entity.title%": entity.title, "%entityName%": 'oro.calendar.calendarevent.entity_label'|trans } }) %}
 {% set entityId = entity.id %}
@@ -26,7 +27,7 @@
     {% endif %}
     {# add the button only when update. Create Calendar Event will produce an error because the calendar event entity is not created yet.#}
     {% if entity.title != null %}
-        {{ AC.addAttendanceButton(entity) }}
+        {{ Calendar.addAttendanceButton(entity) }}
     {% endif %}
     {{ UI.dropdownSaveButton({'html': html}) }}
     {{ UI.cancelButton(path('oro_calendar_event_index')) }}

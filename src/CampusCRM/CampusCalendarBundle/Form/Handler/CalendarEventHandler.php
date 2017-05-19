@@ -2,6 +2,7 @@
 
 namespace CampusCRM\CampusCalendarBundle\Form\Handler;
 
+use CampusCRM\CampusCalendarBundle\Manager\CalendarEventManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\CalendarBundle\Form\Handler\CalendarEventHandler as BaseHandler;
@@ -39,6 +40,7 @@ class CalendarEventHandler extends BaseHandler
             if ($this->form->isValid()) {
                 // TODO: should be refactored after finishing BAP-8722
                 // Contexts handling should be moved to common for activities form handler
+                $contexts=null;
                 if ($this->form->has('contexts')) {
                     $contexts = $this->form->get('contexts')->getData();
                     $owner = $entity->getCalendar() ? $entity->getCalendar()->getOwner() : null;
@@ -46,16 +48,18 @@ class CalendarEventHandler extends BaseHandler
                         $contexts = array_merge($contexts, [$owner]);
                     }
 
-                    // sync between attendees and contexts. One way sync only.
-                    $attendees = $this->form->get('attendees')->getData();
-                    $contexts = $this->syncActivityandContext($contexts, $attendees);
-
-                    $this->activityManager->setActivityTargets($entity, $contexts);
                 } elseif (!$entity->getId() && $entity->getRecurringEvent()) {
                     $this->activityManager->setActivityTargets(
                         $entity,
                         $entity->getRecurringEvent()->getActivityTargetEntities()
                     );
+                }
+
+                $attendees = $entity->getAttendees();
+                $contexts = $this->syncActivityandContext($contexts, $attendees);
+
+                if ($contexts !== null){
+                    $this->activityManager->setActivityTargets($entity, $contexts);
                 }
 
                 $this->processTargetEntity($entity, $request);
@@ -85,8 +89,19 @@ class CalendarEventHandler extends BaseHandler
             if ($attendee->getUser()!== null){
                 $contexts = array_merge([$attendee->getUser()],$contexts);
             }elseif($attendee->getContact()!==null){
+                file_put_contents('/tmp/c.log',$attendee->getContact()->getFirstName(),FILE_APPEND);
                 $contexts = array_merge([$attendee->getContact()],$contexts);
             }
+        }
+
+        foreach ($contexts as $c){
+            if ($c instanceof User){
+                file_put_contents('/tmp/c.log',$c->getFirstName(),FILE_APPEND);
+            }
+            elseif ($c instanceof Contact) {
+                file_put_contents('/tmp/c.log',$c->getFirstName(),FILE_APPEND);
+            }
+
         }
         return $contexts;
     }
