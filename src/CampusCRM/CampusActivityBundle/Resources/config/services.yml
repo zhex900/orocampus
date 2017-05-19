@@ -1,4 +1,7 @@
 services:
+    campus_activity.manger.filter:
+        class: CampusCRM\CampusActivityBundle\Manager\Context
+
     campus_activity.form.handler.autocomplete:
         class: CampusCRM\CampusActivityBundle\Autocomplete\ContextSearchHandler
         arguments:
