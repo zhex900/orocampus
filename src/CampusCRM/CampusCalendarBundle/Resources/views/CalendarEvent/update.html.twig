@@ -71,10 +71,7 @@
     form_row(form.description),
     form_row(form.backgroundColor),
     form.calendarUid is defined ? form_row(form.calendarUid) : null,
-    form_row(form.attendees),
-    entity.recurrence is null ? form_row(form.reminders) : null,
-    form_row(form.notifyAttendees),
-    invitations.notify_attendees_component()
+    entity.recurrence is null ? form_row(form.reminders) : null
     ]
     },
     {
@@ -91,6 +88,20 @@
     ]
     }] %}
 
+    {% set dataBlocks = dataBlocks|merge([{
+    'title' : 'Attendance',
+    'subblocks':
+    [
+    {
+    'title' : null,
+    'useSpan': false,
+    'data' : [
+        form_row(form.attendees)
+    ]
+    }
+    ]
+    }]) %}
+
     {% set contact_attendees = [] %}
     {% for attendee in entity.childAttendees %}
         {% if attendee.contact is not null  %}
@@ -101,7 +112,7 @@
     {% set gridName = 'attendance-contacts-grid' %}
     {% set gridData = dataGrid.renderGrid(gridName, {attendees: contact_attendees}, { cssClass: 'inner-grid' }) %}
     {% set dataBlocks = dataBlocks|merge([{
-    'title' : 'Attendance',
+    'title' : 'Attendance Details',
     'subblocks':
     [
     {
@@ -115,11 +126,6 @@
     }
     ]
     }]) %}
-
-    {#
-
-
-    #}
 
     {% set additionalData = [] %}
     {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
