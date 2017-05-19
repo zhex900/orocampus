@@ -22,21 +22,22 @@ class ContextSearchHandler extends BaseSearchHandler
      */
     protected function getSearchAliases()
     {
-        file_put_contents('/tmp/calendar.log', 'context search handler');
-
         $class               = $this->entityClassNameHelper->resolveEntityClass($this->class, true);
         $aliases             = [];
         $targetEntityClasses = array_keys($this->activityManager->getActivityTargets($class));
+
+        $userClass = 'Oro\Bundle\UserBundle\Entity\User';
+        $contactClass = 'Oro\Bundle\ContactBundle\Entity\Contact';
+
+        if ($class == 'Oro\Bundle\CalendarBundle\Entity\CalendarEvent'){
+            $targetEntityClasses = array_diff( $targetEntityClasses, [$userClass,$contactClass] );
+        }
 
         foreach ($targetEntityClasses as $targetEntityClass) {
             $alias = $this->indexer->getEntityAlias($targetEntityClass);
             if (null !== $alias) {
                 $aliases[] = $alias;
             }
-        }
-
-        if ($class == 'Oro\Bundle\CalendarBundle\Entity\CalendarEvent') {
-            $aliases = preg_grep("/^oro_sales_lead/", $aliases);
         }
 
             /** dispatch oro_activity.search_aliases event */
