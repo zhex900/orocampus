@@ -126,7 +126,7 @@
     }
     ]
     }]) %}
-
+{#
     {% set additionalData = [] %}
     {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
         {% set additionalData = additionalData|merge([form_row(child)]) %}
@@ -141,7 +141,7 @@
         }]
         }] ) %}
     {% endif %}
-
+#}
     {% set data = {
     'formErrors': form_errors(form)? form_errors(form) : null,
     'dataBlocks': dataBlocks
