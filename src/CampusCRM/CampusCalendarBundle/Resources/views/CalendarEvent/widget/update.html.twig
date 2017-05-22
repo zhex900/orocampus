@@ -1,12 +1,12 @@
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 
-   {% set contact_attendees = [] %}
-    {% for attendee in entity.childAttendees %}
-        {% if attendee.contact is not null %}
-            {% set contact_attendees = contact_attendees|merge({ (loop.index0):attendee.contact.id}) %}
-        {% endif %}
-    {% endfor %}
+{% set contact_attendees = [] %}
+{% for attendee in entity.childAttendees %}
+    {% if attendee.contact is not null %}
+        {% set contact_attendees = contact_attendees|merge({ (loop.index0):attendee.contact.id}) %}
+    {% endif %}
+{% endfor %}
 
 <div class="widget-content">
     {% if saved is defined and saved %}
@@ -37,12 +37,11 @@
                 nativeMode: isMobileVersion()
             }
         } %}
-
         <div class="form-container">
             <form id="{{ form.vars.id }}" name="{{ form.vars.name }}" action="{{ formAction }}" method="post">
 
                 {% set hidden = '' %}
-                {% if attendance_selection is defined and attendance_selection %}
+                {% if attendance_button is defined and attendance_button %}
                     {% set gridName = 'attendance-contacts-grid' %}
                     {{ form_row(form.appendContacts, {'id': 'appendContacts'}) }}
                     {{ form_row(form.removeContacts, {'id': 'removeContacts'}) }}
@@ -51,6 +50,7 @@
                 {% endif %}
 
                 <fieldset class="form form-horizontal" {{ hidden }}>
+                    {{ 'dddddd' }}
                     {% set rightColumn %}
                         <div {{ UI.renderPageComponentAttributes(calendarEventDateRange) }}>
                             {{ form_row(form.start) }}
@@ -63,9 +63,9 @@
                     {% endset %}
 
                     {% set leftColumn %}
-                        {{ form_row(form.oro_eventname)  }}
                         {{ form_row(form.title) }}
-                        {#{{ form_row(form.description) }} #}
+                        {{ form_row(form.oro_eventname)  }}
+                        {{ form_row(form.description) }}
                         {{ form_row(form.backgroundColor) }}
                         {% if form.calendarUid is defined %}
                             {{ form_row(form.calendarUid) }}
@@ -76,7 +76,7 @@
                         {% else %}
                             {% do form.reminders.setRendered %}
                         {% endif %}
-
+                        {{ form_rest(form) }}
                     {% endset %}
 
                     <div class="span6">
