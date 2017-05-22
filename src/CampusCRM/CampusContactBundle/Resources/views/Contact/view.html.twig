@@ -1,5 +1,6 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as macros %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 
 {% set fullname = entity|oro_format_name|default('oro.entity.item'|trans({'%id%': entity.id})) %}
 {% oro_title_set({params : {"%contact.name%": fullname} }) %}
@@ -66,6 +67,21 @@
             ]
         }
     ] %}
+
+    {% set gridName = 'campus_contact-contact-event-summary-grid' %}
+    {% set dataBlocks = dataBlocks|merge([{
+    'title' : 'Attended Event Summary',
+    'subblocks':
+    [
+    {
+    'title' : null,
+    'useSpan': false,
+    'data' : [
+        dataGrid.renderGrid(gridName, {contactId: entity.id}, { cssClass: 'inner-grid' })
+    ]
+    }
+    ]
+    }]) %}
 
     {% set id = 'contactView' %}
     {% set data = {'dataBlocks': dataBlocks} %}
