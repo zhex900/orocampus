@@ -50,7 +50,7 @@
                 {% endif %}
 
                 <fieldset class="form form-horizontal" {{ hidden }}>
-                    {{ 'dddddd' }}
+
                     {% set rightColumn %}
                         <div {{ UI.renderPageComponentAttributes(calendarEventDateRange) }}>
                             {{ form_row(form.start) }}
@@ -65,7 +65,7 @@
                     {% set leftColumn %}
                         {{ form_row(form.title) }}
                         {{ form_row(form.oro_eventname)  }}
-                        {{ form_row(form.description) }}
+                       {# {{ form_row(form.description) }}#}
                         {{ form_row(form.backgroundColor) }}
                         {% if form.calendarUid is defined %}
                             {{ form_row(form.calendarUid) }}
@@ -76,8 +76,12 @@
                         {% else %}
                             {% do form.reminders.setRendered %}
                         {% endif %}
-                        {{ form_rest(form) }}
+
                     {% endset %}
+
+                    <fieldset class="form form-horizontal" hidden >
+                        {{ form_rest(form) }}
+                    </fieldset>
 
                     <div class="span6">
                         {{ leftColumn }}
