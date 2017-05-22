@@ -25,10 +25,7 @@
         'params': {'id': '$id'}
         }) %}
     {% endif %}
-    {# edit the button only when update. Create Calendar Event will produce an error because the calendar event entity is not created yet.#}
-    {% if entity.title != null %}
-        {{ Calendar.editAttendanceButton(entity) }}
-    {% endif %}
+
     {{ UI.dropdownSaveButton({'html': html}) }}
     {{ UI.cancelButton(path('oro_calendar_event_index')) }}
 {% endblock %}
