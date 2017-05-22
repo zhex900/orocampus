@@ -2,6 +2,7 @@
 
 namespace CampusCRM\CampusCalendarBundle\Form\Extension;
 
+use Oro\Bundle\CalendarBundle\Entity\Calendar;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -92,7 +93,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
 
                 $calendar_event->setTitle($calendar_event->getOroEventname());
 
-                if ($calendar_event->getSystemCalendar() == null ){
+                if ($calendar_event->getCalendar() instanceof Calendar ){
                     $sem = $this
                         ->container
                         ->get('academic_calendar')
