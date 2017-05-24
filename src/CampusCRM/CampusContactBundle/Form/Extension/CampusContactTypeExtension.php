@@ -36,6 +36,9 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     {
         $this->em = $em;
         $this->container = $container;
+        $this->current_semester = $this->container
+            ->get('academic_calendar')
+            ->getCurrentSemester();
     }
 
     /**
@@ -96,7 +99,6 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     {
         $assigned_user = $this->findAssignedUser($contact->getGender());
         $owner_user = $this->findOwnerUser($contact->getGender());
-
         $owner_id = $owner = $assigned = null;
 
         if (!empty($owner_user)) {
@@ -157,8 +159,8 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                     ) AS c ON u.id=c.assigned_to_user_id 
                 WHERE ( a_g.name= :FT  OR a_g.name = :None_FT ) 
                 AND u.enabled = 1 AND u.username != :admin AND u.gender_id = :gender
-                GROUP BY u.id 
-                ORDER BY num_contact, group_name DESC 
+                GROUP BY u.id, group_name
+                ORDER BY num_contact ASC 
                 LIMIT 1
                 ';
 
@@ -169,6 +171,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
             'None_FT'=>self::NONE_FT,
             'admin'=>self::ADMIN,
             'gender'=>$gender));
+
         return $stmt->fetch();
     }
 
@@ -184,7 +187,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
          * This raw SQL query returns a list of users with the number of NEW ONE contacts
          */
         $owner_sql = '
-                SELECT u.id, a_g.name as group_name, u.username, u.first_name, count(c.user_owner_id) as num_contact
+                SELECT count(c.user_owner_id) as num_contact, u.id, a_g.name as group_name, u.username, u.first_name
                 FROM `oro_user` as u 
                 INNER JOIN `oro_user_access_group` as u_g on u.id=u_g.user_id 
                 INNER join `oro_access_group` as a_g on u_g.group_id=a_g.id 
@@ -196,8 +199,8 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                       WHERE  c_g.label= :contact_group AND cc.semester_contacted= :contact_sem
                     ) AS c ON u.id=c.user_owner_id
                 WHERE a_g.name= :FT AND u.enabled = 1 AND u.username != :admin AND u.gender_id = :gender
-                GROUP BY u.id 
-                ORDER BY num_contact, group_name DESC 
+                GROUP BY u.id, group_name 
+                ORDER BY num_contact ASC 
                 LIMIT 1
                 ';
 
