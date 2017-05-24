@@ -35,7 +35,16 @@
     <div class="row-fluid form-horizontal">
         <div class="responsive-block">
             {{ ui.renderProperty('oro.user.username.label'|trans, entity.username) }}
-            {{ ui.renderProperty('oro.user.linked.contact.label'|trans, entity.contact ) }}
+
+            {%- set linkedContact -%}
+                {%- if entity.contact -%}
+                    <a href="{{ path('oro_contact_view', {'id': entity.contact.id}) }}">
+                        {{ entity.contact }}
+                    </a>
+                {%- endif -%}
+            {%- endset -%}
+            {{ ui.renderHtmlProperty('oro.user.linked.contact.label'|trans, linkedContact) }}
+
             {% set birthday_string %}
                 {{ entity.birthday is empty ? 'N/A'|trans : entity.birthday|oro_format_date }}
                 {% if entity.birthday is not empty %}
