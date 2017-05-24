@@ -16,7 +16,8 @@ class CampusContactTypeExtension extends AbstractTypeExtension
 {
     const FT = 'Full-timer';
     const NONE_FT = 'None Full-timer';
-    const NEW_ONE = 'New One';
+    const NEW_ONE = 'New one';
+    const CHURCH_KID = 'Church kid';
     const ADMIN = 'admin';
 
     /** @var String */
@@ -53,7 +54,11 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                 $contact = $event->getData();
                 $this->defaultFirstContactDate($contact);
                 $this->defaultSemContacted($contact);
-                if ( $contact->getOwner()->getUsername() == self::ADMIN )
+
+                if ( $contact->getOwner()->getUsername() == self::ADMIN &&
+                    (in_array(self::NEW_ONE, $contact->getGroupLabels()) ||
+                        in_array(self::CHURCH_KID, $contact->getGroupLabels()))
+                )
                 {
                     $this->allocateUser($contact);
                 }
