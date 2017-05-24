@@ -131,6 +131,14 @@
                 {%- endif -%}
             {%- endset -%}
 
+            {%- set linkedUser -%}
+                {%- if entity.user -%}
+                    <a href="{{ path('oro_contact_view', {'id': entity.user.id}) }}">
+                        {{ entity.user }}
+                    </a>
+                {%- endif -%}
+            {%- endset -%}
+
             {{ ui.renderProperty('oro.contact.job_title.label'|trans, entity.jobTitle) }}
             {{ ui.renderHtmlProperty('oro.contact.accounts.label'|trans, accountsData) }}
             {{ ui.renderProperty('oro.contact.birthday.label'|trans, entity.birthday ? birthdayData : null) }}
@@ -138,6 +146,7 @@
             {{ ui.renderProperty('oro.contact.source.label'|trans, entity.source) }}
             {{ ui.renderHtmlProperty('oro.contact.assigned_to.label'|trans, assignedToData) }}
             {{ ui.renderHtmlProperty('oro.contact.reports_to.label'|trans, reportsToData) }}
+            {{ ui.renderHtmlProperty('oro.contact.linked_user.label'|trans, linkedUser) }}
             {{ ui.renderProperty('oro.contact.groups.label'|trans, entity.groups.count ? entity.groupLabels|join(', ') : null) }}
         </div>
     </div>
