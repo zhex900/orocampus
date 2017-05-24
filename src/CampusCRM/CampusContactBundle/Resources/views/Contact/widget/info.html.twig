@@ -133,7 +133,7 @@
 
             {%- set linkedUser -%}
                 {%- if entity.user -%}
-                    <a href="{{ path('oro_contact_view', {'id': entity.user.id}) }}">
+                    <a href="{{ path('oro_user_view', {'id': entity.user.id}) }}">
                         {{ entity.user }}
                     </a>
                 {%- endif -%}
