@@ -54,28 +54,31 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
                 ]
             ]
         );
+
         $this->extendExtension->addManyToOneRelation(
             $schema,
             'oro_user', // owning side table
             'contact', // owning side field name
             'orocrm_contact', // inverse side table
-            'user', // column name is used to show related entity
+            'id', // column name is used to show related entity
             [
                 'entity' => ['label' => 'oro.contact.user.label'],
                 'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
             ]
         );
 
-        $this->extendExtension->addManyToOneInverseRelation(
+        $this->extendExtension->addManyToOneRelation(
             $schema,
-            'oro_user', // owning side table
-            'contact', // owning side field name
-            'orocrm_contact', // inverse side table
-            'user', // inverse side field name
-            ['first_name'], // column names are used to show a title of owning side entity
-            ['first_name'], // column names are used to show detailed info about owning side entity
-            ['first_name'], // Column names are used to show owning side entity in a grid
-            ['extend' => ['owner' => ExtendScope::OWNER_CUSTOM]]
+            'orocrm_contact', // owning side table
+            'user', // owning side field name
+            'oro_user', // inverse side table
+            'id', // column name is used to show related entity
+            [
+                'entity' => ['label' => 'oro.contact.user.label'],
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
+            ]
         );
+
+
     }
 }
