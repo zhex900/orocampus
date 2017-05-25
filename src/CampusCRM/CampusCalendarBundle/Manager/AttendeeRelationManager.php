@@ -36,7 +36,6 @@ class AttendeeRelationManager extends BaseManager
                 ->setDisplayName($this->nameFormatter->format($relatedEntity))
                 ->setEmail($relatedEntity->getEmail());
             //$event->addActivityTarget($relatedEntity);
-
         } else {
             // Only User is supported as related entity of attendee.
             throw new \InvalidArgumentException(
