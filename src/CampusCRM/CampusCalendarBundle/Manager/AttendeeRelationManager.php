@@ -21,9 +21,6 @@ class AttendeeRelationManager extends BaseManager
      */
     public function setRelatedEntity(Attendee $attendee, $relatedEntity = null)
     {
-        /* @var CalendarEvent event */
-        $event = $attendee->getCalendarEvent();
-
         if ($relatedEntity instanceof User) {
             $attendee
                 ->setUser($relatedEntity)
@@ -35,6 +32,11 @@ class AttendeeRelationManager extends BaseManager
                 ->setContact($relatedEntity)
                 ->setDisplayName($this->nameFormatter->format($relatedEntity))
                 ->setEmail($relatedEntity->getEmail());
+
+            // check if the contact have a linked user
+            if( $relatedEntity->getUser() !== null ){
+                $this->setRelatedEntity($attendee,$relatedEntity->getUser());
+            }
             //$event->addActivityTarget($relatedEntity);
         } else {
             // Only User is supported as related entity of attendee.
