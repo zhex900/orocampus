@@ -79,7 +79,7 @@ class CalendarEventHandler extends BaseHandler
      *
      * @return array $contexts
      */
-    private function syncActivityandContext($contexts,$attendees){
+    protected function syncActivityandContext($contexts,$attendees){
 
         // remove all user and contacts from contexts.
         $contexts = $this->clearContextUserContact($contexts);
@@ -90,12 +90,16 @@ class CalendarEventHandler extends BaseHandler
                 $contexts = array_merge([$attendee->getUser()],$contexts);
             }elseif($attendee->getContact()!==null){
                 $contexts = array_merge([$attendee->getContact()],$contexts);
+                // add user that is linked with a contact
+                if( $attendee->getContact()->getUser() !==  null ){
+                    $contexts = array_merge([$attendee->getContact()->getUser()],$contexts);
+                }
             }
         }
         return $contexts;
     }
 
-    private function clearContextUserContact($contexts)
+    protected function clearContextUserContact($contexts)
     {
 
         $new_contexts = [];
