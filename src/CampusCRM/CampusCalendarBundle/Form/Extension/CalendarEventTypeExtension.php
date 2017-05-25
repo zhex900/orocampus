@@ -139,12 +139,14 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 }
 
                 // Add calendar owner as attendee
+
                 /** @var Attendee $attendee */
                 $attendee = $this->container
                     ->get('campus_calendar.attendee_manager')
                     ->createAttendee($calendar_event->getCalendar()->getOwner());
-                $calendar_event->addAttendee($attendee);
-
+                if( $calendar_event->getEqualAttendee($attendee) == null ) {
+                    $calendar_event->addAttendee($attendee);
+                }
             }
         );
 
