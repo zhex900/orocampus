@@ -79,9 +79,9 @@
                 {% if entity.recurringEvent %}
                     {{ UI.renderProperty('oro.calendar.calendarevent.recurrence.exception.label'|trans, get_recurrence_text_value(entity.recurringEvent.recurrence ? : entity.parent.recurringEvent.recurrence)) }}
                 {% endif %}
-                {% if canChangeInvitationStatus is defined and canChangeInvitationStatus %}
+                {#{% if canChangeInvitationStatus is defined and canChangeInvitationStatus %}
                     {% include 'OroCalendarBundle:CalendarEvent:invitationControl.html.twig' with {'entity': entity, 'triggerEventName': ''} %}
-                {% endif %}
+                {% endif %}#}
             </div>
             <div class="responsive-block">
                 {{ entityConfig.renderDynamicFields(entity) }}
