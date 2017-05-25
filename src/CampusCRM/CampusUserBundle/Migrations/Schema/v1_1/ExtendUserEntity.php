@@ -27,34 +27,6 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
 
     public function up(Schema $schema, QueryBag $queries)
     {
-        $contact_table = $schema->getTable('orocrm_contact');
-        $contact_table->addColumn(
-            'user',
-            'integer',
-            [
-                'oro_options' => [
-                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
-                    'merge' => ['display' => true],
-                    'dataaudit' => ['auditable' => true]
-                ]
-            ]
-        );
-
-        $user_table = $schema->getTable('oro_user');
-        $user_table->addColumn(
-            'contact',
-            'integer',
-            [
-                'oro_options' => [
-                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
-                    'merge' => ['display' => true],
-                    'dataaudit' => ['auditable' => true]
-                ]
-            ]
-        );
-
         $this->extendExtension->addManyToOneRelation(
             $schema,
             'oro_user', // owning side table
