@@ -88,80 +88,80 @@ datagrids:
                     data_name: event.title
 
     campuscalendar-event-attendance-grid:
-        acl_resource: oro_calendar_event_view
+       # extended_entity_name: %oro_contact.entity.class%
+        acl_resource: oro_contact_view
         source:
             type: orm
             query:
                 select:
-                      - a.id as id
-                      - a.displayName as Name
-                      - a.email
+                      - c.id
+                      - c.firstName
+                      - c.lastName
+                      - c.gender
+                      - c.semester_contacted
+                      - phone.phone
                 from:
-                      - { table: %oro_calendar.calendar_event.entity.class%, alias: event }
+                      - { table: %oro_calendar.calendar_event_attendee.entity.class%, alias: a }
                 where:
                     and:
                       - event.id = :eventId
+                      #attendees. contact = contact id
                 join:
                     inner:
-                      - { join: event.attendees, alias: a }
+                      - { join: a.calendarEvent, alias: event }
+                      - { join: a.contact, alias: c }
+                    left:
+                      - { join: c.phones, alias: phone, conditionType: WITH, condition: 'phone.primary = true' }
             bind_parameters:
                 eventId: viewEventId
         columns:
-            id:
-                label: 'id'
-            Name:
-                label: 'Name'
-            Email:
-                lable: 'Email'
-        sorters:
-            columns:
-                Name:
-                    data_name: Name
-
-    campuscalendar-event-grid:
-        acl_resource: oro_calendar_event_view
-        source:
-            type: orm
-            query:
-                select:
-                      - lead.id
-                      - CONCAT(lead.firstName, ' ', lead.lastName) as Name
-                from:
-                      - { table: %oro_calendar.calendar_event.entity.class%, alias: event }
-                where:
-                    and:
-                      - event.id = :eventId
-                join:
-                    inner:
-                      - { join: event.lead_23c40e3e, alias: lead }
-            bind_parameters:
-                eventId: viewEventId
-        columns:
-            Name:
-                label: 'Name'
+            firstName:
+                label: oro.contact.first_name.label
+            lastName:
+                lable: oro.contact.last_name.label
+            gender:
+                label: oro.contact.gender.label
+            phone:
+                label: oro.contact.phones.label
+            semester_contacted:
+                label: 'Semester Contacted'
         properties:
             id: ~
             view_link:
                 type:       url
-                route:      oro_sales_lead_view
+                route:      oro_contact_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      oro_contact_update
                 params:     [ id ]
         sorters:
             columns:
-                Name:
-                    data_name: Name
+                gender:
+                    data_name: c.gender
+                firstName:
+                    data_name: c.firstName
+                lastName:
+                    data_name: c.lastName
         actions:
             view:
-                type:          navigate
-                acl_resource:  oro_sales_lead_view
-                label:         oro.grid.action.view
-                icon:          eye
-                link:          view_link
-                rowAction:     true
-        filters:
-            columns:
-                name:
-                    type: string
-                    data_name: Name
+                type: navigate
+                acl_resource: oro_contact_view
+                label: oro.grid.action.view
+                icon: eye
+                link: view_link
+                rowAction: true
+            update:
+                type: navigate
+                acl_resource: oro_contact_update
+                label: oro.grid.action.update
+                icon: edit
+                link: update_link
+        options:
+            entityHint: contacts
+            export: true
+            entity_pagination: true
+        views_list: '@oro_contact.contacts_view_list'
 
     campus_calendar-event-grid:
         acl_resource: oro_calendar_event_view
