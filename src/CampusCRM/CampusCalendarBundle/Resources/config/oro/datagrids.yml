@@ -100,6 +100,7 @@ datagrids:
                       - c.gender
                       - c.semester_contacted
                       - phone.phone
+                      - a.frequency
                 from:
                       - { table: %oro_calendar.calendar_event_attendee.entity.class%, alias: a }
                 where:
@@ -125,6 +126,8 @@ datagrids:
                 label: oro.contact.phones.label
             semester_contacted:
                 label: 'Semester Contacted'
+            frequency:
+                labe: 'Frequency'
         properties:
             id: ~
             view_link:
@@ -161,6 +164,8 @@ datagrids:
             entityHint: contacts
             export: true
             entity_pagination: true
+            #requireJSModules:
+           #     - orodatagrid/js/datagrid/jake-grid-builderss
         views_list: '@oro_contact.contacts_view_list'
 
     campus_calendar-event-grid:
@@ -429,6 +434,8 @@ datagrids:
                     data_name: c.lastName
             default: { Attendance: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC }
         options:
+           # requireJSModules:
+              #  - campuscrmcampuscalendar/js/grid-builder
             entityHint: contacts
             rowSelection:
                 dataField: id

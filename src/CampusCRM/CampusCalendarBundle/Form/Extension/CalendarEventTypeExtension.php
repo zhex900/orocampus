@@ -122,6 +122,14 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                         $attendee = $this->container
                             ->get('campus_calendar.attendee_manager')
                             ->createAttendee($appendContact);
+
+                        $freq = $this
+                            ->container
+                            ->get('academic_calendar')->findAttendanceFrequency($appendContact,$calendar_event);
+
+                        file_put_contents('/tmp/freq.log', 'Result: ' . $freq . PHP_EOL, FILE_APPEND);
+
+                        $attendee->setFrequency($freq);
                         $calendar_event->addAttendee($attendee);
                     }
                 }
@@ -135,17 +143,9 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                             $calendar_event->getAttendees()
                         );
                         $calendar_event->removeAttendee($attendee);
+                        // recalculate attendance frequency all for later events
+
                     }
-                }
-
-                // Add calendar owner as attendee
-
-                /** @var Attendee $attendee */
-                $attendee = $this->container
-                    ->get('campus_calendar.attendee_manager')
-                    ->createAttendee($calendar_event->getCalendar()->getOwner()->getContact());
-                if( $calendar_event->getEqualAttendee($attendee) == null ) {
-                    $calendar_event->addAttendee($attendee);
                 }
             }
         );
@@ -156,6 +156,8 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 $form = $event->getForm();
                 $form->remove('teaching_week');
                 $form->remove('semester');
+
+
             }
         );
     }
