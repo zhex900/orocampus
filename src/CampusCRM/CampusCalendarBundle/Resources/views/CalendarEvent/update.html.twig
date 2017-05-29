@@ -99,12 +99,7 @@
     ]
     }]) %}
 
-    {% set contact_attendees = [] %}
-    {% for attendee in entity.childAttendees %}
-        {% if attendee.contact is not null  %}
-            {% set contact_attendees = contact_attendees|merge({ (loop.index0):attendee.contact.id}) %}
-        {% endif %}
-    {% endfor %}
+    {% set contact_attendees = get_attendance(entity.id)   %}
 
     {% set gridName = 'attendance-contacts-grid' %}
     {% set gridData = dataGrid.renderGrid(gridName, {attendees: contact_attendees}, { cssClass: 'inner-grid' }) %}
