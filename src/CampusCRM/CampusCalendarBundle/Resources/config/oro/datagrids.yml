@@ -101,6 +101,7 @@ datagrids:
                       - c.semester_contacted
                       - phone.phone
                       - a.frequency
+                      - a.attendance_count
                 from:
                       - { table: %oro_calendar.calendar_event_attendee.entity.class%, alias: a }
                 where:
@@ -128,6 +129,8 @@ datagrids:
                 label: 'Semester Contacted'
             frequency:
                 labe: 'Frequency'
+            attendance_count:
+                label: 'Count'
         properties:
             id: ~
             view_link:

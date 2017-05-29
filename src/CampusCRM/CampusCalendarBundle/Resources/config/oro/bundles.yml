@@ -1,2 +1,2 @@
 bundles:
-  - {name: CampusCRM\CampusCalendarBundle\CampusCalendarBundle, priority: 2}
+  - {name: CampusCRM\CampusCalendarBundle\CampusCalendarBundle, priority: 1}
