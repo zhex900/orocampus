@@ -1,4 +1,11 @@
 services:
+      campus_calendar.listener.calendar_event_attendees:
+        class: CampusCRM\CampusCalendarBundle\EventListener\CalendarEventAttendeesListener
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }
+
       attendance.twig_extension:
         class: CampusCRM\CampusCalendarBundle\Twig\AttendanceExtension
         public: true

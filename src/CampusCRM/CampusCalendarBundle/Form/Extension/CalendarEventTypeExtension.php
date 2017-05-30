@@ -123,14 +123,6 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                             ->get('campus_calendar.attendee_manager')
                             ->createAttendee($appendContact);
 
-                        $freq = $this
-                            ->container
-                            ->get('frequency_manager')->resetAttendanceFrequency($appendContact,$calendar_event);
-
-                        file_put_contents('/tmp/freq.log', 'Result: freq: ' . $freq['frequency'] . ' count:' . $freq['attendance_count'].  PHP_EOL, FILE_APPEND);
-
-                        $attendee->setFrequency($freq['frequency']);
-                        $attendee->setAttendanceCount($freq['attendance_count']);
                         $calendar_event->addAttendee($attendee);
                     }
                 }
@@ -143,15 +135,8 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                             $removeContact,
                             $calendar_event->getAttendees()
                         );
-                        file_put_contents('/tmp/freq.log', 'contact ' . $removeContact->getId().' '.$calendar_event->getTitle(). ' '. $calendar_event->getSemester() .PHP_EOL, FILE_APPEND);
-
-                        $this
-                            ->container
-                            ->get('frequency_manager')->resetAttendanceFrequency($removeContact,$calendar_event,0);
 
                         $calendar_event->removeAttendee($attendee);
-                        // recalculate attendance frequency all for later events
-
                     }
                 }
             }

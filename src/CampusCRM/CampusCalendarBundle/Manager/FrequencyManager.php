@@ -30,34 +30,18 @@ class FrequencyManager
         $this->em = $em;
     }
 
-
     /**
-     * @param Contact $contact
-     * @param CalendarEvent $calendar_event
+     * @param Attendee $attendee
      * @param Boolean $add
-     * @return array
      */
-    public function resetAttendanceFrequency( $contact, $calendar_event, $add=true)
+    public function updateAttendanceFrequency( $attendee, $add=true)
     {
-        file_put_contents('/tmp/freq.log', 'start ' . $add.PHP_EOL, FILE_APPEND);
-        file_put_contents('/tmp/freq.log', 'start ' . $contact->getId().' '.$calendar_event->getTitle(). ' '. $calendar_event->getSemester() .PHP_EOL, FILE_APPEND);
-
+        /** @var Contact $contact */
+        $contact = $attendee->getContact();
+        /** @var CalendarEvent $calendar_event */
+        $calendar_event = $attendee->getCalendarEvent();
+        // Get all the same events that the contact have attended this semester
         $events = $this->getAttendedEvents($contact, $calendar_event);
-
-        $i = 0;
-        $size = count($events);
-        file_put_contents('/tmp/freq.log', 'start ' . $size .PHP_EOL, FILE_APPEND);
-
-        foreach ($events as $item) {
-            file_put_contents('/tmp/freq.log', $i . ' of ' . $size . ' ' .
-                $item['title'] . ' ' .
-                $item['date'] . ' ' .
-                $item['teaching_week'] . ' ' .
-                $item['display_name'] . ' ' .
-                $item['user_id'] . ' ' .
-                $item['contact_id'] . PHP_EOL, FILE_APPEND);
-            ++$i;
-        }
 
         // Get all events that after the current event date.
         // Add the current event to the head of the array.
@@ -73,25 +57,15 @@ class FrequencyManager
             return ($date) <= \DateTime::createFromFormat(self::DATE_FORMAT, $val['date']);
         });
 
-
         // Find the event before the current event date.
         $before_events = array_filter($events, function ($val) use ($date) {
             return ($date) > \DateTime::createFromFormat(self::DATE_FORMAT, $val['date']);
         });
-        file_put_contents('/tmp/freq.log', 'hi 2' .PHP_EOL, FILE_APPEND);
 
         $attendance_count =1;
 
         if ( !empty($before_events)){
             $before_event = end($before_events);
-            file_put_contents('/tmp/freq.log', 'Before the current event: ' .
-                $before_event['title'] . ' ' .
-                $before_event['date'] . ' count(' .
-                $before_event['attendance_count']. ') ' .
-                $before_event['teaching_week'] . ' ' .
-                $before_event['display_name'] . ' ' .
-                $before_event['user_id'] . ' ' .
-                $before_event['contact_id'] . PHP_EOL, FILE_APPEND);
             if ($before_event['attendance_count'] != null) {
                 $attendance_count += (int)$before_event['attendance_count'];
             }
@@ -107,74 +81,48 @@ class FrequencyManager
 
         $events = array_merge($before_events,$reset_events);
 
-        $i = 0;
-        $size = count($reset_events);
-        foreach ($reset_events as $item) {
-            file_put_contents('/tmp/freq.log', 'reset ' . $i . ' of ' . $size . ' ' .
-                $item['date'] . ' ' .
-                $item['attendee_id'] . ' ' .
-                PHP_EOL, FILE_APPEND);
-            ++$i;
-        }
-        $return_freq = '';
-
         // what if it is the same event?
         if ($add) {
             $count = $attendance_count;
         }else{
             $count = $attendance_count-1;
         }
+
         foreach ($reset_events as $reset_event) {
-            file_put_contents('/tmp/freq.log', 'LOOP '.
-                $reset_event['date'] . ' (' .
-                $reset_event['attendee_id'] . ') ' .
-                $reset_event['teaching_week'].
-                PHP_EOL, FILE_APPEND);
+
             $d= \DateTime::createFromFormat(self::DATE_FORMAT, $reset_event['date']);
 
-            file_put_contents('/tmp/freq.log', 'D: '.
-                $d->format(self::DATE_FORMAT).
-                PHP_EOL, FILE_APPEND);
-
             // find the frequency for this event.
-            $freq = $this->findAttendanceFrequency($d
-                ,
-                $reset_event['teaching_week'],
-                $events);
+            $freq = $this->findAttendanceFrequency($d , $reset_event['teaching_week'], $events);
 
             if ($reset_event['attendee_id'] != null) {
                 // find the event attendee entity
-                /** @var Attendee $attendee */
-                $attendee = $this
-                    ->em
+                /** @var Attendee $rest_attendee */
+                $rest_attendee = $this->em
                     ->getRepository('OroCalendarBundle:Attendee')
                     ->find($reset_event['attendee_id']);
 
                     ++$count;
-                file_put_contents('/tmp/freq.log', 'RESET ' .
-                    $reset_event['date'] . ' ' .
-                    $reset_event['attendee_id'] . ' ' .
-                    'freq: ' . $freq. ' count: ' . $count.
-                    PHP_EOL, FILE_APPEND);
-                // reset attendee frequency
 
-                $attendee->setFrequency($freq);
-                $attendee->setAttendanceCount($count);
-                $this->em->flush($attendee);
+                $this->commitChange($rest_attendee, $freq, $count);
             } else {
                 // the current event have attendee_id as null
-                $return_freq = $freq;
+                $this->commitChange($attendee,$freq,$attendance_count);
             }
-            file_put_contents('/tmp/freq.log', 'FREQ: '.
-                $freq.
-                PHP_EOL, FILE_APPEND);
         }
-        return array (
-                'frequency'=>$return_freq,
-                'attendance_count'=>$attendance_count
-        );
     }
 
+    private function commitChange(Attendee $attendee, $freq, $count){
+
+        $attendee->setFrequency($freq);
+        $attendee->setAttendanceCount($count);
+
+        $unitOfWork = $this->em->getUnitOfWork();
+        $unitOfWork->recomputeSingleEntityChangeSet(
+            $this->em->getClassMetadata(Attendee::class),
+            $attendee
+        );
+    }
 
     /*
      * Returns an array of events that a contact have attended.
@@ -232,7 +180,6 @@ class FrequencyManager
         // find the date that is 5 weeks ago.
         $begin = clone $event_date;
         $begin->sub(new \DateInterval('P5W'));
-
 
         // get the dates only
         $events = array_column($events,'date');
