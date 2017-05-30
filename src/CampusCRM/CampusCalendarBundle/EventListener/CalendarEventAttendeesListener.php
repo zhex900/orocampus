@@ -5,7 +5,9 @@ namespace CampusCRM\CampusCalendarBundle\EventListener;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
+use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\CalendarBundle\EventListener\CalendarEventAttendeesListener as BaseListener;
+use Oro\Bundle\LocaleBundle\Model\Calendar;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CalendarEventAttendeesListener extends BaseListener
@@ -81,7 +83,19 @@ class CalendarEventAttendeesListener extends BaseListener
         }
     }
 
+    /**
+     * @param Attendee $attendee
+     * @return bool
+     */
     private function attendeeExist(Attendee $attendee){
-        return !is_null($attendee->getCalendarEvent()->getEqualAttendee($attendee));
+
+        $attendees = $attendee->getCalendarEvent()->getAttendees();
+        $i=0;
+        foreach ($attendees as $actualAttendee) {
+            if ($attendee->getContact()->getId() == $actualAttendee->getContact()->getId()) {
+                ++$i;
+            }
+        }
+       return $i>1;
     }
 }
