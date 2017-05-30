@@ -38,10 +38,14 @@ class CalendarEventAttendeesListener extends BaseListener
         $deletedEntities = $unitOfWork->getScheduledEntityDeletions();
 
         foreach ($newEntities as $entity) {
-            file_put_contents('/tmp/freq.log', '1 add attendee ' . PHP_EOL, FILE_APPEND);
 
             if ($entity instanceof Attendee) {
-                file_put_contents('/tmp/freq.log', 'ADD: ' . $entity->getDisplayName() . PHP_EOL, FILE_APPEND);
+                // remove duplicate inserts of attendee
+                if( $this->attendeeExist($entity) ){
+                    $unitOfWork->remove($entity);
+                    continue;
+                }
+
                 $this
                     ->container
                     ->get('frequency_manager')
@@ -61,11 +65,8 @@ class CalendarEventAttendeesListener extends BaseListener
         }
 
         foreach ($deletedEntities as $entity) {
-            file_put_contents('/tmp/freq.log', '3 del attendee ' . PHP_EOL, FILE_APPEND);
 
             if ($entity instanceof Attendee) {
-                file_put_contents('/tmp/freq.log', 'DEL: ' . $entity->getDisplayName() . PHP_EOL, FILE_APPEND);
-
                 $this
                     ->container
                     ->get('frequency_manager')
@@ -78,5 +79,9 @@ class CalendarEventAttendeesListener extends BaseListener
                 $this->updateCalendarEventUpdatedAt($entity->getCalendarEvent(), $unitOfWork);
             }
         }
+    }
+
+    private function attendeeExist(Attendee $attendee){
+        return !is_null($attendee->getCalendarEvent()->getEqualAttendee($attendee));
     }
 }
