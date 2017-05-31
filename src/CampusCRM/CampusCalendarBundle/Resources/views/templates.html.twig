@@ -155,7 +155,9 @@
     {% endset %}
 
     {% set leftColumn %}
+        {{ form_row(form.oro_eventname) }}
         {{ form_row(form.title) }}
+        {{ form_row(form.description) }}
         {{ form_row(form.backgroundColor) }}
 
         {% if form.calendarUid is defined %}
@@ -165,11 +167,13 @@
         <% if (!recurrence) { %>
             {{ form_row(form.reminders) }}
         <% } %>
-        {{ form_row(form.notifyAttendees) }}
+
+       {# {{ form_row(form.notifyAttendees) }}
         {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
             {{ form_row(child) }}
         {% endfor %}
         {{ invitations.notify_attendees_component() }}
+        #}
     {% endset %}
 
     <div class="widget-content">
