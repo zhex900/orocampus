@@ -2,12 +2,13 @@
 
 namespace CampusCRM\CampusCalendarBundle\Form\Extension;
 
-use CampusCRM\CampusCalendarBundle\Form\EventListener\CalendarEventTypeSubscriber;
+use CampusCRM\CampusCalendarBundle\Form\EventListener\CalendarEventApiTypeSubscriber;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class CalendarEventTypeExtension extends AbstractTypeExtension
+class CalendarEventApiTypeExtension extends AbstractTypeExtension
 {
     /** @var  ContainerInterface */
     private $container;
@@ -17,7 +18,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
+       $this->container = $container;
     }
 
     /**
@@ -27,7 +28,23 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
      */
     public function getExtendedType()
     {
-        return 'oro_calendar_event';
+        return 'oro_calendar_event_api';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(
+            [
+                'allow_change_calendar' => false,
+                'layout_template'       => false,
+                'data_class'            => 'Oro\Bundle\CalendarBundle\Entity\CalendarEvent',
+                'intention'             => 'calendar_event',
+                'csrf_protection'       => false,
+            ]
+        );
     }
 
     /**
@@ -55,27 +72,8 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                     'label' => 'oro.calendar.calendarevent.attendees.label',
                     'layout_template' => $options['layout_template'],
                 ]
-            )
-            ->add(
-                'appendContacts',
-                'oro_entity_identifier',
-                array(
-                    'class' => 'OroContactBundle:Contact',
-                    'required' => false,
-                    'mapped' => false,
-                    'multiple' => true,
-                )
-            )
-            ->add(
-                'removeContacts',
-                'oro_entity_identifier',
-                array(
-                    'class' => 'OroContactBundle:Contact',
-                    'required' => false,
-                    'mapped' => false,
-                    'multiple' => true,
-                )
             );
-        $builder->addEventSubscriber(new CalendarEventTypeSubscriber($this->container));
+
+        $builder->addEventSubscriber(new CalendarEventApiTypeSubscriber($this->container));
     }
 }

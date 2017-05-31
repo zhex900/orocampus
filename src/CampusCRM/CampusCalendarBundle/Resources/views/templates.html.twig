@@ -153,10 +153,11 @@
             <div {{ UI.renderPageComponentAttributes(calendarEventRecurrence) }}></div>
         <% } %>
     {% endset %}
+
     {% set leftColumn %}
         {{ form_row(form.title) }}
-        {{ form_row(form.description) }}
         {{ form_row(form.backgroundColor) }}
+
         {% if form.calendarUid is defined %}
             {{ form_row(form.calendarUid) }}
         {% endif %}
@@ -175,6 +176,8 @@
         <div class="alert alert-error" style="display: none;"></div>
         <div class="form-container">
             <form id="{{ form.vars.id }}" name="{{ form.vars.name }}" action="#">
+                {{ form_widget(form.title, {'value' : 'Default title' }) }}
+
                 <fieldset class="form form-horizontal">
                     <div class="span6">
                         {{ leftColumn|oro_js_template_content|raw }}
