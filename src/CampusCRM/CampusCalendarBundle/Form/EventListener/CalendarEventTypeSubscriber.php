@@ -3,6 +3,7 @@
 namespace CampusCRM\CampusCalendarBundle\Form\EventListener;
 
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
+use Oro\Bundle\ContactBundle\Entity\Contact;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
@@ -100,6 +101,7 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
         $removeContacts = $form->get('removeContacts')->getData();
 
         foreach ($appendContacts as $appendContact) {
+
             if ($appendContact instanceof Contact) {
                 /** @var Attendee $attendee */
                 $attendee = $this->container
