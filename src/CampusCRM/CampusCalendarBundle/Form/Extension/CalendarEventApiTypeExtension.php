@@ -7,6 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
+use CampusCRM\CampusCalendarBundle\Form\EventListener\AttendeesSubscriber;
 
 class CalendarEventApiTypeExtension extends AbstractTypeExtension
 {
@@ -36,28 +37,30 @@ class CalendarEventApiTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
+        /*$resolver->setDefaults(
             [
+                'allow_extra_fields'    => true,
                 'allow_change_calendar' => false,
                 'layout_template'       => false,
                 'data_class'            => 'Oro\Bundle\CalendarBundle\Entity\CalendarEvent',
                 'intention'             => 'calendar_event',
                 'csrf_protection'       => false,
             ]
-        );
+        );*/
     }
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    {/*
         $builder->remove('title');
         $builder->remove('attendees');
+
         $builder
             ->add(
                 'title',
-                'hidden',
+                'text',
                 array(
                     'required' => false,
                     'data' => 'Default Title',
@@ -65,15 +68,22 @@ class CalendarEventApiTypeExtension extends AbstractTypeExtension
                 )
             )
             ->add(
-                'attendees',
-                'campus_calendar_event_attendees_select',
-                [
-                    'required' => false,
-                    'label' => 'oro.calendar.calendarevent.attendees.label',
-                    'layout_template' => $options['layout_template'],
-                ]
+                $builder->create(
+                    'attendees',
+                    'oro_collection',
+                    [
+                        'property_path' => 'attendees',
+                        'type' => 'campus_calendar_event_attendees_api',
+                        'error_bubbling' => false,
+                        'options' => [
+                            'required' => false,
+                            'label'    => 'oro.calendar.calendarevent.attendees.label',
+                        ],
+                    ]
+                )
+                    ->addEventSubscriber(new AttendeesSubscriber())
             );
-
-        $builder->addEventSubscriber(new CalendarEventApiTypeSubscriber($this->container));
+*/
+    //    $builder->addEventSubscriber(new CalendarEventApiTypeSubscriber($this->container));
     }
 }

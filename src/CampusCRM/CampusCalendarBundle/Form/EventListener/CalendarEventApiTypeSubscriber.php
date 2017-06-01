@@ -31,7 +31,7 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            FormEvents::SUBMIT  => 'submitData',
+            FormEvents::PRE_SUBMIT  => 'preSubmitData',
             FormEvents::PRE_SET_DATA  => 'preSetData',
         ];
     }
@@ -39,10 +39,14 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
     /**
      * @param FormEvent $event
      */
-    public function submitData(FormEvent $event)
+    public function preSubmitData(FormEvent $event)
     {
-        $this->setTitle($event);
-        $this->setAcademicCalendar($event);
+        $data = $event->getData()->get('oro_eventname');
+
+        file_put_contents('/tmp/new.log','preSubmit: '. print_r($data,true). PHP_EOL,FILE_APPEND);
+
+        // $this->setTitle($event);
+       // $this->setAcademicCalendar($event);
       //  $this->syncContactAttendees($event);
     }
 
@@ -54,8 +58,8 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
     public function preSetData(FormEvent $event)
     {
         $form = $event->getForm();
-        $form->remove('teaching_week');
-        $form->remove('semester');
+       // $form->remove('teaching_week');
+      //  $form->remove('semester');
     }
 
     private function setTitle(FormEvent $event){

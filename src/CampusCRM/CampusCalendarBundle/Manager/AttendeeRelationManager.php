@@ -28,6 +28,9 @@ class AttendeeRelationManager extends BaseManager
                 ->setEmail($relatedEntity->getEmail());
            // $event->addActivityTarget($relatedEntity);
         } elseif ($relatedEntity instanceof Contact) {
+
+            file_put_contents('/tmp/attendee.log','setRelatedEntity: '. $relatedEntity->getFirstName().' email: '.$relatedEntity->getEmail().PHP_EOL,FILE_APPEND);
+
             $attendee
                 ->setContact($relatedEntity)
                 ->setDisplayName($this->nameFormatter->format($relatedEntity))

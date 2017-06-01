@@ -73,15 +73,22 @@ class CalendarEventAttendeesSelectType extends AbstractType
      */
     protected function getSelectedData(FormInterface $form)
     {
+        file_put_contents('/tmp/attendee.log', 'getSelectedData->>'.PHP_EOL,FILE_APPEND);
+
         $value = '';
         $attendees = $form->getData();
+        file_put_contents('/tmp/attendee.log', 'getSelectedData->> size: '.count($form->getData()).PHP_EOL,FILE_APPEND);
+
         if ($attendees) {
             $result = [];
+            file_put_contents('/tmp/attendee.log', 'Name 2'.PHP_EOL,FILE_APPEND);
 
             /**
              * @var Attendee $attendee
              */
             foreach ($attendees as $attendee) {
+                file_put_contents('/tmp/attendee.log', 'Name'.$attendee->getDisplayName().PHP_EOL,FILE_APPEND);
+
                 $result[] = json_encode(
                     [
                         'text'        => $this->attendeeRelationManager->getDisplayName($attendee),
@@ -103,9 +110,11 @@ class CalendarEventAttendeesSelectType extends AbstractType
                     ]
                 );
             }
-
+file_put_contents('/tmp/attendee.log', 'result: '. print_r($result,true).PHP_EOL,FILE_APPEND);
             $value = implode(';', $result);
         }
+        file_put_contents('/tmp/attendee.log', 'empty'.PHP_EOL,FILE_APPEND);
+
 
         return $value;
     }

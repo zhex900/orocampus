@@ -1,0 +1,3 @@
+config:
+    paths:
+      'campuscrmcampuscalendar/grid-builder': 'bundles/campuscrmcampuscalendar/js/datagrid/grid-builder.js'

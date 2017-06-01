@@ -196,6 +196,9 @@ class AcademicCalendar
         $monday->setTimezone($sem_start->getTimezone());
 
         $weeks = ($sem_start->diff($monday)->format('%a')) / 7;
+        file_put_contents('/tmp/weeks.log', 'start ' . $sem_start->format('Y-m-d').PHP_EOL, FILE_APPEND);
+        file_put_contents('/tmp/weeks.log', '$sem_end ' . $sem_end->format('Y-m-d').PHP_EOL, FILE_APPEND);
+        file_put_contents('/tmp/weeks.log', 'date ' . $date->format('Y-m-d').PHP_EOL, FILE_APPEND);
 
         // if the date is not within the semester period.
         if ($date < $sem_start or $date > $sem_end) {

@@ -43,7 +43,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 'hidden',
                 array(
                     'required' => false,
-                    'data' => 'Default Title',
+                    'data' => 'Default Title Jake',
                     'label' => 'oro.calendar.calendarevent.title.label'
                 )
             )
@@ -76,6 +76,9 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                     'multiple' => true,
                 )
             );
+
+        file_put_contents('/tmp/new.log','CalendarEventTypeExtension: '. PHP_EOL,FILE_APPEND);
+
         $builder->addEventSubscriber(new CalendarEventTypeSubscriber($this->container));
     }
 }

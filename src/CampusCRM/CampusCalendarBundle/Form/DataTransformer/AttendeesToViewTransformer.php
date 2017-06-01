@@ -36,6 +36,7 @@ class AttendeesToViewTransformer extends ContextsToViewTransformer
     public function reverseTransform($value)
     {
         $entities = parent::reverseTransform($value);
+        file_put_contents('/tmp/attendee.log', 'explode: start'.PHP_EOL,FILE_APPEND);
 
         if (!$entities) {
             return $entities;
@@ -52,7 +53,7 @@ class AttendeesToViewTransformer extends ContextsToViewTransformer
             }
             $attendees[] = $attendee;
         }
-
+file_put_contents('/tmp/attendee.log', 'explode: '. print_r($value, true).PHP_EOL,FILE_APPEND);
         $targets = explode(';', $value);
         foreach ($targets as $target) {
             $target = json_decode($target, true);
