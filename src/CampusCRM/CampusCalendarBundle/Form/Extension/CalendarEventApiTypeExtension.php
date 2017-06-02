@@ -52,7 +52,7 @@ class CalendarEventApiTypeExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->remove('title');
+       /* $builder->remove('title');
         $builder->remove('attendees');
         $builder
             ->add(
@@ -73,7 +73,7 @@ class CalendarEventApiTypeExtension extends AbstractTypeExtension
                     'layout_template' => $options['layout_template'],
                 ]
             );
-
-        $builder->addEventSubscriber(new CalendarEventApiTypeSubscriber($this->container));
+*/
+  //      $builder->addEventSubscriber(new CalendarEventApiTypeSubscriber($this->container));
     }
 }
