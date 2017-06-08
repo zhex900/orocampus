@@ -82,7 +82,7 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
                 ->setTeachingWeek($this
                     ->container
                     ->get('academic_calendar')
-                    ->getTeachingWeek($calendar_event->getStart()), $sem);
+                    ->getTeachingWeek($calendar_event->getStart()), substr($sem,4));
         }
     }
 

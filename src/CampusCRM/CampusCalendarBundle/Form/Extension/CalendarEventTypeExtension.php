@@ -6,6 +6,7 @@ use CampusCRM\CampusCalendarBundle\Form\EventListener\CalendarEventTypeSubscribe
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CalendarEventTypeExtension extends AbstractTypeExtension
 {
@@ -18,6 +19,15 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            [
+                'validation_groups' => ['calendar_event_validation'],
+            ]
+        );
     }
 
     /**
@@ -43,7 +53,6 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 'hidden',
                 array(
                     'required' => false,
-                    'data' => 'Default Title Jake',
                     'label' => 'oro.calendar.calendarevent.title.label'
                 )
             )
@@ -76,8 +85,6 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                     'multiple' => true,
                 )
             );
-
-        file_put_contents('/tmp/new.log','CalendarEventTypeExtension: '. PHP_EOL,FILE_APPEND);
 
         $builder->addEventSubscriber(new CalendarEventTypeSubscriber($this->container));
     }

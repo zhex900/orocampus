@@ -37,7 +37,7 @@ class CalendarEventApiTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        /*$resolver->setDefaults(
+        $resolver->setDefaults(
             [
                 'allow_extra_fields'    => true,
                 'allow_change_calendar' => false,
@@ -46,27 +46,17 @@ class CalendarEventApiTypeExtension extends AbstractTypeExtension
                 'intention'             => 'calendar_event',
                 'csrf_protection'       => false,
             ]
-        );*/
+        );
     }
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {/*
-        $builder->remove('title');
+    {
         $builder->remove('attendees');
 
         $builder
-            ->add(
-                'title',
-                'text',
-                array(
-                    'required' => false,
-                    'data' => 'Default Title',
-                    'label' => 'oro.calendar.calendarevent.title.label'
-                )
-            )
             ->add(
                 $builder->create(
                     'attendees',
@@ -83,7 +73,7 @@ class CalendarEventApiTypeExtension extends AbstractTypeExtension
                 )
                     ->addEventSubscriber(new AttendeesSubscriber())
             );
-*/
-    //    $builder->addEventSubscriber(new CalendarEventApiTypeSubscriber($this->container));
+
+        $builder->addEventSubscriber(new CalendarEventApiTypeSubscriber($this->container));
     }
 }

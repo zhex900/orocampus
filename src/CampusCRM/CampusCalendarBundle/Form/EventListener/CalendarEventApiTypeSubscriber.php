@@ -2,6 +2,7 @@
 
 namespace CampusCRM\CampusCalendarBundle\Form\EventListener;
 
+use CampusCRM\EventNameBundle\Entity\EventName;
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,8 +32,8 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            FormEvents::PRE_SUBMIT  => 'preSubmitData',
-            FormEvents::PRE_SET_DATA  => 'preSetData',
+            FormEvents::PRE_SUBMIT => 'preSubmitData',
+            FormEvents::PRE_SET_DATA => 'preSetData',
         ];
     }
 
@@ -41,13 +42,9 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
      */
     public function preSubmitData(FormEvent $event)
     {
-        $data = $event->getData()->get('oro_eventname');
-
-        file_put_contents('/tmp/new.log','preSubmit: '. print_r($data,true). PHP_EOL,FILE_APPEND);
-
-        // $this->setTitle($event);
-       // $this->setAcademicCalendar($event);
-      //  $this->syncContactAttendees($event);
+        $this->setTitle($event);
+        $this->setAcademicCalendar($event);
+        // $this->syncContactAttendees($event);
     }
 
     /**
@@ -58,34 +55,36 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
     public function preSetData(FormEvent $event)
     {
         $form = $event->getForm();
-       // $form->remove('teaching_week');
-      //  $form->remove('semester');
+        $form->remove('teaching_week');
+        $form->remove('semester');
     }
 
-    private function setTitle(FormEvent $event){
-        /** @var CalendarEvent $calendar_event */
-        $calendar_event = $event->getData();
+    private function setTitle(FormEvent $event)
+    {
 
-        $event->getData()->setTitle($calendar_event->getOroEventname());
+        $data = $event->getData();
+        $eventname_id = $data['oro_eventname'];
+        /** @var EventName $event_name */
+        $event_name = $this
+            ->container
+            ->get('doctrine')
+            ->getRepository('EventNameBundle:EventName')
+            ->find($eventname_id);
+
+        $data['title'] = $event_name->getName();
+        $event->setData($data);
     }
 
-    private function setAcademicCalendar(FormEvent $event){
+    private function setAcademicCalendar(FormEvent $event)
+    {
+        $data = $event->getData();
+        $time_stamp = strtotime($data['start']);
+        $start = new \DateTime("@$time_stamp");
+        $sem = $this->container->get('academic_calendar')->getSemester($start);
+        $teaching_week = $this->container->get('academic_calendar')->getTeachingWeek($start, substr($sem,4));
+        $data['semester']=$sem;
+        $data['teaching_week'] =$teaching_week;
 
-        /** @var CalendarEvent $calendar_event */
-        $calendar_event = $event->getData();
-
-        if ($calendar_event->getCalendar() instanceof Calendar) {
-            $sem = $this
-                ->container
-                ->get('academic_calendar')
-                ->getSemester($calendar_event->getStart());
-            $calendar_event->setSemester($sem);
-
-            $calendar_event
-                ->setTeachingWeek($this
-                    ->container
-                    ->get('academic_calendar')
-                    ->getTeachingWeek($calendar_event->getStart()), $sem);
-        }
+        $event->setData($data);
     }
 }

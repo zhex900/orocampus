@@ -1,0 +1,4 @@
+Oro\Bundle\CalendarBundle\Entity\CalendarEvent:
+    properties:
+        title:
+              - CampusCRM\CampusCalendarBundle\Validator\Constraints\CalendarEvent: { groups: [calendar_event_validation] }
