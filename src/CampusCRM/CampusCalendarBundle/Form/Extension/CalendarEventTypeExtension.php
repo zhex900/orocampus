@@ -25,7 +25,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
     {
         $resolver->setDefaults(
             [
-                'validation_groups' => ['calendar_event_validation'],
+                'validation_groups' => ['calendar_event_validation', 'event_name_validation'],
             ]
         );
     }
