@@ -47,9 +47,6 @@ class AttendanceExtension extends \Twig_Extension
             ->getQuery()
             ->getResult();
 
-        foreach ($result as $r){
-            file_put_contents('/tmp/a.log',$r['id'].' ',FILE_APPEND);
-        }
         return array_values($result);
     }
 }

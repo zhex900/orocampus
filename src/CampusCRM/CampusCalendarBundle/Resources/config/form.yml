@@ -6,11 +6,6 @@ services:
             - '@security.token_storage'
             - '@campus_calendar.attendee_manager'
 
-    campus_calendar.attendees_api.form.type:
-        class: CampusCRM\CampusCalendarBundle\Form\Type\CalendarEventAttendeesApiType
-        tags:
-            - { name: form.type, alias: campus_calendar_event_attendees_api }
-
     campus_calendar.attendees_select.form.type:
         class: CampusCRM\CampusCalendarBundle\Form\Type\CalendarEventAttendeesSelectType
         arguments:
@@ -26,6 +21,14 @@ services:
         calls:
             - ['setForm', ['@oro_calendar.calendar_event.form']]
             - ['setEntityRoutingHelper', ['@oro_entity.routing_helper']]
+            - ['setAttendeeRelationManager', ['@campus_calendar.attendee_relation_manager']]
+
+    campus_calendar.calendar_event.form.handler.api:
+        class: 'CampusCRM\CampusCalendarBundle\Form\Handler\CalendarEventApiHandler'
+        parent: 'oro_calendar.calendar_event.form.handler.abstract'
+        calls:
+            - ['setForm', ['@oro_calendar.calendar_event.form.api']]
+            - ['setAttendeeRelationManager', ['@campus_calendar.attendee_relation_manager']]
 
     campus_calendar.calendar_event.form.extension.type:
         class: 'CampusCRM\CampusCalendarBundle\Form\Extension\CalendarEventTypeExtension'
@@ -34,21 +37,6 @@ services:
             - "@service_container"
         tags:
             - { name: form.type_extension, alias: oro_calendar_event }
-
-    #oro_calendar.calendar_event.form.api:
-    #    class:   'Symfony\Component\Form\Form'
-    #    factory: 'form.factory:createNamed'
-    #    arguments:
-    #        - ~
-    #        - "oro_calendar_event_api"
-
-    #oro_calendar.calendar_event.form.type.api:
-    #    class: '%oro_calendar.calendar_event.form.type.api.class%'
-    #    arguments:
-    #        - '@oro_calendar.calendar_event_manager'
-    #        - '@oro_calendar.calendar_event.notification_manager'
-    #    tags:
-    #        - { name: form.type, alias: oro_calendar_event_api }
 
     campus_calendar.calendar_event.api.form.extension.type:
         class: 'CampusCRM\CampusCalendarBundle\Form\Extension\CalendarEventApiTypeExtension'

@@ -7,7 +7,6 @@ use Doctrine\Common\Util\ClassUtils;
 use Oro\Bundle\ActivityBundle\Autocomplete\ContextSearchHandler;
 use CampusCRM\CampusCalendarBundle\Manager\AttendeeManager;
 use Oro\Bundle\SearchBundle\Query\Result\Item;
-use Oro\Bundle\ContactBundle\Entity\Contact;
 
 class AttendeeSearchHandler extends ContextSearchHandler
 {
@@ -45,7 +44,9 @@ class AttendeeSearchHandler extends ContextSearchHandler
                 ),
                 'text' => $attendee->getDisplayName(),
                 'displayName' => $attendee->getDisplayName(),
-                'email' => $attendee->getEmail(),
+                //HACK: Append the contact id to the back of email address separated by #
+                //This is to add the contact entity to attendee.
+                'email' =>$attendee->getContact() ?  $attendee->getEmail().'#'.$attendee->getContact()->getId() : $attendee->getEmail(),
                 'status' => $attendee->getStatusCode(),
                 'type' => $attendee->getType() ? $attendee->getType()->getId() : null,
                 'userId' => $attendee->getUser() ? $attendee->getUser()->getId() : null

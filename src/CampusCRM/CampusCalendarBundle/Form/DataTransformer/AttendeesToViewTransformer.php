@@ -6,11 +6,10 @@ use Doctrine\ORM\EntityManager;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-use Oro\Bundle\ActivityBundle\Form\DataTransformer\ContextsToViewTransformer;
-use Oro\Bundle\CalendarBundle\Entity\Attendee;
 use CampusCRM\CampusCalendarBundle\Manager\AttendeeManager;
+use Oro\Bundle\CalendarBundle\Form\DataTransformer\AttendeesToViewTransformer as BaseTransformer;
 
-class AttendeesToViewTransformer extends ContextsToViewTransformer
+class AttendeesToViewTransformer extends BaseTransformer
 {
     /** @var AttendeeManager */
     protected $attendeeManager;
@@ -25,53 +24,9 @@ class AttendeesToViewTransformer extends ContextsToViewTransformer
         TokenStorageInterface $securityTokenStorage,
         AttendeeManager $attendeeManager
     ) {
-        parent::__construct($entityManager, $securityTokenStorage);
+        parent::__construct($entityManager, $securityTokenStorage,$attendeeManager);
 
         $this->attendeeManager = $attendeeManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function reverseTransform($value)
-    {
-        $entities = parent::reverseTransform($value);
-        file_put_contents('/tmp/attendee.log', 'explode: start'.PHP_EOL,FILE_APPEND);
-
-        if (!$entities) {
-            return $entities;
-        }
-
-        $attendees = [];
-        foreach ($entities as $entity) {
-            if ($entity instanceof Attendee) {
-                // Entity represents existing Attendee.
-                $attendee = $entity;
-            } else {
-                // Entity represents related entity of Attendee, such as User.
-                $attendee = $this->attendeeManager->createAttendee($entity);
-            }
-            $attendees[] = $attendee;
-        }
-file_put_contents('/tmp/attendee.log', 'explode: '. print_r($value, true).PHP_EOL,FILE_APPEND);
-        $targets = explode(';', $value);
-        foreach ($targets as $target) {
-            $target = json_decode($target, true);
-
-            if (array_key_exists('entityClass', $target) == true && array_key_exists('id', $target) == true) {
-                // Record was handled in parent method and already added to $attendees.
-                continue;
-            }
-
-            if (array_key_exists('displayName', $target) && array_key_exists('email', $target)) {
-                // Record has no related entity, a new instance of Attendee should be created.
-                $attendee = $this->attendeeManager->createAttendee();
-                $attendee->setEmail($target['email'])
-                    ->setDisplayName($target['displayName']);
-                $attendees[] = $attendee;
-            }
-        }
-
-        return $attendees;
-    }
 }

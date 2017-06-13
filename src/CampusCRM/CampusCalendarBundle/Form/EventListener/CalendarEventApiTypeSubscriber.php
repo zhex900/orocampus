@@ -33,7 +33,6 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
     {
         return [
             FormEvents::PRE_SUBMIT => 'preSubmitData',
-            FormEvents::PRE_SET_DATA => 'preSetData',
         ];
     }
 
@@ -44,19 +43,6 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
     {
         $this->setTitle($event);
         $this->setAcademicCalendar($event);
-        // $this->syncContactAttendees($event);
-    }
-
-    /**
-     * PRE_SET_DATA event handler
-     *
-     * @param FormEvent $event
-     */
-    public function preSetData(FormEvent $event)
-    {
-        $form = $event->getForm();
-        $form->remove('teaching_week');
-        $form->remove('semester');
     }
 
     private function setTitle(FormEvent $event)

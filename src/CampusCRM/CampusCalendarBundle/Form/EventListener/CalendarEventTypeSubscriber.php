@@ -115,7 +115,7 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
             if ($removeContact instanceof Contact) {
                 /** @var Attendee $attendee */
                 $attendee = $this->container
-                    ->get('campus_calendar.attendee_manager')
+                    ->get('campus_calendar.attendee_relation_manager')
                     ->findAttendeeByContact(
                         $removeContact,
                         $calendar_event->getAttendees()

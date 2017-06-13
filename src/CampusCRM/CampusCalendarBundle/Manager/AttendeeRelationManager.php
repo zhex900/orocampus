@@ -26,10 +26,8 @@ class AttendeeRelationManager extends BaseManager
                 ->setUser($relatedEntity)
                 ->setDisplayName($this->nameFormatter->format($relatedEntity))
                 ->setEmail($relatedEntity->getEmail());
-           // $event->addActivityTarget($relatedEntity);
+            // $event->addActivityTarget($relatedEntity);
         } elseif ($relatedEntity instanceof Contact) {
-
-            file_put_contents('/tmp/attendee.log','setRelatedEntity: '. $relatedEntity->getFirstName().' email: '.$relatedEntity->getEmail().PHP_EOL,FILE_APPEND);
 
             $attendee
                 ->setContact($relatedEntity)
@@ -37,8 +35,8 @@ class AttendeeRelationManager extends BaseManager
                 ->setEmail($relatedEntity->getEmail());
 
             // check if the contact have a linked user
-            if( $relatedEntity->getUser() !== null ){
-                $this->setRelatedEntity($attendee,$relatedEntity->getUser());
+            if ($relatedEntity->getUser() !== null) {
+                $this->setRelatedEntity($attendee, $relatedEntity->getUser());
             }
             //$event->addActivityTarget($relatedEntity);
         } else {
@@ -51,5 +49,82 @@ class AttendeeRelationManager extends BaseManager
                 )
             );
         }
+    }
+
+    /*
+     * @param array $contexts
+     * @param array $attendees
+	 *
+     * @return array $contexts
+    */
+    public function syncActivityandContext($contexts, $attendees)
+    {
+        // remove all user and contacts from contexts.
+        $contexts = $this->clearContextUserContact($contexts);
+
+        foreach ($attendees as $attendee) {
+
+            $this->setAttendeeContactRelationship($attendee);
+
+            if ($attendee->getUser() !== null) {
+                $contexts = array_merge([$attendee->getUser()], $contexts);
+            } elseif ($attendee->getContact() !== null) {
+
+                $contexts = array_merge([$attendee->getContact()], $contexts);
+                // add user that is linked with a contact
+                if ($attendee->getContact()->getUser() !== null) {
+                    $contexts = array_merge([$attendee->getContact()->getUser()], $contexts);
+                }
+            }
+        }
+        return $contexts;
+    }
+
+    /*
+     * @param Attendee $attendee
+     */
+    private function setAttendeeContactRelationship(Attendee $attendee)
+    {
+
+        preg_match('/(?P<email>.*)#(?P<contact_id>.*)/', $attendee->getEmail(), $matches);
+        if (!empty($matches)) {
+            $attendee->setEmail($matches['email']);
+
+            if ($attendee->getContact() == null) {
+                /** @var  Contact $contact */
+                $contact = $this->registry
+                    ->getRepository('OroContactBundle:Contact')
+                    ->find($matches['contact_id']);
+                $attendee->setContact($contact);
+            }
+        }
+    }
+
+    /*
+     * @param Contact $contact
+     * @param array $attendees
+     * @return Attendee $attendee
+     */
+    public function findAttendeeByContact($contact, $attendees)
+    {
+        foreach ($attendees as $attendee) {
+            if ($attendee->getContact() == $contact) {
+                return $attendee;
+            }
+        }
+    }
+
+    protected function clearContextUserContact($contexts)
+    {
+
+        $new_contexts = [];
+        if ($contexts != null) {
+            foreach ($contexts as $context) {
+                if (!($context instanceof User or $context instanceof Contact)) {
+                    $new_contexts = array_merge($new_contexts, [$context]);
+                }
+            }
+        }
+        return $new_contexts;
     }
 }
