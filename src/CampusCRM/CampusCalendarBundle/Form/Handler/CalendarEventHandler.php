@@ -66,7 +66,11 @@ class CalendarEventHandler extends BaseHandler
                 }
 
                 $attendees = $entity->getAttendees();
+<<<<<<< HEAD
                 $contexts = $this->attendee_relation_manager->syncActivityandContext($contexts, $attendees);
+=======
+               // $contexts = $this->syncActivityandContext($contexts, $attendees);
+>>>>>>> master
 
                 if ($contexts !== null){
                     $this->activityManager->setActivityTargets($entity, $contexts);
