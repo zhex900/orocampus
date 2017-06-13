@@ -31,7 +31,9 @@ class AttendeeRelationManager extends BaseManager
 
             $attendee
                 ->setContact($relatedEntity)
-                ->setDisplayName($this->nameFormatter->format($relatedEntity))
+                //HACK: Append the contact id to the back of display name separated by #
+                //This is to add the contact entity to attendee.
+                ->setDisplayName($this->nameFormatter->format($relatedEntity).'   #'.$relatedEntity->getId() )
                 ->setEmail($relatedEntity->getEmail());
 
             // check if the contact have a linked user
@@ -64,11 +66,6 @@ class AttendeeRelationManager extends BaseManager
 
         foreach ($attendees as $attendee) {
 
-            file_put_contents('/tmp/attendee.log','syncActivityandContext:'.$attendee->getDisplayName().PHP_EOL,FILE_APPEND);
-
-            if ($attendee->getContact() != null ) {
-                file_put_contents('/tmp/attendee.log', 'syncActivityandContext:' . $attendee->getContact()->getFirstName() . PHP_EOL, FILE_APPEND);
-            }
             $this->setAttendeeContactRelationship($attendee);
 
             if ($attendee->getUser() !== null) {

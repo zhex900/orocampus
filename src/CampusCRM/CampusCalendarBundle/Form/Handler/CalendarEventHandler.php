@@ -7,8 +7,6 @@ use CampusCRM\CampusCalendarBundle\Manager\CalendarEventManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\CalendarBundle\Form\Handler\CalendarEventHandler as BaseHandler;
-use Oro\Bundle\UserBundle\Entity\User;
-use Oro\Bundle\ContactBundle\Entity\Contact;
 
 class CalendarEventHandler extends BaseHandler
 {
