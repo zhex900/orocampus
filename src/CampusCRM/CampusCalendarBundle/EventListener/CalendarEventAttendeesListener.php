@@ -61,6 +61,13 @@ class CalendarEventAttendeesListener extends BaseListener
 
         foreach ($updateEntities as $entity) {
 
+            if ($entity instanceof Attendee) {
+                $this
+                    ->container
+                    ->get('frequency_manager')
+                    ->updateAttendanceFrequency($entity);
+            }
+
             if ($this->isAttendeeApplicable($entity, $unitOfWork)) {
                 $this->updateCalendarEventUpdatedAt($entity->getCalendarEvent(), $unitOfWork);
             }

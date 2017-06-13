@@ -43,10 +43,10 @@ class AttendeeSearchHandler extends ContextSearchHandler
                     ]
                 ),
                 'text' => $attendee->getDisplayName(),
-                'displayName' => $attendee->getDisplayName(),
-                //HACK: Append the contact id to the back of email address separated by #
+                //HACK: Append the contact id to the back of display name separated by #
                 //This is to add the contact entity to attendee.
-                'email' =>$attendee->getContact() ?  $attendee->getEmail().'#'.$attendee->getContact()->getId() : $attendee->getEmail(),
+                'displayName' => $attendee->getContact() ?  $attendee->getDisplayName().'   #'.$attendee->getContact()->getId() : $attendee->getDisplayName(),
+                'email' => $attendee->getEmail(),
                 'status' => $attendee->getStatusCode(),
                 'type' => $attendee->getType() ? $attendee->getType()->getId() : null,
                 'userId' => $attendee->getUser() ? $attendee->getUser()->getId() : null

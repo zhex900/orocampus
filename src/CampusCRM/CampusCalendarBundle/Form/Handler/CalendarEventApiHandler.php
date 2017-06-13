@@ -28,6 +28,7 @@ class CalendarEventApiHandler extends BaseHandler
         $request = $this->getRequest();
 
         $this->form->setData($entity);
+        file_put_contents('/tmp/attendee.log','CalendarEventApiHandler:'.$request.PHP_EOL,FILE_APPEND);
 
         if (in_array($request->getMethod(), ['POST', 'PUT'])) {
             // clone entity to have original values later

@@ -64,6 +64,11 @@ class AttendeeRelationManager extends BaseManager
 
         foreach ($attendees as $attendee) {
 
+            file_put_contents('/tmp/attendee.log','syncActivityandContext:'.$attendee->getDisplayName().PHP_EOL,FILE_APPEND);
+
+            if ($attendee->getContact() != null ) {
+                file_put_contents('/tmp/attendee.log', 'syncActivityandContext:' . $attendee->getContact()->getFirstName() . PHP_EOL, FILE_APPEND);
+            }
             $this->setAttendeeContactRelationship($attendee);
 
             if ($attendee->getUser() !== null) {
@@ -85,12 +90,10 @@ class AttendeeRelationManager extends BaseManager
      */
     private function setAttendeeContactRelationship(Attendee $attendee)
     {
-
-        preg_match('/(?P<email>.*)#(?P<contact_id>.*)/', $attendee->getEmail(), $matches);
+        preg_match('/(?P<email>.*)#(?P<contact_id>.*)/', $attendee->getDisplayName(), $matches);
         if (!empty($matches)) {
-            $attendee->setEmail($matches['email']);
-
             if ($attendee->getContact() == null) {
+
                 /** @var  Contact $contact */
                 $contact = $this->registry
                     ->getRepository('OroContactBundle:Contact')
