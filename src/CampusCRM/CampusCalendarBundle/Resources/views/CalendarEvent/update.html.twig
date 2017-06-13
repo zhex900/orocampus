@@ -98,7 +98,7 @@
     ]
     }]) %}
 
-    {#{% set contact_attendees = get_attendance(entity.id)   %}
+    {% set contact_attendees = get_attendance(entity.id)   %}
 
     {% set gridName = 'attendance-contacts-grid' %}
     {% set gridData = dataGrid.renderGrid(gridName, {attendees: contact_attendees}, { cssClass: 'inner-grid' }) %}
@@ -117,7 +117,7 @@
     }
     ]
     }]) %}
-    #}
+
 
     {% set additionalData = [] %}
     {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}

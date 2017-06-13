@@ -42,12 +42,7 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
     public function preSubmitData(FormEvent $event)
     {
         $this->setTitle($event);
-<<<<<<< HEAD
         $this->setAcademicCalendar($event);
-=======
-      //  $this->setAcademicCalendar($event);
-      //  $this->syncContactAttendees($event);
->>>>>>> master
     }
 
     private function setTitle(FormEvent $event)

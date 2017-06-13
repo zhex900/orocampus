@@ -77,7 +77,7 @@ class AttendeeSearchHandler extends ContextSearchHandler
      */
     protected function getSearchAliases()
     {
-        return ['oro_user'];
+        return ['oro_contact'];
     }
 
     /**
