@@ -35,13 +35,8 @@ class AttendeeRelationManager extends BaseManager
                 ->setEmail($relatedEntity->getEmail());
 
             // check if the contact have a linked user
-<<<<<<< HEAD
             if ($relatedEntity->getUser() !== null) {
                 $this->setRelatedEntity($attendee, $relatedEntity->getUser());
-=======
-            if( $relatedEntity->getUser() !== null ){
-              //  $this->setRelatedEntity($attendee,$relatedEntity->getUser());
->>>>>>> master
             }
             //$event->addActivityTarget($relatedEntity);
         } else {
