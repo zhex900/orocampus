@@ -50,6 +50,10 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
 
         $data = $event->getData();
         $eventname_id = $data['oro_eventname'];
+
+        if ($eventname_id == null) {
+            throw new \Exception('Please select an event name.');
+        }
         /** @var EventName $event_name */
         $event_name = $this
             ->container
