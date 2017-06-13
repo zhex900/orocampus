@@ -166,7 +166,6 @@ class EventName extends ExtendEventName implements NameInterface
      */
     protected $updatedAt;
 
-
     public function __construct()
     {
         parent::__construct();
