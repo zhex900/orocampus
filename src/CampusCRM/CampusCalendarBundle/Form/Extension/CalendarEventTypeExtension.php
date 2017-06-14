@@ -63,11 +63,13 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->remove('title');
-        $builder->remove('attendees');
+        $builder
+            ->remove('title')
+            ->remove('attendees')
+            ->remove('oro_eventname');
 
-        $builder->remove('oro_eventname');
-        $builder->add('oro_eventname', 'entity', array(
+        $builder
+            ->add('oro_eventname', 'entity', array(
             'class' => 'CampusCRM\EventNameBundle\Entity\EventName',
             'query_builder' => function(EntityRepository $repository) {
                 $qb = $repository->createQueryBuilder('e');
@@ -75,10 +77,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                     ->where($qb->expr()->neq('e.system_calendar', '?1'))
                     ->setParameter('1', $this->isSystemCalendar())
                     ->orderBy('e.name', 'ASC');
-            },
-        ));
-
-        $builder
+            },))
             ->add(
                 'title',
                 'hidden',
