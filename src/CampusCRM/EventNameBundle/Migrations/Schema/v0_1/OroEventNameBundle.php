@@ -1,6 +1,6 @@
 <?php
 
-namespace CampusCRM\EventNameBundle\Migrations\Schema\v2_1;
+namespace CampusCRM\EventNameBundle\Migrations\Schema\v0_1;
 
 use Doctrine\DBAL\Schema\Schema;
 
