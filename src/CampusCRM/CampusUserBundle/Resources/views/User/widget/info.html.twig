@@ -43,6 +43,7 @@
                     </a>
                 {%- endif -%}
             {%- endset -%}
+            {{ ui.renderProperty('oro.user.gender.label'|trans, entity.gender) }}
             {{ ui.renderHtmlProperty('oro.user.linked.contact.label'|trans, linkedContact) }}
 
             {% set birthday_string %}

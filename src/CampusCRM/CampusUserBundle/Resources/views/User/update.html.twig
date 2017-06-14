@@ -77,11 +77,9 @@
                     form.enabled is defined ? form_row(form.enabled),
                     form_row(form.username),
                     form.plainPassword is defined ? form_row(form.plainPassword) : '',
-                    form_row(form.namePrefix),
                     form_row(form.firstName),
-                    form_row(form.middleName),
                     form_row(form.lastName),
-                    form_row(form.nameSuffix),
+                    form_row(form.gender),
                     form_row(form.birthday),
                     form_row(form.avatar),
                     form_row(form.contact),
@@ -99,7 +97,11 @@
         ]
     }] %}
 
-    {% set additionalData = [] %}
+    {#
+    form_row(form.namePrefix),
+    form_row(form.middleName),
+    form_row(form.nameSuffix),
+        {% set additionalData = [] %}
     {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
         {% set additionalData = additionalData|merge([form_row(child)]) %}
     {% endfor %}
@@ -113,6 +115,10 @@
             }]
         }] ) %}
     {% endif %}
+    #}
+
+
+
 
     {% set hasGroups = form.groups is defined %}
     {% set hasRoles = form.roles is defined %}
