@@ -73,7 +73,7 @@ class ExtendCalendarEntity implements Migration, ExtendExtensionAwareInterface
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
                     'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => false],
-                    'dataaudit' => ['auditable' => true]
+                    'dataaudit' => ['auditable' => false]
                 ]
             ]
         );
@@ -84,7 +84,7 @@ class ExtendCalendarEntity implements Migration, ExtendExtensionAwareInterface
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
                     'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => false],
-                    'dataaudit' => ['auditable' => true]
+                    'dataaudit' => ['auditable' => false]
                 ]
             ]
         );
@@ -97,7 +97,7 @@ class ExtendCalendarEntity implements Migration, ExtendExtensionAwareInterface
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
                     'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => false],
-                    'dataaudit' => ['auditable' => true]
+                    'dataaudit' => ['auditable' => false]
                 ]
             ]
         );
@@ -108,7 +108,7 @@ class ExtendCalendarEntity implements Migration, ExtendExtensionAwareInterface
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
                     'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => false],
-                    'dataaudit' => ['auditable' => true]
+                    'dataaudit' => ['auditable' => false]
                 ]
             ]
         );
