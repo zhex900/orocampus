@@ -6,7 +6,7 @@
  * Time: 1:07 PM
  */
 
-namespace CampusCRM\CampusUserBundle\Migrations\Schema\v1_0;
+namespace CampusCRM\CampusUserBundle\Migrations\Schema\v0_1;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
@@ -40,6 +40,29 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
                 'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                 'merge' => ['display' => true],
                 'dataaudit' => ['auditable' => true]
+            ]
+        );
+        $this->extendExtension->addManyToOneRelation(
+            $schema,
+            'oro_user', // owning side table
+            'contact', // owning side field name
+            'orocrm_contact', // inverse side table
+            'id', // column name is used to show related entity
+            [
+                'entity' => ['label' => 'oro.contact.user.label'],
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
+            ]
+        );
+
+        $this->extendExtension->addManyToOneRelation(
+            $schema,
+            'orocrm_contact', // owning side table
+            'user', // owning side field name
+            'oro_user', // inverse side table
+            'id', // column name is used to show related entity
+            [
+                'entity' => ['label' => 'oro.contact.user.label'],
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
             ]
         );
     }

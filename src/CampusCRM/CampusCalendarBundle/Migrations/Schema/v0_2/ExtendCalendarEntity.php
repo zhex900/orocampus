@@ -6,7 +6,7 @@
  * Time: 1:07 PM
  */
 
-namespace CampusCRM\CampusCalendarBundle\Migrations\Schema\v2_4;
+namespace CampusCRM\CampusCalendarBundle\Migrations\Schema\v0_2;
 
 use Doctrine\DBAL\Schema\Schema;
 

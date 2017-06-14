@@ -71,6 +71,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
         $builder
             ->add('oro_eventname', 'entity', array(
             'class' => 'CampusCRM\EventNameBundle\Entity\EventName',
+            'label' => 'oro.calendar.calendarevent.oro_eventname.label',
             'query_builder' => function(EntityRepository $repository) {
                 $qb = $repository->createQueryBuilder('e');
                 return $qb
