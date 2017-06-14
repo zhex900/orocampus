@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CalendarEventTypeExtension extends AbstractTypeExtension
@@ -14,12 +15,18 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
     /** @var  ContainerInterface */
     private $container;
 
+    /** @var  RequestStack */
+    protected $requestStack;
+
     /**
      * @param ContainerInterface $container
+     * @param RequestStack $requestStack
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container,
+                                RequestStack $requestStack)
     {
         $this->container = $container;
+        $this->requestStack = $requestStack;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -42,6 +49,16 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
     }
 
     /**
+     * Check whether this is a system calendar event or a calender event
+     *
+     * @return true for system calendar event or false
+     */
+    protected function isSystemCalendar(){
+        $request = $this->requestStack->getCurrentRequest()->getRequestUri();
+        return (strpos($request, 'system-calendar') == false);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -54,15 +71,13 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
             'class' => 'CampusCRM\EventNameBundle\Entity\EventName',
             'query_builder' => function(EntityRepository $repository) {
                 $qb = $repository->createQueryBuilder('e');
-                // the function returns a QueryBuilder object
                 return $qb
-                    // find all event name where system calendar is false
                     ->where($qb->expr()->neq('e.system_calendar', '?1'))
-                    ->setParameter('1', '1')
-                    ->orderBy('e.name', 'ASC')
-                    ;
+                    ->setParameter('1', $this->isSystemCalendar())
+                    ->orderBy('e.name', 'ASC');
             },
         ));
+
         $builder
             ->add(
                 'title',

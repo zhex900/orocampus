@@ -33,6 +33,7 @@ services:
     campus_calendar.calendar_event.form.extension.type:
         class: 'CampusCRM\CampusCalendarBundle\Form\Extension\CalendarEventTypeExtension'
         public: true
+        autowire: true
         arguments:
             - "@service_container"
         tags:
