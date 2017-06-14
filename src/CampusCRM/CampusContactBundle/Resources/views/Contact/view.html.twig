@@ -82,6 +82,13 @@
         }) }}
     {% endset %}
 
+    {% set feedbackInformationWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('oro_contact_info', {id: entity.id,block: 'Feedback'}),
+        }) }}
+    {% endset %}
+
     {% set addressBookWidget %}
         {{ oro_widget_render({
             'widgetType': 'block',
@@ -147,6 +154,15 @@
     'class': 'active',
     'subblocks': [
     {'data' : [socialInformationWidget] },
+    ]
+    }
+    ]) %}
+    {% set dataBlocks = dataBlocks|merge([{
+
+    'title': 'Feedback'|trans,
+    'class': 'active',
+    'subblocks': [
+    {'data' : [feedbackInformationWidget] },
     ]
     }
     ]) %}

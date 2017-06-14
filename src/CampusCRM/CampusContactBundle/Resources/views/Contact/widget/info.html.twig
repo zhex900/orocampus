@@ -192,6 +192,16 @@
                 {{ ui.renderHtmlProperty('oro.contact.social.label'|trans, socialData) }}
             {%- endif -%}
 
+            {%- if block == 'Feedback' -%}
+                {{ ui.renderProperty('oro.contact.further_activities.label'|trans, entity.furtherActivities? 'Yes'|trans : 'No'|trans) }}
+                {{ ui.renderProperty('oro.contact.bible_study.label'|trans, entity.bibleStudy? 'Yes'|trans : 'No'|trans) }}
+                {{ ui.renderProperty('oro.contact.homes.label'|trans, entity.homes? 'Yes'|trans : 'No'|trans) }}
+                {{ ui.renderProperty('oro.contact.sunday_worship.label'|trans, entity.sundayWorship? 'Yes'|trans : 'No'|trans) }}
+                {{ ui.renderProperty('oro.contact.mhl.label'|trans, entity.mhl? 'Yes'|trans : 'No'|trans) }}
+                {{ ui.renderProperty('oro.contact.christian_courses.label'|trans, entity.christianCourses? 'Yes'|trans : 'No'|trans) }}
+            {%- endif -%}
+
+
 
         </div>
     </div>
