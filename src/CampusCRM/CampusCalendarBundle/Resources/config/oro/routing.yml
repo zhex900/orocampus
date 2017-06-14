@@ -4,12 +4,12 @@ campuscrm_parent_bundle:
     type:         annotation
     prefix:       /calendar
 
-oro_sytem_calendar:
-    resource:     "@!OroCalendarBundle/Controller/SystemCalendarController.php"
-    type:         annotation
-    prefix:       /system-calendar
+#oro_sytem_calendar:
+#    resource:     "@!OroCalendarBundle/Controller/SystemCalendarController.php"
+#    type:         annotation
+#    prefix:       /system-calendar
 
-oro_sytem_calendar_event:
-    resource:     "@!OroCalendarBundle/Controller/SystemCalendarEventController.php"
-    type:         annotation
-    prefix:       /system-calendar
+#oro_sytem_calendar_event:
+#    resource:     "@!OroCalendarBundle/Controller/SystemCalendarEventController.php"
+#    type:         annotation
+#    prefix:       /system-calendar
