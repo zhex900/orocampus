@@ -80,9 +80,7 @@ class AcademicCalendar
 
     /**
      * {@inheritdoc}
-     * @param String $field
-     * @parma int $year
-     * @param array $array
+     * @param int $year
      * @return array
      *
      **/
