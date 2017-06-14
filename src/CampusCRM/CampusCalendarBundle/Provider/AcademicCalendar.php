@@ -80,6 +80,7 @@ class AcademicCalendar
 
     /**
      * {@inheritdoc}
+     * @param string $key
      * @param int $year
      * @return array
      *
@@ -112,6 +113,11 @@ class AcademicCalendar
                 = array($start->setTime(0, 0, 0),
                 $end->setTime(0, 0, 0));
         }
+
+        if (empty($array)) {
+            throw new \Exception($key . ' period cannot be find in '. $year . ' System Calendar!');
+        }
+
         return $array;
     }
 
@@ -143,6 +149,10 @@ class AcademicCalendar
 
         // what if no semester dates are available ?
         $semesters = array_keys($this->semester_dates[$university]);
+
+        if (empty($semesters)) {
+            throw new \Exception($university . ' Calendar does not exist.');
+        }
 
         for ($i = 0; $i < count($semesters); $i++) {
 
