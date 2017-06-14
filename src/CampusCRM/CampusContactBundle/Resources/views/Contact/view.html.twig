@@ -43,8 +43,42 @@
     {% set contactInformationWidget %}
         {{ oro_widget_render({
             'widgetType': 'block',
-            'url': path('oro_contact_info', {id: entity.id}),
-            'title': 'Contact Information'|trans
+            'url': path('oro_contact_info', {id: entity.id,block: 'General'}),
+        }) }}
+    {% endset %}
+
+    {% set personalInformationWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('oro_contact_info', {id: entity.id,block: 'Personal'}),
+        }) }}
+    {% endset %}
+
+    {% set academicInformationWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('oro_contact_info', {id: entity.id,block: 'Academic'}),
+        }) }}
+    {% endset %}
+
+    {% set spiritualInformationWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('oro_contact_info', {id: entity.id,block: 'Spiritual'}),
+        }) }}
+    {% endset %}
+
+    {% set campusInformationWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('oro_contact_info', {id: entity.id,block: 'Campus'}),
+        }) }}
+    {% endset %}
+
+    {% set socialInformationWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('oro_contact_info', {id: entity.id,block: 'Social'}),
         }) }}
     {% endset %}
 
@@ -67,6 +101,55 @@
             ]
         }
     ] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+
+    'title': 'Personal'|trans,
+    'class': 'active',
+    'subblocks': [
+    {'data' : [personalInformationWidget] },
+    ]
+    }
+    ]) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+
+    'title': 'Academic'|trans,
+    'class': 'active',
+    'subblocks': [
+    {'data' : [academicInformationWidget] },
+    ]
+    }
+    ]) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+
+    'title': 'Spiritual'|trans,
+    'class': 'active',
+    'subblocks': [
+    {'data' : [spiritualInformationWidget] },
+    ]
+    }
+    ]) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+
+    'title': 'Campus Work'|trans,
+    'class': 'active',
+    'subblocks': [
+    {'data' : [campusInformationWidget] },
+    ]
+    }
+    ]) %}
+    {% set dataBlocks = dataBlocks|merge([{
+
+    'title': 'Social'|trans,
+    'class': 'active',
+    'subblocks': [
+    {'data' : [socialInformationWidget] },
+    ]
+    }
+    ]) %}
 
     {% set gridName = 'campus_contact-contact-event-summary-grid' %}
     {% set dataBlocks = dataBlocks|merge([{

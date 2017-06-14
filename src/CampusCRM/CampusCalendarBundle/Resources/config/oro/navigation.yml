@@ -8,6 +8,34 @@ navigation:
             marketing_tab:
                 display: false
                 display_children: false
+            sales_tab:
+                display: false
+                display_children: false
+            customers_tab:
+                display: false
+                display_children: false
+
+            campus_contact_list:
+                label: 'oro.contact.entity_plural_label'
+                route: 'oro_contact_index'
+                position: 10
+                extras:
+                    routes: ['/^oro_contact_(?!group\w+|group\w+)\w+$/']
+                    description: 'oro.contact.menu.contact_list.description'
+
+            contact_group_list:
+                label: 'oro.contact.group.entity_plural_label'
+                route: 'oro_contact_group_index'
+                position: 30
+                extras:
+                    routes:      ['oro_contact_group_*']
+                    description: 'oro.contact.menu.contact_group_list.description'
+
+            campus_contacts_tab:
+                label: 'Contacts'
+                uri: '#'
+                extras:
+                    position: 19
 
             campus_calendar_tab:
                 label: 'Calendar'
@@ -63,6 +91,11 @@ navigation:
         tree:
             application_menu:
                 children:
+                    campus_contacts_tab:
+                        children:
+                            campus_contact_list: ~
+                            contact_group_list: ~
+
                     campus_calendar_tab:
                         children:
                             oro_calendar_view_default: ~

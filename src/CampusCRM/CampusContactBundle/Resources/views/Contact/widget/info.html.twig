@@ -85,15 +85,26 @@
                 {%- endif -%}
             {%- endset -%}
 
-            {{ ui.renderHtmlProperty('oro.contact.description.label'|trans, entity.description) }}
-            {{ ui.renderHtmlProperty('oro.contact.phones.label'|trans, entity.phones.count ? _self.renderCollectionWithPrimaryElement(entity.phones, false, entity) : null) }}
-            {{ ui.renderHtmlProperty('oro.contact.emails.label'|trans, entity.emails.count ? _self.renderCollectionWithPrimaryElement(entity.emails, true, entity) : null) }}
-            {{ ui.renderHtmlProperty('oro.contact.fax.label'|trans, entity.fax ? ui.renderPhone(entity.fax) : null) }}
-            {{ ui.renderHtmlProperty('oro.contact.skype.label'|trans, skypeData) }}
-            {{ ui.renderProperty('oro.contact.method.label'|trans, entity.method) }}
-            {{ ui.renderHtmlProperty('oro.contact.social.label'|trans, socialData) }}
+            {%- set birthdayData -%}
+                {{ entity.birthday is not empty ? entity.birthday|oro_format_date : null }}
+                {% if entity.birthday is not empty %} ({{ entity.birthday|age_string({'default': 'N/A'}) }}){% endif %}
+            {%- endset -%}
 
-            {{ entityConfig.renderDynamicFields(entity) }}
+            {%- if block == 'General' -%}
+
+                {{ ui.renderHtmlProperty('oro.contact.first_name.label'|trans, entity.firstName) }}
+                {{ ui.renderHtmlProperty('oro.contact.last_name.label'|trans, entity.lastName) }}
+                {{ ui.renderProperty('oro.contact.gender.label'|trans, oro_gender(entity.gender)) }}
+                {{ ui.renderProperty('oro.contact.birthday.label'|trans, entity.birthday ? birthdayData : null) }}
+                {{ ui.renderHtmlProperty('oro.contact.phones.label'|trans, entity.phones.count ? _self.renderCollectionWithPrimaryElement(entity.phones, false, entity) : null) }}
+                {{ ui.renderHtmlProperty('oro.contact.emails.label'|trans, entity.emails.count ? _self.renderCollectionWithPrimaryElement(entity.emails, true, entity) : null) }}
+
+                {{ ui.renderHtmlProperty('oro.contact.description.label'|trans, entity.description) }}
+
+                {# {{ entityConfig.renderDynamicFields(entity) }}#}
+            {%- endif -%}
+
+
         </div>
 
         <div class="responsive-block">
@@ -111,10 +122,7 @@
                 {%- endif -%}
             {%- endset -%}
 
-            {%- set birthdayData -%}
-                {{ entity.birthday is not empty ? entity.birthday|oro_format_date : null }}
-                {% if entity.birthday is not empty %} ({{ entity.birthday|age_string({'default': 'N/A'}) }}){% endif %}
-            {%- endset -%}
+
 
             {%- set assignedToData -%}
                 {%- if entity.assignedTo -%}
@@ -139,15 +147,51 @@
                 {%- endif -%}
             {%- endset -%}
 
-            {{ ui.renderProperty('oro.contact.job_title.label'|trans, entity.jobTitle) }}
-            {{ ui.renderHtmlProperty('oro.contact.accounts.label'|trans, accountsData) }}
-            {{ ui.renderProperty('oro.contact.birthday.label'|trans, entity.birthday ? birthdayData : null) }}
-            {{ ui.renderProperty('oro.contact.gender.label'|trans, oro_gender(entity.gender)) }}
-            {{ ui.renderProperty('oro.contact.source.label'|trans, entity.source) }}
-            {{ ui.renderHtmlProperty('oro.contact.assigned_to.label'|trans, assignedToData) }}
-            {{ ui.renderHtmlProperty('oro.contact.reports_to.label'|trans, reportsToData) }}
-            {{ ui.renderHtmlProperty('oro.contact.linked_user.label'|trans, linkedUser) }}
-            {{ ui.renderProperty('oro.contact.groups.label'|trans, entity.groups.count ? entity.groupLabels|join(', ') : null) }}
+            {%- if block == 'Personal' -%}
+                {{ ui.renderProperty('oro.contact.country_of_birth.label'|trans, entity.countryOfBirth) }}
+                {{ ui.renderProperty('oro.contact.ethnicity.label'|trans, entity.ethnicity) }}
+                {{ ui.renderProperty('oro.contact.marital_status.label'|trans, entity.maritalStatus) }}
+                {{ ui.renderProperty('oro.contact.year_of_birth.label'|trans, entity.yearOfBirth) }}
+                {{ ui.renderProperty('oro.contact.int_student.label'|trans, entity.intStudent) }}
+                {{ ui.renderProperty('oro.contact.out_of_town.label'|trans, entity.outOfTown) }}
+            {%- endif -%}
+
+            {%- if block == 'Academic' -%}
+                {{ ui.renderProperty('oro.contact.student_id.label'|trans, entity.studentId) }}
+                {{ ui.renderProperty('oro.contact.institutions.label'|trans, entity.institutions) }}
+                {{ ui.renderProperty('oro.contact.degrees.label'|trans, entity.degrees) }}
+                {{ ui.renderProperty('oro.contact.level_of_study.label'|trans, entity.levelOfStudy) }}
+                {{ ui.renderProperty('oro.contact.duration.label'|trans, entity.duration) }}
+                {{ ui.renderProperty('oro.contact.year_of_commencement.label'|trans, entity.yearOfCommencement) }}
+                {{ ui.renderProperty('oro.contact.month_of_commencement.label'|trans, entity.monthOfCommencement) }}
+            {%- endif -%}
+
+            {%- if block == 'Spiritual' -%}
+                {{ ui.renderProperty('oro.contact.date_of_baptism.label'|trans, entity.dateOfBaptism) }}
+                {{ ui.renderProperty('oro.contact.christian.label'|trans, entity.christian) }}
+                {{ ui.renderProperty('oro.contact.believed_thr_us.label'|trans, entity.believedThrUs) }}
+                {{ ui.renderProperty('oro.contact.baptised_by_us.label'|trans, entity.baptisedByUs) }}
+                {{ ui.renderProperty('oro.contact.date_believed.label'|trans, entity.dateBelieved) }}
+                {{ ui.renderProperty('oro.contact.groups.label'|trans, entity.groups.count ? entity.groupLabels|join(', ') : null) }}
+            {%- endif -%}
+
+            {%- if block == 'Campus' -%}
+                {{ ui.renderProperty('oro.contact.source.label'|trans, entity.source) }}
+                {{ ui.renderProperty('oro.contact.contact_source.label'|trans, entity.contactSource) }}
+                {{ ui.renderProperty('oro.contact.contact_status.label'|trans, entity.contactStatus) }}
+                {{ ui.renderProperty('oro.contact.first_contact_date.label'|trans, entity.firstContactDate) }}
+                {{ ui.renderHtmlProperty('oro.contact.assigned_to.label'|trans, assignedToData) }}
+                {{ ui.renderHtmlProperty('oro.contact.linked_user.label'|trans, linkedUser) }}
+            {%- endif -%}
+
+            {%- if block == 'Social' -%}
+                {{ ui.renderHtmlProperty('oro.contact.fax.label'|trans, entity.fax ? ui.renderPhone(entity.fax) : null) }}
+                {{ ui.renderHtmlProperty('oro.contact.skype.label'|trans, skypeData) }}
+                {{ ui.renderProperty('oro.contact.method.label'|trans, entity.method) }}
+                {{ ui.renderHtmlProperty('oro.contact.social.label'|trans, socialData) }}
+            {%- endif -%}
+
+
         </div>
     </div>
 </div>
