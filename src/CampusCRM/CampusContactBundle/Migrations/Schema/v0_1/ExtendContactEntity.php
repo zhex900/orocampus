@@ -6,7 +6,7 @@
  * Time: 1:07 PM
  */
 
-namespace CampusCRM\CampusContactBundle\Migrations\Schema\v1_9;
+namespace CampusCRM\CampusContactBundle\Migrations\Schema\v0_1;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
@@ -184,6 +184,18 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
         $table->addColumn(
             'year_of_commencement',
             'integer',
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'merge' => ['display' => true],
+                    'dataaudit' => ['auditable' => true]
+                ]
+            ]
+        );
+        $table->addColumn(
+            'semester_contacted',
+            'string',
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],

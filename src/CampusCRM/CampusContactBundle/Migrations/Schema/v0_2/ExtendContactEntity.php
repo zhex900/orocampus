@@ -6,7 +6,7 @@
  * Time: 1:07 PM
  */
 
-namespace CampusCRM\CampusContactBundle\Migrations\Schema\v2_0;
+namespace CampusCRM\CampusContactBundle\Migrations\Schema\v0_2;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
