@@ -24,7 +24,7 @@ class AttendeeRelationManager extends BaseManager
         if ($relatedEntity instanceof User) {
             $attendee
                 ->setUser($relatedEntity)
-                ->setDisplayName($this->nameFormatter->format($relatedEntity))
+                ->setDisplayName($this->nameFormatter->format($relatedEntity).'   #'.$relatedEntity->getId() )
                 ->setEmail($relatedEntity->getEmail());
             // $event->addActivityTarget($relatedEntity);
         } elseif ($relatedEntity instanceof Contact) {
