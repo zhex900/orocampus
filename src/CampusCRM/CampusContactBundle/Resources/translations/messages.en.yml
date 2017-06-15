@@ -20,6 +20,7 @@ oro:
             marital_status.label:         Marital Status
             contact_source.label:         Contact Source
             contact_status.label:         Contact Status
+            followup_status.label:        Follow-up Status
             degrees.label:                Degrees
             level_of_study.label:         Level of Study
             month_of_commencement.label:  Month of Commencement
