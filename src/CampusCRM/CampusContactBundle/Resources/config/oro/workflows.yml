@@ -1,0 +1,58 @@
+workflows:
+    contact_followup:
+        entity: Oro\Bundle\ContactBundle\Entity\Contact
+        entity_attribute: contact
+        force_autostart: false
+        steps_display_ordered: true
+        defaults:
+            active: true
+        priority: 100
+        applications: [ 'default' ]
+        steps:
+            followup:
+                order: 1
+                allowed_transitions:
+                    - open
+                    - closed
+            open:
+                order: 2
+                allowed_transitions:
+                    - closed
+            closed:
+                order: 3
+                allowed_transitions:
+                    - reopen
+        attributes:
+            contact_status:
+                type: string
+                property_path: contact.contactStatus
+        transitions:
+            reopen:
+                step_to: followup
+                transition_definition: def
+            follow_up:
+                is_start: true
+                step_to: followup
+                transition_definition: def
+                #frontend_options:
+                 #   icon: bar
+            open:
+                step_to: open
+                transition_definition: def
+                #frontend_options:
+                 #   icon: bar
+            closed:
+                step_to: closed
+                transition_definition: def
+                #frontend_options:
+                 #   icon: bar
+                form_options:                               # options which will be passed to form type of transition
+                    attribute_fields:                       # list of attribute fields which will be shown
+                        contact_status:                       # attribute name
+                            options:                        # list of form field options
+                                form_type: choice
+                                required: true              # define this field as required
+                                constraints:                # list of constraints
+                                    - NotBlank: ~           # this field must be filled
+        transition_definitions:
+             def: ~

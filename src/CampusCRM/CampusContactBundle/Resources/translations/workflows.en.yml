@@ -1,0 +1,29 @@
+oro:
+    workflow:
+        contact_followup:
+            step:
+                started:
+                    label: Started
+                followup:
+                    label: Follow-up
+                open:
+                    label: Open
+                closed:
+                    label: Closed
+            attribute:
+                contact_status:
+                    label: 'Contact Status'
+            transition:
+                reopen:
+                    label: 'Re-open'
+                    warning_message: ''
+                follow_up:
+                    label: 'Follow-up'
+                    warning_message: ''
+                open:
+                    label: Open
+                    warning_message: ''
+                closed:
+                    label: Closed
+                    warning_message: ''
+            label: 'Contact Follow-up'
