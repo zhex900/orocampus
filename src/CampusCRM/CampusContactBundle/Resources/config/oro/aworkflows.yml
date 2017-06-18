@@ -24,8 +24,10 @@ workflows:
                     - reopen
         attributes:
             contact_status:
-                type: string
+                type: object
                 property_path: contact.contactStatus
+                options:
+                    class: Oro\Bundle\ContactBundle\Entity\Contact
         transitions:
             reopen:
                 step_to: followup
@@ -50,7 +52,7 @@ workflows:
                     attribute_fields:                       # list of attribute fields which will be shown
                         contact_status:                       # attribute name
                             options:                        # list of form field options
-                                form_type: choice
+                                form_type: enum
                                 required: true              # define this field as required
                                 constraints:                # list of constraints
                                     - NotBlank: ~           # this field must be filled
