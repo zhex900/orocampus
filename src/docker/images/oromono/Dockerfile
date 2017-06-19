@@ -20,6 +20,7 @@ ARG GIT_URI="https://github.com/orocrm/crm-application.git"
 # tags/1.9.1 - for 1.9.1 tag 
 ARG GIT_REF="tags/2.2.1"
 COPY bin/install-application.sh          /usr/local/bin/install-application.sh
+COPY bin/install.sh                      /usr/local/bin/install.sh
 RUN install-application.sh
 
 CMD ["run.sh"]
