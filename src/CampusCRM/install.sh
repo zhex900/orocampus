@@ -54,10 +54,8 @@ chown -R www-data:www-data /var/www/ /srv/app-data/
 # install the orocampus.
 cd /var/www
 php /var/www/app/console oro:migration:load --show-queries --force --bundles="EventNameBundle"
-php /var/www/app/console oro:migration:load --show-queries --force --bundles="CampusCalendarBundle"
-php /var/www/app/console oro:migration:load --show-queries --force --bundles="CampusUserBundle"
-php /var/www/app/console oro:migration:load --show-queries --force --bundles="CampusContactBundle"
-#php app/console oro:migration:load --show-queries --force
+php /var/www/app/console cache:clear --env=prod -vvv
+php app/console oro:migration:load --show-queries --force
 php /var/www/app/console oro:migration:data:load
 
 php /var/www/app/console cache:clear --env=prod -vvv
@@ -65,9 +63,9 @@ php /var/www/app/console cache:clear --env=prod -vvv
 # set redis configuration
 sed -i 's/session_handler/\#session_handler/g' /var/www/app/config/parameters.yml
 echo '    session_handler:    'snc_redis.session.handler'' >> /var/www/app/config/parameters.yml
-echo '    redis_dsn_cache:    'redis://redis:6379/0'' >> /var/www/app/config/parameters.yml
-echo '    redis_dsn_session:  'redis://redis:6379/1'' >> /var/www/app/config/parameters.yml
-echo '    redis_dsn_doctrine: 'redis://redis:6379/2'' >> /var/www/app/config/parameters.yml
+#echo '    redis_dsn_cache:    'redis://redis:6379/0'' >> /var/www/app/config/parameters.yml
+#echo '    redis_dsn_session:  'redis://redis:6379/1'' >> /var/www/app/config/parameters.yml
+#echo '    redis_dsn_doctrine: 'redis://redis:6379/2'' >> /var/www/app/config/parameters.yml
 
 php /var/www/app/console cache:clear --env=prod -vvv
 chown -R www-data:www-data /var/www/ /srv/app-data/
