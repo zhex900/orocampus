@@ -58,7 +58,7 @@ phpmyadmin:
   links:
     - db
   ports:
-    - '8888:8888'
+    - '8080:80'
   restart: always
 redis:
   environment:
