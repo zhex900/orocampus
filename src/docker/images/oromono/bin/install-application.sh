@@ -84,14 +84,5 @@ rm -rf /tmp/*
 rm -rf ~/.ssh
 rm -rf ~/.composer
 
-PARAMETERS='/var/www/app/config/parameters.yml'
-
-# update the database config
-sed -i s/database_host:.*/database_host:\ ${APP_DB_HOST}/g ${PARAMETERS}
-sed -i s/database_name:.*/database_name:\ ${APP_DB_NAME}/g ${PARAMETERS}
-sed -i s/database_password:.*/database_password:\ ${APP_DB_PASSWORD}/g ${PARAMETERS}
-sed -i s/database_port:.*/database_port:\ ${APP_DB_PORT}/g ${PARAMETERS}
-sed -i s/database_user:.*/database_user:\ ${APP_DB_USER}/g ${PARAMETERS}
-
 chmod +x /usr/local/bin/download-orocampus.sh
 download-orocampus.sh
