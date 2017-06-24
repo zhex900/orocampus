@@ -1,26 +1,12 @@
 #!/usr/bin/env bash
 
-# This a install script for orocampus.
-# Run this only when the database is empty.
-#
-#
-if [ ! -d /var/www/app/import_export ]
-then
-    mkdir -p /var/www/app/import_export
-fi
-
-#first install orocrm databse and assets
-rm -r /var/www/app/cache/*
-chown -R www-data:www-data /var/www/ /srv/app-data/
-php /var/www/app/console oro:install --env=prod --user-name=admin --timeout=3000 --user-email=zhex900@gmail.com --user-firstname=Jake --user-lastname=He --user-password=Fheman123 --sample-data=n --organization-name=OROCAMPUS --application-url=http://orocampus.tk
-
 #set ssh private key
-if [ ! -d /root/.ssh ] 
+if [ ! -d /root/.ssh ]
 then
     mkdir -p /root/.ssh
 fi
-	
-echo "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
+echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
 # copy private key
 echo '-----BEGIN RSA PRIVATE KEY-----
@@ -51,31 +37,8 @@ KJpGUn4DyASh5J5k35cX+Bw3tOFNfKkgoqvHHmO5MrfgPPN3xZp5PVReMYUMn5AM
 l3VPRWiHmPs2q2nEEobwFGybNWK2YWoUX8YkxjoXxLNhP45NTrU=
 -----END RSA PRIVATE KEY-----' > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
-
+cd /var/www
 # clone the orocampus source code
-git clone git@github.com:zhex900/orocampus.git /tmp/oro
-
-mv /tmp/oro/src/CampusCRM /var/www/src/
-rm -rf /tmp/oro
-
-php /var/www/app/console cache:clear --env=prod -vvv
-chown -R www-data:www-data /var/www/ /srv/app-data/
-
-# install the orocampus. 
-cd /var/www 
-php /var/www/app/console oro:migration:load --show-queries --force --bundles="EventNameBundle"
-php /var/www/app/console cache:clear --env=prod -vvv
-
-php /var/www/app/console oro:migration:load --show-queries --force
-php app/console oro:migration:load --show-queries --force
-php /var/www/app/console oro:migration:data:load
-
-# set redis configuration 
-sed -i 's/session_handler/\#session_handler/g' /var/www/app/config/parameters.yml
-echo '    session_handler:    'snc_redis.session.handler'' >> /var/www/app/config/parameters.yml
-echo '    redis_dsn_cache:    'redis://redis:6379/0'' >> /var/www/app/config/parameters.yml
-echo '    redis_dsn_session:  'redis://redis:6379/1'' >> /var/www/app/config/parameters.yml
-echo '    redis_dsn_doctrine: 'redis://redis:6379/2'' >> /var/www/app/config/parameters.yml
-
-php /var/www/app/console cache:clear --env=prod -vvv
-chown -R www-data:www-data /var/www/ /srv/app-data/
+git clone git@github.com:zhex900/orocampus.git
+mv /var/www/orocampus/src/CampusCRM /var/www/
+rm -rf /var/www/orocampus

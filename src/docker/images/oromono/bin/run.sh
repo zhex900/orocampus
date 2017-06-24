@@ -71,19 +71,7 @@ chown -R www-data:www-data /var/www/ /srv/app-data/
 # add redis config to parameters.yml
 # When docker container is restarted, the redis dns config always get deleted.
 # This is a workaroud.
-if grep -q redis_ds /var/www/app/config/parameters.yml; then
-	info "Add redis_dsn config to parameters.yml"
-	echo '    redis_dsn_cache:    'redis://redis:6379/0'' >> /var/www/app/config/parameters.yml
-	echo '    redis_dsn_session:  'redis://redis:6379/1'' >> /var/www/app/config/parameters.yml
-	echo '    redis_dsn_doctrine: 'redis://redis:6379/2'' >> /var/www/app/config/parameters.yml
-fi
-
-# update the database config
-sed -i s/database_host:.*/database_host:\ ${APP_DB_HOST}/g /var/www/app/config/parameters.yml
-sed -i s/database_name:.*/database_name:\ ${APP_DB_NAME}/g /var/www/app/config/parameters.yml
-sed -i s/database_password:.*/database_password:\ ${APP_DB_PASSWORD}/g /var/www/app/config/parameters.yml
-sed -i s/database_port:.*/database_port:\ ${APP_DB_PORT}/g /var/www/app/config/parameters.yml
-sed -i s/database_user:.*/database_user:\ ${APP_DB_USER}/g /var/www/app/config/parameters.yml
+fix_parameters.sh
 
 # Starting services
 if php -r 'foreach(json_decode(file_get_contents("'${APP_ROOT}'/composer.lock"))->{"packages"} as $p) { echo $p->{"name"} . ":" . $p->{"version"} . PHP_EOL; };' | grep 'platform:2' > /dev/null

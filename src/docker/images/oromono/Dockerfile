@@ -20,7 +20,12 @@ ARG GIT_URI="https://github.com/orocrm/crm-application.git"
 # tags/1.9.1 - for 1.9.1 tag 
 ARG GIT_REF="tags/2.2.1"
 COPY bin/install-application.sh          /usr/local/bin/install-application.sh
-COPY bin/install.sh                      /usr/local/bin/install.sh
+COPY bin/install-oro.sh                  /usr/local/bin/install-oro.sh
+COPY bin/download-orocampus.sh           /usr/local/bin/download-orocampus.sh
+COPY bin/rebuild.sh                      /usr/local/bin/rebuild.sh
+COPY bin/fix_parameters.sh               /usr/local/bin/fix_parameters.sh
+COPY bin/install-orocampus.sh            /usr/local/bin/install-orocampus.sh
+
 RUN install-application.sh
 
 CMD ["run.sh"]
