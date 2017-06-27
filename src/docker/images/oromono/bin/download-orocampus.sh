@@ -41,4 +41,5 @@ cd /var/www
 # clone the orocampus source code
 git clone git@github.com:zhex900/orocampus.git
 mv /var/www/orocampus/src/CampusCRM /var/www/
-rm -rf /var/www/orocampus
+
+#rm -rf /var/www/orocampus
