@@ -7,7 +7,8 @@ if [ ! -d /var/www/app/import_export ]
 then
     mkdir -p /var/www/app/import_export
 fi
-
+rm -rf /var/app/cache/*
+#change installed to true
 # rebuild assets
 php /var/www/app/console oro:platform:update --force
 

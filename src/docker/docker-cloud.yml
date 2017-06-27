@@ -53,12 +53,19 @@ orocrm:
     - '993:993'
     - '3088:8080'
   restart: always
+mail:
+  environment:
+    - maildomain=localhost
+    - 'smtp_user=user@localhost:password'
+  expose:
+    - '25'
+  image: 'catatnight/postfix:latest'
 phpmyadmin:
   image: 'phpmyadmin/phpmyadmin:latest'
   links:
     - db
   ports:
-    - '8080:80'
+    - '8888:80'
   restart: always
 redis:
   environment:

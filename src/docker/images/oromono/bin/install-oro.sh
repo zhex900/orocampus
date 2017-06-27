@@ -3,11 +3,11 @@
 # install the orocampus. 
 cd /var/www
 PARAMETERS='/var/www/app/config/parameters.yml'
-APP_DB_HOST
-APP_DB_NAME
-APP_DB_PASSWORD
-APP_DB_PORT
-APP_DB_USER
+APP_DB_HOST='db'
+APP_DB_NAME='orocrm'
+APP_DB_PASSWORD='orocrm'
+APP_DB_PORT='3306'
+APP_DB_USER='orocrm'
 
 # update the database config
 sed -i s/database_host:.*/database_host:\ ${APP_DB_HOST}/g ${PARAMETERS}
