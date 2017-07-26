@@ -24,9 +24,10 @@ class AttendeeRelationManager extends BaseManager
         if ($relatedEntity instanceof User) {
             $attendee
                 ->setUser($relatedEntity)
-                ->setDisplayName($this->nameFormatter->format($relatedEntity).'   #'.$relatedEntity->getId() )
+                //HACK: Append the contact id to the back of display name separated by #
+                ->setDisplayName($this->nameFormatter->format($relatedEntity).'   #'.$relatedEntity->getContact()->getId() )
                 ->setEmail($relatedEntity->getEmail());
-            // $event->addActivityTarget($relatedEntity);
+
         } elseif ($relatedEntity instanceof Contact) {
 
             $attendee
@@ -95,6 +96,7 @@ class AttendeeRelationManager extends BaseManager
                 $contact = $this->registry
                     ->getRepository('OroContactBundle:Contact')
                     ->find($matches['contact_id']);
+
                 $attendee->setContact($contact);
             }
         }
