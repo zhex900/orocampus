@@ -99,6 +99,14 @@
         }
     ] %}
 
+    {# If parent event exists, set the parent event id as the event id
+      This will show the attendance of the parent event.
+    #}
+    {% set event_id = entity.id %}
+    {% if not entity.parent is null %}
+        {% set event_id = entity.parent.id%}
+    {% endif %}
+
     {% set gridName = 'campuscalendar-event-attendance-grid' %}
     {% set dataBlocks = dataBlocks|merge([{
     'title' : 'Attendance',
@@ -108,7 +116,7 @@
     'title' : null,
     'useSpan': false,
     'data' : [
-    dataGrid.renderGrid(gridName, {viewEventId: entity.id}, { cssClass: 'inner-grid' })
+    dataGrid.renderGrid(gridName, {viewEventId: event_id}, { cssClass: 'inner-grid' })
     ]
     }
     ]
