@@ -32,16 +32,16 @@ class FrequencyManager
 
     /**
      * @param Attendee $attendee
-     * @param Boolean $add
+     * @param string $add
      */
-    public function updateAttendanceFrequency( $attendee, $add=true)
+    public function updateAttendanceFrequency( $attendee, $add)
     {
         /** @var Contact $contact */
         $contact = $attendee->getContact();
         /** @var CalendarEvent $calendar_event */
         $calendar_event = $attendee->getCalendarEvent();
         // Get all the same events that the contact have attended this semester
-        $events = $this->getAttendedEvents($contact, $calendar_event);
+        $reset_events = $this->getAttendedEvents($contact, $calendar_event);
 
         // Get all events that after the current event date.
         // Add the current event to the head of the array.
@@ -49,51 +49,58 @@ class FrequencyManager
 
         $current_event = Array((0) => Array(
             'date' => $calendar_event->getStart()->format(self::DATE_FORMAT),
+            'event_id' => $calendar_event->getId(),
             'teaching_week' => $calendar_event->getTeachingWeek(),
             'attendee_id' => null
         ));
 
-        $reset_events = array_filter($events, function ($val) use ($date) {
-            return ($date) <= \DateTime::createFromFormat(self::DATE_FORMAT, $val['date']);
-        });
-
-        // Find the event before the current event date.
-        $before_events = array_filter($events, function ($val) use ($date) {
-            return ($date) > \DateTime::createFromFormat(self::DATE_FORMAT, $val['date']);
-        });
-
-        $attendance_count =1;
-
-        if ( !empty($before_events)){
-            $before_event = end($before_events);
-            if ($before_event['attendance_count'] != null) {
-                $attendance_count += (int)$before_event['attendance_count'];
-            }
-        }
-
-        if( $add ) {
+        if( $add=='ADD' ) {
             $reset_events = array_merge($current_event, $reset_events);
 
-        }else{
-            // remove the first event.
-            array_shift($reset_events);
+        }elseif ( $add == 'DELETE'){
+            // remove the $current_event.
+            $reset_events = array_filter($reset_events, function ($val) use ($calendar_event) {
+                return ($calendar_event->getId() != $val['event_id']);
+            });
         }
 
-        $events = array_merge($before_events,$reset_events);
+        file_put_contents('/tmp/event.log', PHP_EOL.'----- Events: '.PHP_EOL, FILE_APPEND);
+        $this->printEvents($reset_events);
 
-        // what if it is the same event?
-        if ($add) {
-            $count = $attendance_count;
-        }else{
-            $count = $attendance_count-1;
-        }
+        // Find the event with the same event id and replace old event date with current event date.
+        $reset_events = array_map(
+            function($v) use($calendar_event) {
+                if ($v['event_id'] == $calendar_event->getId())
+                    $v['date'] = $calendar_event->getStart()->format(self::DATE_FORMAT);
+                return $v;
+                },
+            $reset_events
+        );
 
+        // Sort the events according to event date.
+        usort($reset_events,
+            function ($a, $b){
+                $t1 = strtotime($a['date']);
+                $t2 = strtotime($b['date']);
+                return $t1 - $t2;
+            }
+        );
+
+        file_put_contents('/tmp/event.log', 'Attendee: ' . $attendee->getDisplayName() . PHP_EOL, FILE_APPEND);
+        file_put_contents('/tmp/event.log', 'Current Event: '.$calendar_event->getStart()->format(self::DATE_FORMAT).' id: '. $calendar_event->getId(), FILE_APPEND);
+        file_put_contents('/tmp/event.log', PHP_EOL.'Attended Events: '.PHP_EOL, FILE_APPEND);
+        $this->printEvents($reset_events);
+        file_put_contents('/tmp/event.log', PHP_EOL.'Reset_events: '.PHP_EOL , FILE_APPEND);
+        $this->printEvents($reset_events);
+        file_put_contents('/tmp/event.log', PHP_EOL .''.PHP_EOL, FILE_APPEND);
+
+        $count=0;
         foreach ($reset_events as $reset_event) {
-
+            ++$count;
             $d= \DateTime::createFromFormat(self::DATE_FORMAT, $reset_event['date']);
 
             // find the frequency for this event.
-            $freq = $this->findAttendanceFrequency($d , $reset_event['teaching_week'], $events);
+            $freq = $this->findAttendanceFrequency($d , $reset_event['teaching_week'], $reset_events);
 
             if ($reset_event['attendee_id'] != null) {
                 // find the event attendee entity
@@ -102,13 +109,15 @@ class FrequencyManager
                     ->getRepository('OroCalendarBundle:Attendee')
                     ->find($reset_event['attendee_id']);
 
-                    ++$count;
-
                 $this->commitChange($rest_attendee, $freq, $count);
+                file_put_contents('/tmp/event.log', $reset_event['date'].' N:'.$count.PHP_EOL, FILE_APPEND);
+
             } else {
                 // the current event have attendee_id as null
-                $this->commitChange($attendee,$freq,$attendance_count);
+                $this->commitChange($attendee,$freq,$count);
+                file_put_contents('/tmp/event.log', $reset_event['date'].' '.$count.PHP_EOL, FILE_APPEND);
             }
+
         }
     }
 
@@ -249,5 +258,14 @@ class FrequencyManager
             $minimum_days = self::AFTER_SNAP_SHOT;
         }
         return $minimum_days;
+    }
+
+    private function printEvents($events)
+    {
+        foreach ($events as $event) {
+
+            file_put_contents('/tmp/event.log', 'Event: ' . $event['date'] . ' id: '. $event['event_id']. PHP_EOL, FILE_APPEND);
+
+        }
     }
 }

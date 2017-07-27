@@ -51,7 +51,7 @@ class CalendarEventAttendeesListener extends BaseListener
                 $this
                     ->container
                     ->get('frequency_manager')
-                    ->updateAttendanceFrequency($entity);
+                    ->updateAttendanceFrequency($entity,'ADD');
             }
 
             if ($this->isAttendeeApplicable($entity, $unitOfWork)) {
@@ -65,7 +65,7 @@ class CalendarEventAttendeesListener extends BaseListener
                 $this
                     ->container
                     ->get('frequency_manager')
-                    ->updateAttendanceFrequency($entity);
+                    ->updateAttendanceFrequency($entity,'UPDATE');
             }
 
             if ($this->isAttendeeApplicable($entity, $unitOfWork)) {
@@ -79,7 +79,7 @@ class CalendarEventAttendeesListener extends BaseListener
                 $this
                     ->container
                     ->get('frequency_manager')
-                    ->updateAttendanceFrequency($entity, false);
+                    ->updateAttendanceFrequency($entity, 'DELETE');
             }
 
             if ($this->isAttendeeApplicable($entity, $unitOfWork)
