@@ -2,6 +2,8 @@
 
 namespace CampusCRM\CampusCalendarBundle\Form\Type;
 
+use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
+use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,10 +15,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
 use CampusCRM\CampusCalendarBundle\Manager\AttendeeRelationManager;
 use CampusCRM\CampusCalendarBundle\Manager\AttendeeManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 //use Oro\Bundle\CalendarBundle\Manager\AttendeeManager;
 
 class CalendarEventAttendeesSelectType extends AbstractType
 {
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     /**
      * @var AttendeeManager
      */
@@ -36,15 +46,18 @@ class CalendarEventAttendeesSelectType extends AbstractType
      * @param DataTransformerInterface $attendeesToViewTransformer
      * @param AttendeeManager          $attendeeManager
      * @param AttendeeRelationManager  $attendeeRelationManager
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         DataTransformerInterface $attendeesToViewTransformer,
         AttendeeManager $attendeeManager,
-        AttendeeRelationManager $attendeeRelationManager
+        AttendeeRelationManager $attendeeRelationManager,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->attendeesToViewTransformer = $attendeesToViewTransformer;
         $this->attendeeManager            = $attendeeManager;
         $this->attendeeRelationManager    = $attendeeRelationManager;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -65,6 +78,46 @@ class CalendarEventAttendeesSelectType extends AbstractType
         if ($form->getData()) {
             $view->vars['configs']['selected'] = $this->attendeeManager->createAttendeeExclusions($form->getData());
         }
+
+        if (!$form->getParent()) {
+            return;
+        }
+
+        $calendarEvent = $form->getParent()->getData();
+        if (!$calendarEvent instanceof CalendarEvent) {
+            return;
+        }
+
+        if ($calendarEvent->getId() !== null) {
+            return;
+        }
+
+        /** @var User $owner */
+        $owner = $this->tokenStorage->getToken()->getUser();
+
+        $this->addOwnerToAttendees($view, $owner);
+    }
+
+    /**
+     * @param FormView $view
+     * @param User    $owner
+     */
+    private function addOwnerToAttendees(FormView $view, User $owner)
+    {
+        $view->vars['value'] = json_encode([
+            'entityClass' => User::class,
+            'entityId'    => $owner->getId(),
+        ]);
+
+        $view->vars['attr']['data-selected-data'] = json_encode([
+            'text' => $owner->getFullName(),
+            'displayName' => $owner->getFullName(),
+            'email' => $owner->getEmail(),
+            'type' => null,
+            'status' => null,
+            'userId' => $owner->getId(),
+            'id' => $view->vars['value'],
+        ]);
     }
 
     /**
