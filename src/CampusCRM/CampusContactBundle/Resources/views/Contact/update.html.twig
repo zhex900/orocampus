@@ -5,7 +5,6 @@
 {% set fullname = entity|oro_format_name|default('oro.entity.item'|trans({'%id%': entity.id})) %}
 {% oro_title_set({ params : {"%contact.name%": fullname} }) %}
 
-{% set gridName = 'contact-accounts-grid' %}
 {% set formAction = form.vars.value.id ? path('oro_contact_update', { 'id': form.vars.value.id }) : path('oro_contact_create') %}
 
 {% block navButtons %}
@@ -212,22 +211,6 @@
         ]
         }]) %}
     {% endif %}
-
-    {% set dataBlocks = dataBlocks|merge([{
-    'title' : 'oro.contact.accounts.label'|trans,
-    'subblocks':
-    [
-    {
-    'title' : null,
-    'useSpan': false,
-    'data' : [
-    form_widget(form.appendAccounts, {'id': 'appendAccounts'}),
-    form_widget(form.removeAccounts, {'id': 'removeAccounts'}),
-    dataGrid.renderGrid(gridName, { contact: form.vars.value.id ? : null }, { cssClass: 'inner-grid' })
-    ]
-    }
-    ]
-    }]) %}
 
     {% set data = {
     'formErrors': form_errors(form)? form_errors(form) : null,
