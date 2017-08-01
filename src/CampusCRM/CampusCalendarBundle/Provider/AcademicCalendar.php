@@ -9,16 +9,16 @@
 namespace CampusCRM\CampusCalendarBundle\Provider;
 
 use Doctrine\ORM\EntityManager;
-use Oro\Bundle\CalendarBundle\Entity\Attendee;
-use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
-use Oro\Bundle\ContactBundle\Entity\Contact;
-use Oro\ORM\Query\AST\Functions\SimpleFunction;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class AcademicCalendar
 {
 
     /** @var EntityManager */
     protected $em;
+
+    /** @var Session */
+    protected $session;
 
     /** @var array $semesters */
     // array ( key=>university name ,
@@ -38,13 +38,15 @@ class AcademicCalendar
 
     /**
      * @param EntityManager $em
+     * @param Session $session
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Session $session)
     {
         $this->em = $em;
         $this->now = new \DateTime('now');
         $this->semester_dates = $this->getSemesterDates();
         $this->recess_dates = $this->getRecessDates();
+        $this->session = $session;
     }
 
     /**
@@ -153,6 +155,8 @@ class AcademicCalendar
         if (empty($semesters)) {
             throw new \Exception($university . ' Calendar does not exist.');
         }
+        file_put_contents('/tmp/weeks.log', print_r($semesters).PHP_EOL, FILE_APPEND);
+
 
         for ($i = 0; $i < count($semesters); $i++) {
 
@@ -178,6 +182,8 @@ class AcademicCalendar
      */
     public function getTeachingWeek($date, $sem = null, $university = self::DEFAULT_UNIVERSITY)
     {
+        file_put_contents('/tmp/weeks.log', 'date ' . $date->format('Y-m-d').PHP_EOL, FILE_APPEND);
+
         $date->setTime(0, 0, 0);
 
         if ($sem == null) {
@@ -185,15 +191,36 @@ class AcademicCalendar
             $sem = substr($this->getSemester($date), 4);
         }
 
+        file_put_contents('/tmp/weeks.log', 'sem ' . $sem.PHP_EOL, FILE_APPEND);
+
         $sem_key = array_search($sem, self::SEMESTER_CODE);
+        file_put_contents('/tmp/weeks.log', 'sem key ' . $sem_key.PHP_EOL, FILE_APPEND);
 
         // get the start and end dates of the semester
         /** @var \DateTime $sem_start */
         $sem_start = $this->semester_dates[$university][$sem_key][0][0];
+        file_put_contents('/tmp/weeks.log', 'start ' . $sem_start->format('Y-m-d').PHP_EOL, FILE_APPEND);
+
         /** @var \DateTime $sem_end */
         $sem_end = $this->semester_dates[$university][$sem_key][0][1];
+        file_put_contents('/tmp/weeks.log', '$sem_end ' . $sem_end->format('Y-m-d').PHP_EOL, FILE_APPEND);
+
+        file_put_contents('/tmp/weeks.log', 'compare ' . sizeof($this->recess_dates[$university][self::RECESS]) . PHP_EOL, FILE_APPEND);
+
         /** @var \DateTime $recess_start */
-        $recess_start = $this->recess_dates[$university][self::RECESS][$sem_key - 1][0];
+        if ($sem_key <=sizeof($this->recess_dates[$university][self::RECESS])) {
+
+            $recess_start = $this->recess_dates[$university][self::RECESS][$sem_key - 1][0];
+        }else {
+            file_put_contents('/tmp/weeks.log', '$recess_start aaa' . PHP_EOL, FILE_APPEND);
+
+            $this->session->getFlashBag()->add('error', 'Calendar does not exist.');
+            throw new \Exception($university . 'asdfd Calendar does not exist.');
+            //file_put_contents('/tmp/weeks.log', '$recess_start aaa' . PHP_EOL, FILE_APPEND);
+            //throw new RuntimeException('Calendar does not exist.');
+        }
+        file_put_contents('/tmp/weeks.log', '$recess_start ' . $recess_start->format('Y-m-d') . PHP_EOL, FILE_APPEND);
+
         /** @var \DateTime $recess_end */
         $recess_end = $this->recess_dates[$university][self::RECESS][$sem_key - 1][1];
 
@@ -202,6 +229,7 @@ class AcademicCalendar
         $monday = new \DateTime();
         $monday->setTimestamp(strtotime("monday this week", $date->getTimestamp()));
         $monday->setTimezone($sem_start->getTimezone());
+        file_put_contents('/tmp/weeks.log', '$monday ' . $monday->format('Y-m-d').PHP_EOL, FILE_APPEND);
 
         $weeks = ($sem_start->diff($monday)->format('%a')) / 7;
         file_put_contents('/tmp/weeks.log', 'start ' . $sem_start->format('Y-m-d').PHP_EOL, FILE_APPEND);

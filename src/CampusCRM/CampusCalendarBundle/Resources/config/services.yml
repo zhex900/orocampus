@@ -18,6 +18,7 @@ services:
         class:  CampusCRM\CampusCalendarBundle\Provider\AcademicCalendar
         arguments:
                   - '@doctrine.orm.entity_manager'
+                  - '@session'
 
       frequency_manager:
         class:  CampusCRM\CampusCalendarBundle\Manager\FrequencyManager
