@@ -92,10 +92,13 @@ class CalendarEventAttendeesSelectType extends AbstractType
             return;
         }
 
-        /** @var User $owner */
-        $owner = $this->tokenStorage->getToken()->getUser();
+        // add owner as default attendee when it is not system calendar
+        if ($calendarEvent->getSystemCalendar()==null) {
+            /** @var User $owner */
+            $owner = $this->tokenStorage->getToken()->getUser();
 
-        $this->addOwnerToAttendees($view, $owner);
+            $this->addOwnerToAttendees($view, $owner);
+        }
     }
 
     /**
