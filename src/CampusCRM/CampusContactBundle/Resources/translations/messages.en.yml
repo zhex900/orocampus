@@ -2,6 +2,7 @@ oro:
     contact:
             gridview:
                 owner.label:              My contacts
+                followup.label:           Follow-up
 
             user.label:                   User
             linked_user.label:            Linked User

@@ -249,13 +249,15 @@ datagrids:
                     options:
                         field_options:
                             choices: "@oro_user.gender_provider->getChoices"
-                    enabled: false
+                    enabled: true
                 email:
                     type: string
                     data_name: email.email
+                    enabled: false
                 phone:
                     type: string
                     data_name: phone.phone
+                    enabled: false
                 fax:
                     type: string
                     data_name: c.fax
@@ -338,7 +340,7 @@ datagrids:
                     autocomplete_alias: users
                     renderedPropertyName: 'fullName'
                     className: 'Oro\Bundle\UserBundle\Entity\User'
-                    enabled: false
+                    enabled: true
                 reportsName:
                     type: string
                     data_name: reportsName
@@ -534,7 +536,7 @@ datagrids:
                 renderable: true
             institutions:
                 label: 'Institution'
-                renderable: true
+                renderable: false
             contact_status:
                 renderable: false
             level_of_study:
@@ -550,4 +552,15 @@ datagrids:
             ownerName:
                 label:         oro.contact.owner.label
                 renderable: true
+        filters:
+            columns:
+                semester_contacted:
+                    type: string
+                    data_name: semester_contacted
+                    enabled: true
+                contact_source:
+                    type: enum
+                    data_name: contact_source
+                    enum_code: contact_source_source
+                    enabled: true
         views_list: '@oro_contact.contact_grid_view_list'
