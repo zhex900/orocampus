@@ -1,5 +1,8 @@
 oro:
     contact:
+            gridview:
+                owner.label:              My contacts
+
             user.label:                   User
             linked_user.label:            Linked User
             date_of_baptism.label:        Date of Baptism

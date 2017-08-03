@@ -2,6 +2,12 @@ parameters:
     oro_contact.form_type_extension.class: CampusCRM\CampusContactBundle\Form\Extension\CampusContactTypeExtension
 
 services:
+    oro_contact.contact_grid_view_list:
+        class: CampusCRM\CampusContactBundle\Datagrid\ContactExtraViewList
+        arguments:
+            - '@translator'
+        calls:
+            - [setToken, ['@security.token_storage']]
     oro_contact.form_type_extension:
         class: %oro_contact.form_type_extension.class%
         arguments:

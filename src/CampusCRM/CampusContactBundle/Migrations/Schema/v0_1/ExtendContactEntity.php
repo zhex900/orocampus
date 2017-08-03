@@ -72,7 +72,7 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => true],
                     'dataaudit' => ['auditable' => true]
                 ]
@@ -85,7 +85,7 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => true],
                     'dataaudit' => ['auditable' => true]
                 ]
@@ -97,7 +97,7 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => true],
                     'dataaudit' => ['auditable' => true]
                 ]
@@ -110,7 +110,7 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => true],
                     'dataaudit' => ['auditable' => true]
                 ]
@@ -123,7 +123,7 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => true],
                     'dataaudit' => ['auditable' => true]
                 ]
@@ -136,7 +136,7 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => true],
                     'dataaudit' => ['auditable' => true]
                 ]
@@ -199,7 +199,7 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
             [
                 'oro_options' => [
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_FALSE],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
                     'merge' => ['display' => true],
                     'dataaudit' => ['auditable' => true]
                 ]
