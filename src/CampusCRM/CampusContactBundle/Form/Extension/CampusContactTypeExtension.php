@@ -37,9 +37,13 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     {
         $this->em = $em;
         $this->container = $container;
-        $this->current_semester = $this->container
-            ->get('academic_calendar')
-            ->getCurrentSemester();
+        try {
+            $this->current_semester = $this->container
+                ->get('academic_calendar')
+                ->getCurrentSemester();
+        }catch (\Exception $e) {
+            $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
+        }
     }
 
     /**

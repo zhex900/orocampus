@@ -9,6 +9,7 @@
 namespace CampusCRM\CampusCalendarBundle\Provider;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class AcademicCalendar
@@ -16,9 +17,6 @@ class AcademicCalendar
 
     /** @var EntityManager */
     protected $em;
-
-    /** @var Session */
-    protected $session;
 
     /** @var array $semesters */
     // array ( key=>university name ,
@@ -40,13 +38,12 @@ class AcademicCalendar
      * @param EntityManager $em
      * @param Session $session
      */
-    public function __construct(EntityManager $em, Session $session)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
         $this->now = new \DateTime('now');
         $this->semester_dates = $this->getSemesterDates();
         $this->recess_dates = $this->getRecessDates();
-        $this->session = $session;
     }
 
     /**
@@ -116,9 +113,9 @@ class AcademicCalendar
                 $end->setTime(0, 0, 0));
         }
 
-        if (empty($array)) {
-            throw new \Exception($key . ' period cannot be find in '. $year . ' System Calendar!');
-        }
+            if (empty($array)) {
+                throw new \Exception($key . ' period cannot be find in ' . $year . ' System Calendar!');
+            }
 
         return $array;
     }
@@ -212,12 +209,7 @@ class AcademicCalendar
 
             $recess_start = $this->recess_dates[$university][self::RECESS][$sem_key - 1][0];
         }else {
-            file_put_contents('/tmp/weeks.log', '$recess_start aaa' . PHP_EOL, FILE_APPEND);
-
-            $this->session->getFlashBag()->add('error', 'Calendar does not exist.');
-            throw new \Exception($university . 'asdfd Calendar does not exist.');
-            //file_put_contents('/tmp/weeks.log', '$recess_start aaa' . PHP_EOL, FILE_APPEND);
-            //throw new RuntimeException('Calendar does not exist.');
+            throw new \Exception($university . ' Calendar, semester ('.$this->getSemester($date).') recess dates does not exist.');
         }
         file_put_contents('/tmp/weeks.log', '$recess_start ' . $recess_start->format('Y-m-d') . PHP_EOL, FILE_APPEND);
 
