@@ -9,8 +9,6 @@
 namespace CampusCRM\CampusCalendarBundle\Provider;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class AcademicCalendar
 {
@@ -36,7 +34,6 @@ class AcademicCalendar
 
     /**
      * @param EntityManager $em
-     * @param Session $session
      */
     public function __construct(EntityManager $em)
     {
@@ -152,7 +149,7 @@ class AcademicCalendar
         if (empty($semesters)) {
             throw new \Exception($university . ' Calendar does not exist.');
         }
-        file_put_contents('/tmp/weeks.log', print_r($semesters).PHP_EOL, FILE_APPEND);
+        //file_put_contents('/tmp/weeks.log', print_r($semesters).PHP_EOL, FILE_APPEND);
 
 
         for ($i = 0; $i < count($semesters); $i++) {
@@ -188,10 +185,10 @@ class AcademicCalendar
             $sem = substr($this->getSemester($date), 4);
         }
 
-        file_put_contents('/tmp/weeks.log', 'sem ' . $sem.PHP_EOL, FILE_APPEND);
+      //  file_put_contents('/tmp/weeks.log', 'sem ' . $sem.PHP_EOL, FILE_APPEND);
 
         $sem_key = array_search($sem, self::SEMESTER_CODE);
-        file_put_contents('/tmp/weeks.log', 'sem key ' . $sem_key.PHP_EOL, FILE_APPEND);
+        //file_put_contents('/tmp/weeks.log', 'sem key ' . $sem_key.PHP_EOL, FILE_APPEND);
 
         // get the start and end dates of the semester
         /** @var \DateTime $sem_start */
@@ -211,7 +208,7 @@ class AcademicCalendar
         }else {
             throw new \Exception($university . ' Calendar, semester ('.$this->getSemester($date).') recess dates does not exist.');
         }
-        file_put_contents('/tmp/weeks.log', '$recess_start ' . $recess_start->format('Y-m-d') . PHP_EOL, FILE_APPEND);
+        //file_put_contents('/tmp/weeks.log', '$recess_start ' . $recess_start->format('Y-m-d') . PHP_EOL, FILE_APPEND);
 
         /** @var \DateTime $recess_end */
         $recess_end = $this->recess_dates[$university][self::RECESS][$sem_key - 1][1];
