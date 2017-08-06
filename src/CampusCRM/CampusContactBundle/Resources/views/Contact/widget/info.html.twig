@@ -187,7 +187,6 @@
             {%- if block == 'Social' -%}
                 {{ ui.renderHtmlProperty('oro.contact.fax.label'|trans, entity.fax ? ui.renderPhone(entity.fax) : null) }}
                 {{ ui.renderHtmlProperty('oro.contact.skype.label'|trans, skypeData) }}
-                {{ ui.renderProperty('oro.contact.method.label'|trans, entity.method) }}
                 {{ ui.renderHtmlProperty('oro.contact.social.label'|trans, socialData) }}
             {%- endif -%}
 
