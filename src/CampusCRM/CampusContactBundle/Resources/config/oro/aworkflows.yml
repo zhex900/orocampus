@@ -8,27 +8,67 @@ workflows:
             active: true
         priority: 100
         applications: [ 'default' ]
+        start_step: unassigned
         steps:
+            unassigned:
+                order: 10
+                allowed_transitions:
+                    - assign
+                    - close
+            assigned:
+                order: 20
+                allowed_transition:
+                    - followup
             followup:
-                order: 1
+                order: 30
                 allowed_transitions:
                     - open
-                    - closed
+                    - close
             open:
-                order: 2
+                order: 40
                 allowed_transitions:
-                    - closed
-            closed:
-                order: 3
+                    - close
+            close:
+                order: 50
                 allowed_transitions:
                     - reopen
         attributes:
+            assigned_to:
+                type: entity
+                options:
+                    class: Oro\Bundle\UserBundle\Entity\User
+            owner:
+                type: entity
+                options:
+                    class: Oro\Bundle\UserBundle\Entity\User
             contact_status:
                 type: object
                 property_path: contact.contactStatus
-                options:
-                    class: Oro\Bundle\ContactBundle\Entity\Contact
+              #  options:
+              #      class: Oro\Bundle\ContactBundle\Entity\Contact
         transitions:
+            assign:
+                step_to:  assigned
+                is_start: true
+                is_unavailable_hidden: true
+             #   acl_resource: oro_sales_opportunity_create
+                frontend_options:
+                    icon: 'fa-usd'
+                transition_definition: assign_definition
+                form_options:
+                    attribute_fields:
+                        assigned_to:
+                            form_type: oro_user_select
+                            options:
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
+                        owner:
+                            form_type: oro_user_select
+                            options:
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
             reopen:
                 step_to: followup
                 transition_definition: def
@@ -43,8 +83,8 @@ workflows:
                 transition_definition: def
                 #frontend_options:
                  #   icon: bar
-            closed:
-                step_to: closed
+            close:
+                step_to: close
                 transition_definition: def
                 #frontend_options:
                  #   icon: bar
