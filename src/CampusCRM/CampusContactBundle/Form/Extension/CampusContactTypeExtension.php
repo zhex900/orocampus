@@ -3,6 +3,7 @@
 namespace CampusCRM\CampusContactBundle\Form\Extension;
 
 use Oro\Bundle\ContactBundle\Entity\Contact;
+use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -19,6 +20,9 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     const NEW_ONE = 'New one';
     const CHURCH_KID = 'Church kid';
     const ADMIN = 'admin';
+
+    /** @var TagManager */
+    protected $tagManager;
 
     /** @var String */
     protected $current_semester;
@@ -162,9 +166,9 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                 LEFT JOIN 
                     ( SELECT cc.assigned_to_user_id
                       FROM orocrm_contact AS cc 
-                      INNER JOIN orocrm_contact_to_contact_grp AS cc_g ON cc_g.contact_id=cc.id 
-                      INNER join orocrm_contact_group AS c_g ON cc_g.contact_group_id=c_g.id  
-                      WHERE  c_g.label= :contact_group AND cc.semester_contacted= :contact_sem
+                      INNER JOIN oro_tag_tagging AS tag ON tag.record_id=cc.id AND tag.entity_name LIKE `%ContactBundle%`
+                      INNER JOIN oro_tag_tag AS tt ON tag.tag_id = tt.id
+                      WHERE  tt.name= :contact_group AND cc.semester_contacted= :contact_sem
                     ) AS c ON u.id=c.assigned_to_user_id 
                 WHERE ( a_g.name= :FT  OR a_g.name = :None_FT ) 
                 AND u.enabled = 1 AND u.username != :admin AND u.gender_id = :gender
@@ -203,9 +207,9 @@ class CampusContactTypeExtension extends AbstractTypeExtension
                 LEFT JOIN 
                     ( SELECT cc.user_owner_id
                       FROM orocrm_contact AS cc 
-                      INNER JOIN orocrm_contact_to_contact_grp AS cc_g ON cc_g.contact_id=cc.id 
-                      INNER join orocrm_contact_group AS c_g ON cc_g.contact_group_id=c_g.id  
-                      WHERE  c_g.label= :contact_group AND cc.semester_contacted= :contact_sem
+                      INNER JOIN oro_tag_tagging AS tag ON tag.record_id=cc.id AND tag.entity_name LIKE `%ContactBundle%`
+                      INNER JOIN oro_tag_tag AS tt ON tag.tag_id = tt.id
+                      WHERE  tt.name= :contact_group AND cc.semester_contacted= :contact_sem
                     ) AS c ON u.id=c.user_owner_id
                 WHERE a_g.name= :FT AND u.enabled = 1 AND u.username != :admin AND u.gender_id = :gender
                 GROUP BY u.id, group_name 
