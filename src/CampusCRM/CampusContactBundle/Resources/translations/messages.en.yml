@@ -36,3 +36,4 @@ oro:
             sunday_worship.label:         Sunday Worship
             mhl.label:                    MHL
             christian_courses.label:      Christian Courses
+            auto_allocate.label:          Auto Allocate

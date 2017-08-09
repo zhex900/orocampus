@@ -17,7 +17,7 @@ workflows:
                     - close
             assigned:
                 order: 20
-                allowed_transition:
+                allowed_transitions:
                     - followup
             followup:
                 order: 30
@@ -28,7 +28,7 @@ workflows:
                 order: 40
                 allowed_transitions:
                     - close
-            close:
+            closed:
                 order: 50
                 allowed_transitions:
                     - reopen
@@ -41,60 +41,70 @@ workflows:
                 type: entity
                 options:
                     class: Oro\Bundle\UserBundle\Entity\User
-            contact_status:
-                type: object
-                property_path: contact.contactStatus
+            auto_allocate:
+                type: boolean
+                property_path: contact.auto_allocate
+            #contact_status:
+            ##    type: array
+             #   property_path: contact.contactStatus
               #  options:
               #      class: Oro\Bundle\ContactBundle\Entity\Contact
         transitions:
             assign:
                 step_to:  assigned
-                is_start: true
+#                is_start: true
                 is_unavailable_hidden: true
              #   acl_resource: oro_sales_opportunity_create
                 frontend_options:
                     icon: 'fa-usd'
-                transition_definition: assign_definition
+                transition_definition: assign_def
                 form_options:
                     attribute_fields:
                         assigned_to:
                             form_type: oro_user_select
                             options:
-                                required: true
-                                constraints:
-                                    - NotBlank: ~
+                                required: false
                         owner:
                             form_type: oro_user_select
                             options:
-                                required: true
-                                constraints:
-                                    - NotBlank: ~
+                                required: false
+                        auto_allocate:
+                            form_type: checkbox
+                            options:
+                                required: false
             reopen:
                 step_to: followup
-                transition_definition: def
-            follow_up:
-                is_start: true
+                transition_definition: reopen_def
+            followup:
                 step_to: followup
-                transition_definition: def
+                transition_definition: followup_def
                 #frontend_options:
                  #   icon: bar
             open:
                 step_to: open
-                transition_definition: def
+                transition_definition: open_def
                 #frontend_options:
                  #   icon: bar
             close:
-                step_to: close
-                transition_definition: def
+                step_to: closed
+                transition_definition: close_def
                 #frontend_options:
                  #   icon: bar
-                form_options:                               # options which will be passed to form type of transition
-                    attribute_fields:                       # list of attribute fields which will be shown
-                        contact_status:                       # attribute name
-                            options:                        # list of form field options
-                                form_type: enum
-                                required: true              # define this field as required
-                                constraints:                # list of constraints
-                                    - NotBlank: ~           # this field must be filled
+               # form_options:                               # options which will be passed to form type of transition
+               #     attribute_fields:                       # list of attribute fields which will be shown
+               ##         contact_status:                       # attribute name
+                #            options:                        # list of form field options
+               #                 form_type: enum
+               ##                 required: true              # define this field as required
+                ##                constraints:                # list of constraints
+                  #                  - NotBlank: ~           # this field must be filled
         transition_definitions:
-             def: ~
+             assign_def:
+                actions:
+                  - '@auto_allocate_workflow':
+                      auto_allocate: $auto_allocate
+                      entity_class: $.entity
+             reopen_def: ~
+             followup_def: ~
+             open_def: ~
+             close_def: ~

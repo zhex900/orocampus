@@ -1,7 +1,18 @@
-parameters:
-    oro_contact.form_type_extension.class: CampusCRM\CampusContactBundle\Form\Extension\CampusContactTypeExtension
-
 services:
+    oro_contact.auto_allocate_workflow:
+        class: CampusCRM\CampusContactBundle\Model\Action\AutoAllocateOwnerWorkflow
+        arguments:
+            - "@oro_action.expression.context_accessor"
+            - "@service_container"
+        tags:
+            - { name: oro_action.action, alias: auto_allocate_workflow }
+
+    oro_contact.auto_owner_allocator:
+        class: CampusCRM\CampusContactBundle\Manager\AutoOwnerAllocator
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@service_container'
+
     oro_contact.contact_grid_view_list:
         class: CampusCRM\CampusContactBundle\Datagrid\ContactExtraViewList
         arguments:
@@ -9,9 +20,8 @@ services:
         calls:
             - [setToken, ['@security.token_storage']]
     oro_contact.form_type_extension:
-        class: %oro_contact.form_type_extension.class%
+        class: CampusCRM\CampusContactBundle\Form\Extension\CampusContactTypeExtension
         arguments:
-            - '@doctrine.orm.entity_manager'
             - '@service_container'
         tags:
             - { name: form.type_extension, alias: oro_contact }
