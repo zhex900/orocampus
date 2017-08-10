@@ -543,6 +543,8 @@ datagrids:
                 renderable: false
             ethnicity:
                 renderable: false
+            church_kid:
+                renderable: true
             contact_source:
                 label:  'Source'
                 renderable: true
