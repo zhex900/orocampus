@@ -1,6 +1,10 @@
 oro:
     contact:
+            autoallocate:
+                mass_action.success:      Auto-allocate completed successfully on %count% contacts.
+                mass_action.failure:       Mass auto-allocate failed.
             gridview:
+                autoallocate.label:       Auto Allocate
                 owner.label:              My contacts
                 followup.label:           Follow-up
             church_kid.label:             Church Kid

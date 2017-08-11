@@ -1,4 +1,12 @@
 services:
+    oro_contact.mass_action.handler.autoallocate:
+        class: CampusCRM\CampusContactBundle\Datagrid\Extension\MassAction\AutoAllocateActionHandler
+        arguments:
+            - '@oro_workflow.manager'
+            - '@service_container'
+            - '@translator'
+            - '@oro_entity_merge.doctrine_helper'
+
     oro_contact.auto_allocate_workflow:
         class: CampusCRM\CampusContactBundle\Model\Action\AutoAllocateOwnerWorkflow
         arguments:

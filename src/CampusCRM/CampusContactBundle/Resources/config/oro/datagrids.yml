@@ -380,6 +380,17 @@ datagrids:
                 type: merge
                 entity_name: %oro_contact.entity.class%
                 data_identifier: c.id
+            autoallocate:
+                type: autoallocate
+                entity_name: %oro_contact.entity.class%
+                data_identifier: c.id
+                icon: wrench
+                label: oro.contact.gridview.autoallocate.label
+
+                # handler: oro_contact.mass_action.handler.autoallocate
+   #             acl_resource: orocrm_contact_update
+  #              route: orocrm_contact_update
+ #               link: update_link
         options:
             entityHint: contacts
             export: true
