@@ -154,11 +154,29 @@ datagrids:
                 label:         oro.contact.picture.label
                 renderable:    false
             ownerName:
+                inline_editing:
+                    enable: true
+                    editor:
+                        view_options:
+                            value_field_name: user
+                    autocomplete_api_accessor:
+                        search_handler_name: users
+                        label_field_name: fullName
                 label:         oro.contact.owner.label
                 renderable: false
+                frontend_type: relation
             assignedName:
+                inline_editing:
+                    enable: true
+                    editor:
+                        view_options:
+                            value_field_name: user
+                    autocomplete_api_accessor:
+                        search_handler_name: users
+                        label_field_name: fullName
                 label:         oro.contact.assigned_to.label
                 renderable: false
+                frontend_type: relation
             reportsName:
                 label:         oro.contact.reports_to.label
                 renderable: false
