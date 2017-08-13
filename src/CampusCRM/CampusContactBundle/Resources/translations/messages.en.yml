@@ -1,8 +1,13 @@
 oro:
     contact:
             autoallocate:
+                action:
+                    confirm_title:        Mass Auto Allocate Owner and Assigned To
+                    confirm_content:      Are you sure you want to run Auto Allocate Owner and Assigned To?
+                    confirm_ok:           Yes, do it
+                    confirm_cancel:       Cancel
                 mass_action.success:      Auto-allocate completed successfully on %count% contacts.
-                mass_action.failure:       Mass auto-allocate failed.
+                mass_action.failure:      Mass auto-allocate failed.
             gridview:
                 autoallocate.label:       Auto Allocate
                 owner.label:              My contacts

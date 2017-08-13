@@ -16,13 +16,10 @@ define([
      */
     AutoallocateAction = MassAction.extend({
         defaultMessages: {
-            confirm_title: 'Execution TEST123',
-            confirm_content: 'Are you sure you want to do TEST123?',
-            confirm_ok: 'Yes, do it',
-            confirm_cancel: 'Cancel',
-            success: 'Action performed.',
-            error: 'Action is not performed.',
-            empty_selection: 'Please, select item to perform action.'
+            confirm_title: 'oro.contact.autoallocate.action.confirm_title',
+            confirm_content: 'oro.contact.autoallocate.action.confirm_content',
+            confirm_ok: 'oro.contact.autoallocate.action.confirm_ok',
+            confirm_cancel: 'oro.contact.autoallocate.action.confirm_cancel'
         }
     });
 
