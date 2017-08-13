@@ -2,13 +2,10 @@
 
 namespace CampusCRM\CampusContactBundle\Manager;
 
-use Doctrine\Common\Collections\Collection;
 use Oro\Bundle\ContactBundle\Entity\Contact;
-use Oro\Bundle\TagBundle\Entity\Tag;
-use Oro\Bundle\TagBundle\Entity\TagManager;
 use Doctrine\ORM\EntityManager;
 use Oro\Bundle\UserBundle\Entity\User;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AutoOwnerAllocator
 {
@@ -23,14 +20,14 @@ class AutoOwnerAllocator
     /** @var EntityManager */
     protected $em;
 
-    /** @var  Container */
+    /** @var  ContainerInterface */
     private $container;
 
     /**
      * @param EntityManager $em
-     * @param Container $container
+     * @param ContainerInterface $container
      */
-    public function __construct(EntityManager $em, Container $container)
+    public function __construct(EntityManager $em, ContainerInterface $container)
     {
         $this->em = $em;
         $this->container = $container;

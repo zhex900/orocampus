@@ -3,6 +3,7 @@
 namespace CampusCRM\CampusContactBundle\Form\Extension;
 
 use Oro\Bundle\ContactBundle\Entity\Contact;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -14,13 +15,13 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     /** @var String */
     protected $current_semester;
 
-    /** @var  Container */
+    /** @var  ContainerInterface */
     private $container;
 
     /**
      * @param Container $container
      */
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         try {

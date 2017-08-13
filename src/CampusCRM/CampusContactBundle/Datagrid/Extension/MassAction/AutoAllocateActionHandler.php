@@ -19,7 +19,7 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
 {
     const SUCCESS_MESSAGE = 'oro.contact.autoallocate.mass_action.success';
     const ERROR_MESSAGE = 'oro.contact.autoallocate.mass_action.failure';
-
+    const FOLLOWUP_WORKFLOW = 'followup';
     /**
      * @var DoctrineHelper
      */
@@ -79,14 +79,30 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
             if ($entity instanceof Contact) {
                 // if the current work flow step is unassigned.
                 file_put_contents('/tmp/massaction.log','handler:->'. $entity->getFirstName().' '.$entity->getLastName().PHP_EOL, FILE_APPEND);
-                $count++;
-                $this->container
-                    ->get('oro_contact.auto_owner_allocator')
-                    ->allocateUser($entity);
+
+                // auto allocate owner when follow-up workflow step is unassigned.
+                $current_step = $this->container
+                    ->get('campus_contact.workflow.manager')
+                    ->getCurrentWorkFlowItem($entity,self::FOLLOWUP_WORKFLOW)
+                    ->getCurrentStep()
+                    ->getName();;
+
+                file_put_contents('/tmp/massaction.log','handler:'. $current_step.PHP_EOL, FILE_APPEND);
+
+                if (preg_match('/unassigned/', $current_step)) {
+                    $count++;
+                    $this->container
+                        ->get('oro_contact.auto_owner_allocator')
+                        ->allocateUser($entity);
+
+                    //move workflow step to assigned.
+                    $this->container
+                        ->get('campus_contact.workflow.manager')
+                        ->transitTo($entity,self::FOLLOWUP_WORKFLOW,'assign');
+
+                    $this->container->get('doctrine.orm.entity_manager')->flush();
+                }
             }
-        }
-        if ( $count > 0 ) {
-            $this->container->get('doctrine.orm.entity_manager')->flush();
         }
 
         file_put_contents('/tmp/massaction.log','handler'. PHP_EOL, FILE_APPEND);
