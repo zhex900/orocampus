@@ -16,10 +16,10 @@ define([
      */
     AutoallocateAction = MassAction.extend({
         defaultMessages: {
-            confirm_title: 'oro.contact.autoallocate.action.confirm_title',
-            confirm_content: 'oro.contact.autoallocate.action.confirm_content',
-            confirm_ok: 'oro.contact.autoallocate.action.confirm_ok',
-            confirm_cancel: 'oro.contact.autoallocate.action.confirm_cancel'
+            confirm_title: 'Mass Action Auto Allocate Confirmation',
+            confirm_content: 'Are you sure you want to do this?',
+            confirm_ok: 'Yes, do it',
+            confirm_cancel: 'Cancel',
         }
     });
 
