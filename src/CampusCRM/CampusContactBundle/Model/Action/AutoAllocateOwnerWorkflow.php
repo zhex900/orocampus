@@ -11,6 +11,7 @@ namespace CampusCRM\CampusContactBundle\Model\Action;
 use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Component\Action\Action\AbstractAction;
+use Oro\Component\Action\Exception\ActionException;
 use Oro\Component\ConfigExpression\ContextAccessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Oro\Component\Action\Exception\InvalidParameterException;
@@ -44,8 +45,8 @@ class AutoAllocateOwnerWorkflow extends AbstractAction
         $owner=$this->contextAccessor->getValue($context, $this->options['owner']);
         /* @var User $assignto*/
         $assignto=$this->contextAccessor->getValue($context, $this->options['assigned_to']);
-
-        if ($owner == null || $assignto == null ){
+        $auto_allocate = $this->contextAccessor->getValue($context, $this->options['auto_allocate']);
+        if ($auto_allocate){
             file_put_contents('/tmp/tag.log','Auto Allocate'.PHP_EOL,FILE_APPEND);
             $array = $this
                 ->container
@@ -55,17 +56,19 @@ class AutoAllocateOwnerWorkflow extends AbstractAction
             $owner = $array[0];
             $assignto= $array[1];
             $msg = 'Auto allocation. ';
-        }else{
+        }elseif ($owner!= null && $assignto != null) {
             $entity->setOwner($owner);
             $entity->setAssignedTo($assignto);
             $entity->setAutoAllocate(0);
             $msg = 'Manual allocation. ';
         }
 
-        $this->container->get('session')->getFlashBag()->add('info', $msg.
-            'Owner: '.$owner->getFirstName(). ' '.$owner->getLastName().
-            '. Assigned to: '.$assignto->getFirstName(). ' '.$assignto->getLastName()
+        if ($owner!= null && $assignto != null) {
+            $this->container->get('session')->getFlashBag()->add('info', $msg .
+                'Owner: ' . $owner->getFirstName() . ' ' . $owner->getLastName() .
+                '. Assigned to: ' . $assignto->getFirstName() . ' ' . $assignto->getLastName()
             );
+        }
     }
 
     /**
@@ -74,13 +77,16 @@ class AutoAllocateOwnerWorkflow extends AbstractAction
     public function initialize(array $options)
     {
         if (empty($options['owner'])) {
-            throw new InvalidParameterException('Group name parameter is required');
+            throw new InvalidParameterException('Owner parameter is required');
         }
         if (empty($options['assigned_to'])) {
-            throw new InvalidParameterException('Group name parameter is required');
+            throw new InvalidParameterException('Assigned_to parameter is required');
         }
         if (empty($options['entity_class'])) {
             throw new InvalidParameterException('Entity class parameter is required');
+        }
+        if (empty($options['auto_allocate'])) {
+            throw new InvalidParameterException('Auto_allocate parameter is required');
         }
 
         $this->options=$options;
