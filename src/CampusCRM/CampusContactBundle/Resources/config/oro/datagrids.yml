@@ -157,23 +157,25 @@ datagrids:
                 inline_editing:
                     enable: true
                     editor:
+                        view: oroform/js/app/views/editor/related-id-relation-editor-view
                         view_options:
-                            value_field_name: user
+                            value_field_name: owner
                     autocomplete_api_accessor:
-                        search_handler_name: users
-                        label_field_name: fullName
-                label:         oro.contact.owner.label
+                        class: orouser/js/tools/acl-users-search-api-accessor
+                        permission_check_entity_name: Oro_Bundle_ContactBundle_Entity_Contact
+                label:      oro.contact.owner.label
                 renderable: false
                 frontend_type: relation
             assignedName:
                 inline_editing:
                     enable: true
                     editor:
+                        view: oroform/js/app/views/editor/related-id-relation-editor-view
                         view_options:
-                            value_field_name: user
+                            value_field_name: assignedTo
                     autocomplete_api_accessor:
-                        search_handler_name: users
-                        label_field_name: fullName
+                        class: orouser/js/tools/acl-users-search-api-accessor
+                        permission_check_entity_name: Oro_Bundle_ContactBundle_Entity_Contact
                 label:         oro.contact.assigned_to.label
                 renderable: false
                 frontend_type: relation
