@@ -68,6 +68,13 @@ workflows:
                             form_type: oro_user_select
                             options:
                                 required: false
+                        auto_allocate:
+                            form_type: checkbox
+                            options:
+                                required: true
+                    attribute_default_values:
+                        owner: $contact.owner
+                        auto_allocate: true
             reopen:
                 step_to: followup
                 transition_definition: reopen_def
@@ -101,6 +108,7 @@ workflows:
                       assigned_to: $assigned_to
                       owner: $owner
                       entity_class: $.entity
+                      auto_allocate: $auto_allocate
              reopen_def: ~
              followup_def: ~
              open_def: ~
