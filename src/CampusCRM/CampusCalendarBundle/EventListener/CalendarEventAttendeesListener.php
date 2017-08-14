@@ -5,9 +5,7 @@ namespace CampusCRM\CampusCalendarBundle\EventListener;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
-use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\CalendarBundle\EventListener\CalendarEventAttendeesListener as BaseListener;
-use Oro\Bundle\LocaleBundle\Model\Calendar;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CalendarEventAttendeesListener extends BaseListener

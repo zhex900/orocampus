@@ -52,6 +52,9 @@ class WorkflowManager extends BaseManager
        // $this->workflowmanager = $this->container->get('oro_workflow.manager');
     }
 
+    public function isUnassignedStep(Contact $contact){
+        return preg_match('/unassigned/', $this->getCurrentWorkFlowItem($contact,'followup'));
+    }
     /**
      * find the current step name of follow up workflow
      * @param Contact $contact

@@ -1,4 +1,13 @@
 services:
+    campus_contact.subscriber.contact_listener:
+        class: 'CampusCRM\CampusContactBundle\EventListener\ContactListener'
+        arguments:
+            - "@security.token_storage"
+            - "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: postPersist }
+
     oro_contact.mass_action.handler.autoallocate:
         class: CampusCRM\CampusContactBundle\Datagrid\Extension\MassAction\AutoAllocateActionHandler
         arguments:
