@@ -103,6 +103,21 @@ workflows:
                   #                  - NotBlank: ~           # this field must be filled
         transition_definitions:
              assign_def:
+                # Either auto allocate have value or assigned have value.
+                # Both cannot have value. One have to be null.
+                conditions:
+                # ($assignedTo not empty AND $auto_allocate is false) OR
+                # ($assignedTo is empty AND $auto_allocate is true)
+                  '@or':
+                      - '@and':
+                          message: You must select either Assigned to or Auto allocate. But you cannot select both.
+                          parameters:
+                            - '@not_empty': [$assigned_to]
+                            - '@equal': [$auto_allocate,false]
+                      - '@and':
+                          parameters:
+                            - '@empty': [$assigned_to]
+                            - '@equal': [$auto_allocate,true]
                 actions:
                   - '@auto_allocate_workflow':
                       assigned_to: $assigned_to
