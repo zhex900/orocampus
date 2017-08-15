@@ -6,7 +6,7 @@ services:
             - "@service_container"
         tags:
             - { name: doctrine.event_listener, event: preUpdate }
-            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate  }
 
     oro_contact.mass_action.handler.autoallocate:
         class: CampusCRM\CampusContactBundle\Datagrid\Extension\MassAction\AutoAllocateActionHandler

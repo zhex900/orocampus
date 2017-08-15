@@ -3,6 +3,8 @@
 namespace CampusCRM\CampusContactBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Oro\Bundle\ContactBundle\EventListener\ContactListener as BaseListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,6 +20,7 @@ class ContactListener extends BaseListener
     /** @var ContainerInterface */
     protected $container;
 
+    /** @boolean $transit */
     protected $transit;
 
     /**
@@ -34,10 +37,11 @@ class ContactListener extends BaseListener
      *
      * @param LifecycleEventArgs $args
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function postUpdate(LifecycleEventArgs $args)
     {
+        $entity = $args->getEntity();
+
         if ($this->transit) {
-            $entity = $args->getEntity();
             if ($entity instanceof Contact) {
                 $this->transitToAssigned($entity);
             }
@@ -60,9 +64,7 @@ class ContactListener extends BaseListener
                 && $args->getOldValue('assignedTo') == null
                 && $args->getNewValue('assignedTo') != null
             ) {
-                file_put_contents('/tmp/tag.log', '$assignedTo: null' . PHP_EOL, FILE_APPEND);
-               // $this->container->get('doctrine.orm.entity_manager')->flush();
-              //  $this->transitToAssigned($entity);
+                file_put_contents('/tmp/tag.log', '$assignedTo: null. transit' . PHP_EOL, FILE_APPEND);
                 $this->transit=true;
             }
         }
