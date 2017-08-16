@@ -236,6 +236,10 @@ workflows:
                           parameters:
                             - '@empty': [$assigned_to]
                             - '@equal': [$auto_allocate,true]
+                      - '@and':
+                          parameters:
+                            - '@empty': [$assigned_to]
+                            - '@empty': [$owner]
                 actions:
                   - '@auto_allocate_workflow':
                       assigned_to: $assigned_to
