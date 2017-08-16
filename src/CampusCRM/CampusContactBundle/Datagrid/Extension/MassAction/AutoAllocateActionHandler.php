@@ -41,6 +41,7 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
      * @param WorkflowManager        $workflowmanager
      * @param ContainerInterface     $container
      * @param TranslatorInterface    $translator
+     * @param DoctrineHelper $doctrineHelper
      */
     public function __construct(
         WorkflowManager $workflowmanager,
@@ -78,18 +79,14 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
         foreach ($entities as $entity) {
             if ($entity instanceof Contact) {
                 // if the current work flow step is unassigned.
-                file_put_contents('/tmp/massaction.log','handler:->'. $entity->getFirstName().' '.$entity->getLastName().PHP_EOL, FILE_APPEND);
+                file_put_contents('/tmp/tag.log','handler:->'. $entity->getFirstName().' '.$entity->getLastName().PHP_EOL, FILE_APPEND);
 
                 // auto allocate owner when follow-up workflow step is unassigned.
-                $current_step = $this->container
+                if ($this->container
                     ->get('campus_contact.workflow.manager')
-                    ->getCurrentWorkFlowItem($entity,self::FOLLOWUP_WORKFLOW)
-                    ->getCurrentStep()
-                    ->getName();;
+                    ->isUnassignedStep($entity)) {
+                    file_put_contents('/tmp/tag.log',$entity->getFirstName().' '.$entity->getLastName().' is unassigned'. PHP_EOL, FILE_APPEND);
 
-                file_put_contents('/tmp/massaction.log','handler:'. $current_step.PHP_EOL, FILE_APPEND);
-
-                if (preg_match('/unassigned/', $current_step)) {
                     $count++;
                     $this->container
                         ->get('oro_contact.auto_owner_allocator')
@@ -100,12 +97,14 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
                         ->get('campus_contact.workflow.manager')
                         ->transitTo($entity,self::FOLLOWUP_WORKFLOW,'assign');
 
+                    file_put_contents('/tmp/tag.log',$entity->getFirstName().' '.$entity->getLastName().' flush'. PHP_EOL, FILE_APPEND);
+
                     $this->container->get('doctrine.orm.entity_manager')->flush();
                 }
             }
         }
 
-        file_put_contents('/tmp/massaction.log','handler'. PHP_EOL, FILE_APPEND);
+        file_put_contents('/tmp/tag.log','handler'. PHP_EOL, FILE_APPEND);
 
         return $this->generateResponse($count);
     }

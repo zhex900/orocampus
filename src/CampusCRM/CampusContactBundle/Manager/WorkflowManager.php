@@ -9,6 +9,7 @@
 namespace CampusCRM\CampusContactBundle\Manager;
 
 use Oro\Bundle\ContactBundle\Entity\Contact;
+use Oro\Bundle\WorkflowBundle\Model\WorkflowData;
 use Oro\Bundle\WorkflowBundle\Model\WorkflowEntityConnector;
 use Oro\Bundle\WorkflowBundle\Model\WorkflowRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -49,11 +50,10 @@ class WorkflowManager extends BaseManager
             $startedWorkflowsBag);
 
         $this->container = $container;
-       // $this->workflowmanager = $this->container->get('oro_workflow.manager');
     }
 
     public function isUnassignedStep(Contact $contact){
-        return preg_match('/unassigned/', $this->getCurrentWorkFlowItem($contact,'followup'));
+        return preg_match('/unassigned/', $this->getCurrentWorkFlowItem($contact,'followup')->getCurrentStep()->getName());
     }
     /**
      * find the current step name of follow up workflow
@@ -73,11 +73,9 @@ class WorkflowManager extends BaseManager
             //find the follow-up workflow
             if (preg_match('/'.$workflow.'/', $workflowItem->getWorkflowName())) {
                 file_put_contents('/tmp/tag.log', 'workflow Match!!!: ' . $workflowItem->getCurrentStep()->getName() . PHP_EOL, FILE_APPEND);
-
                 return $workflowItem; //->getCurrentStep()->getName();
             }
         }
-        return null;
     }
 
     /*
@@ -87,6 +85,8 @@ class WorkflowManager extends BaseManager
      */
 
     public function transitTo(Contact $contact, $workflow, $transition){
+        file_put_contents('/tmp/tag.log',$contact->getFirstName().' '.$contact->getLastName().' transit to '.$transition. PHP_EOL, FILE_APPEND);
+
         $workflowItem = $this->getCurrentWorkFlowItem($contact, $workflow);
         $this->transit($workflowItem,$transition);
     }
