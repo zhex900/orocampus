@@ -1,12 +1,138 @@
 workflows:
-    contact_followup:
+    contact_feedback:
         entity: Oro\Bundle\ContactBundle\Entity\Contact
+        is_system: true
         entity_attribute: contact
         force_autostart: false
-        steps_display_ordered: true
+        steps_display_ordered: false
         defaults:
             active: true
-        priority: 100
+        priority: 20
+        applications: [ 'default' ]
+        start_step: no_feedback
+        steps:
+            no_feedback:
+                order: 10
+                allowed_transitions:
+                    - add_feedback
+            feedback_completed:
+                is_final: true
+                order: 20
+                allowed_transitions:
+                    - edit_feedback
+        attributes:
+            bible_study:
+                type: boolean
+                property_path: contact.bible_study
+            mhl:
+                type: boolean
+                property_path: contact.mhl
+            christian_courses:
+                type: boolean
+                property_path: contact.christian_courses
+            sunday_worship:
+                type: boolean
+                property_path: contact.sunday_worship
+            homes:
+                type: boolean
+                property_path: contact.homes
+            further_activities:
+                type: boolean
+                property_path: contact.further_activities
+        transitions:
+            add_feedback:
+                step_to:  feedback_completed
+                is_unavailable_hidden: true
+                frontend_options:
+                    icon: comment
+                    class: 'btn-primary'
+                transition_definition: add_def
+                form_options:
+                    attribute_fields:
+                        bible_study:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        mhl:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        christian_courses:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        sunday_worship:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        homes:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        further_activities:
+                            form_type: checkbox
+                            options:
+                                required: true
+                    attribute_default_values:
+                        bible_study: false
+                        mhl: false
+                        christian_courses: false
+                        sunday_worship: false
+                        homes: false
+                        further_activities: false
+            edit_feedback:
+                step_to:  feedback_completed
+                is_unavailable_hidden: true
+                frontend_options:
+                    icon: comments
+                    class: 'btn-success'
+                transition_definition: edit_def
+                form_options:
+                    attribute_fields:
+                        bible_study:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        mhl:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        christian_courses:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        sunday_worship:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        homes:
+                            form_type: checkbox
+                            options:
+                                required: true
+                        further_activities:
+                            form_type: checkbox
+                            options:
+                                required: true
+                    attribute_default_values:
+                        bible_study: $contact.bible_study
+                        mhl: $contact.mhl
+                        christian_courses: $contact.christian_courses
+                        sunday_worship: $contact.sunday_worship
+                        homes: $contact.homes
+                        further_activities: $contact.further_activities
+        transition_definitions:
+             add_def: ~
+             edit_def: ~
+
+    contact_followup:
+        entity: Oro\Bundle\ContactBundle\Entity\Contact
+        is_system: true
+        entity_attribute: contact
+        force_autostart: false
+        steps_display_ordered: false
+        defaults:
+            active: true
+        priority: 10
         applications: [ 'default' ]
         start_step: unassigned
         steps:
@@ -44,19 +170,13 @@ workflows:
             auto_allocate:
                 type: boolean
                 property_path: contact.auto_allocate
-            #contact_status:
-            ##    type: array
-             #   property_path: contact.contactStatus
-              #  options:
-              #      class: Oro\Bundle\ContactBundle\Entity\Contact
         transitions:
             assign:
                 step_to:  assigned
-#                is_start: true
                 is_unavailable_hidden: true
-             #   acl_resource: oro_sales_opportunity_create
                 frontend_options:
-                    icon: 'fa-usd'
+                    icon: 'fa-sign-in'
+                    class: 'btn-success'
                 transition_definition: assign_def
                 form_options:
                     attribute_fields:
@@ -77,30 +197,28 @@ workflows:
                         auto_allocate: true
             reopen:
                 step_to: followup
+                frontend_options:
+                    icon: 'fa-thumbs-up'
+                    class: 'btn-warning'
                 transition_definition: reopen_def
             followup:
                 step_to: followup
+                frontend_options:
+                    icon: 'fa-search-plus'
+                    class: 'btn-primary'
                 transition_definition: followup_def
-                #frontend_options:
-                 #   icon: bar
             open:
                 step_to: open
                 transition_definition: open_def
-                #frontend_options:
-                 #   icon: bar
+                frontend_options:
+                    icon: 'fa-thumbs-up'
+                    class: 'btn-success'
             close:
                 step_to: closed
+                frontend_options:
+                    icon: 'fa-times'
+                    class: 'btn-danger'
                 transition_definition: close_def
-                #frontend_options:
-                 #   icon: bar
-               # form_options:                               # options which will be passed to form type of transition
-               #     attribute_fields:                       # list of attribute fields which will be shown
-               ##         contact_status:                       # attribute name
-                #            options:                        # list of form field options
-               #                 form_type: enum
-               ##                 required: true              # define this field as required
-                ##                constraints:                # list of constraints
-                  #                  - NotBlank: ~           # this field must be filled
         transition_definitions:
              assign_def:
                 # Either auto allocate have value or assigned have value.

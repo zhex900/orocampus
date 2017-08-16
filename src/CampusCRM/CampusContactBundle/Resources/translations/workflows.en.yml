@@ -1,7 +1,32 @@
 oro:
     workflow:
+        contact_feedback:
+            label: 'Feedback'
+            step:
+                no_feedback:
+                    label: 'Empty'
+                feedback_completed:
+                    label: 'Completed'
+            attribute:
+                bible_study:
+                    label: 'Bible study'
+                mhl:
+                christian_courses:
+                    label: 'Christian courses'
+                sunday_worship:
+                    label: 'Sunday worship'
+                homes:
+                    label: 'Dinner in the homes'
+                further_activities:
+                    label: 'Further activities'
+            transition:
+                add_feedback:
+                    label: 'Add Feedback'
+                edit_feedback:
+                    label: 'Edit Feedback'
+
         contact_followup:
-            label: 'Contact Follow-up'
+            label: 'Follow-up'
             step:
                 unassigned:
                     label: Unassigned
