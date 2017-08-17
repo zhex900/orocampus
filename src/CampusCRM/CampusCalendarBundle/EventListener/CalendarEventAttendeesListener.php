@@ -91,15 +91,15 @@ class CalendarEventAttendeesListener extends BaseListener
      * @param Attendee $attendee
      * @return bool
      */
-    private function attendeeExist(Attendee $attendee){
+    private function attendeeExist(Attendee $attendee) {
 
         $attendees = $attendee->getCalendarEvent()->getAttendees();
-        $i=0;
+        $i = 0;
         foreach ($attendees as $actualAttendee) {
             if ($attendee->getContact()->getId() == $actualAttendee->getContact()->getId()) {
                 ++$i;
             }
         }
-        return $i>1;
+        return $i > 1;
     }
 }

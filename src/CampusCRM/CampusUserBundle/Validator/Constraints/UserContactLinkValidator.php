@@ -43,10 +43,8 @@ class UserContactLinkValidator extends ConstraintValidator
                 $value->getLastName() != $value->getUser()->getLastName()) {
                 //return;
                 $this->context->addViolation('Names of contact and user does not match.');
-            }
-            else {return; }
-        }
-        else {
+            } else {return; }
+        } else {
             return;
         }
     }
