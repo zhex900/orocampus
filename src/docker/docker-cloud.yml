@@ -40,7 +40,7 @@ orocrm:
     - CMD_INIT_BEFORE=
     - CMD_INIT_CLEAN=
     - CMD_INIT_INSTALLED=
-    - VIRTUAL_HOST=test.orocampus.tk
+    - VIRTUAL_HOST=orocampus.tk
   image: 'zhex900/oromono:latest'
   links:
     - db
@@ -74,4 +74,6 @@ redis:
   image: 'redis:latest'
   ports:
     - '6379:6379'
+  volumes:
+    - '/root/data/redis:/data'
   restart: always

@@ -17,7 +17,13 @@ php /var/www/app/console cache:clear --env=prod -vvv
 php /var/www/app/console oro:migration:load --show-queries --force
 php app/console oro:migration:load --show-queries --force
 php /var/www/app/console oro:migration:data:load
-
+#php app/console cache:clear -–env=prod -vvv
+#php app/console assets:install
+#php app/console assetic:dump
+#php app/console oro:requirejs:build
+#app/console oro:workflow:definitions:load --workflows contact_followup
+#app/console oro:workflow:definitions:load --workflows contact_feedback
+#app/console oro:translation:load
 chmod +x /usr/local/bin/fix_parameters.sh
 fix_parameters.sh
 
