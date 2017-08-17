@@ -33,7 +33,7 @@ class Configuration implements ConfigurationInterface
                 )
                 ->validate()
                     ->ifTrue(
-                        function ($v) {
+                        function($v) {
                             return !(is_bool($v) || (is_string($v) && in_array($v, ['organization', 'system'])));
                         }
                     )

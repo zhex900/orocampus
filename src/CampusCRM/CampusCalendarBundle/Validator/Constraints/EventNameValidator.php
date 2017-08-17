@@ -17,7 +17,7 @@ class EventNameValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if ($value == null){
+        if ($value == null) {
             $this->context->addViolation('You must select an event name.');
         }
         return;

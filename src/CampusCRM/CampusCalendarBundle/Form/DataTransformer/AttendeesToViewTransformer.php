@@ -24,7 +24,7 @@ class AttendeesToViewTransformer extends BaseTransformer
         TokenStorageInterface $securityTokenStorage,
         AttendeeManager $attendeeManager
     ) {
-        parent::__construct($entityManager, $securityTokenStorage,$attendeeManager);
+        parent::__construct($entityManager, $securityTokenStorage, $attendeeManager);
 
         $this->attendeeManager = $attendeeManager;
     }

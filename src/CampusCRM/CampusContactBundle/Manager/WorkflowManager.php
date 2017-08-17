@@ -52,8 +52,8 @@ class WorkflowManager extends BaseManager
         $this->container = $container;
     }
 
-    public function isUnassignedStep(Contact $contact){
-        return preg_match('/unassigned/', $this->getCurrentWorkFlowItem($contact,'followup')->getCurrentStep()->getName());
+    public function isUnassignedStep(Contact $contact) {
+        return preg_match('/unassigned/', $this->getCurrentWorkFlowItem($contact, 'followup')->getCurrentStep()->getName());
     }
     /**
      * find the current step name of follow up workflow
@@ -66,11 +66,11 @@ class WorkflowManager extends BaseManager
         $workflowItems = $this->getWorkflowItemsByEntity($contact);
         file_put_contents('/tmp/tag.log', 'Enter workflow' . PHP_EOL, FILE_APPEND);
 
-        foreach ($workflowItems as $workflowItem){
+        foreach ($workflowItems as $workflowItem) {
             file_put_contents('/tmp/tag.log', 'workflow: ' . $workflowItem->getWorkflowName() . PHP_EOL, FILE_APPEND);
             file_put_contents('/tmp/tag.log', 'workflow step: ' . $workflowItem->getCurrentStep()->getName() . PHP_EOL, FILE_APPEND);
             //find the follow-up workflow
-            if (preg_match('/'.$workflow.'/', $workflowItem->getWorkflowName())) {
+            if (preg_match('/' . $workflow . '/', $workflowItem->getWorkflowName())) {
                 file_put_contents('/tmp/tag.log', 'workflow Match!!!: ' . $workflowItem->getCurrentStep()->getName() . PHP_EOL, FILE_APPEND);
                 return $workflowItem; //->getCurrentStep()->getName();
             }
@@ -84,10 +84,10 @@ class WorkflowManager extends BaseManager
      * @param string|Transition $transition
      */
 
-    public function transitTo(Contact $contact, $workflow, $transition){
-        file_put_contents('/tmp/tag.log',$contact->getFirstName().' '.$contact->getLastName().' transit to '.$transition. PHP_EOL, FILE_APPEND);
+    public function transitTo(Contact $contact, $workflow, $transition) {
+        file_put_contents('/tmp/tag.log', $contact->getFirstName() . ' ' . $contact->getLastName() . ' transit to ' . $transition . PHP_EOL, FILE_APPEND);
 
         $workflowItem = $this->getCurrentWorkFlowItem($contact, $workflow);
-        $this->transit($workflowItem,$transition);
+        $this->transit($workflowItem, $transition);
     }
 }

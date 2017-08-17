@@ -29,8 +29,8 @@ class ContextSearchHandler extends BaseSearchHandler
         $userClass = 'Oro\Bundle\UserBundle\Entity\User';
         $contactClass = 'Oro\Bundle\ContactBundle\Entity\Contact';
 
-        if ($class == 'Oro\Bundle\CalendarBundle\Entity\CalendarEvent'){
-            $targetEntityClasses = array_diff( $targetEntityClasses, [$userClass,$contactClass] );
+        if ($class == 'Oro\Bundle\CalendarBundle\Entity\CalendarEvent') {
+            $targetEntityClasses = array_diff($targetEntityClasses, [$userClass, $contactClass]);
         }
 
         foreach ($targetEntityClasses as $targetEntityClass) {

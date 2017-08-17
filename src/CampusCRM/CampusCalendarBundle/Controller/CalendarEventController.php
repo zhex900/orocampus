@@ -35,7 +35,7 @@ class CalendarEventController extends BaseController
             $saved = true;
         }
 
-        if( $this->getRequest()->get('select')){
+        if ($this->getRequest()->get('select')) {
             $select = true;
         }
 

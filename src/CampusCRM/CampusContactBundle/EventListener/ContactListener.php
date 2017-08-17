@@ -3,14 +3,11 @@
 namespace CampusCRM\CampusContactBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PostFlushEventArgs;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Oro\Bundle\ContactBundle\EventListener\ContactListener as BaseListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Oro\Bundle\ContactBundle\Entity\Contact;
-use Oro\Bundle\UserBundle\Entity\User;
 
 class ContactListener extends BaseListener
 {
@@ -58,14 +55,14 @@ class ContactListener extends BaseListener
         $entity = $args->getEntity();
 
         if ($entity instanceof Contact) {
-            file_put_contents('/tmp/tag.log', 'preUpdate: ' .print_r(array_keys($args->getEntityChangeSet()),true). PHP_EOL, FILE_APPEND);
+            file_put_contents('/tmp/tag.log', 'preUpdate: ' . print_r(array_keys($args->getEntityChangeSet()), true) . PHP_EOL, FILE_APPEND);
 
             if ($args->hasChangedField('assignedTo')
                 && $args->getOldValue('assignedTo') == null
                 && $args->getNewValue('assignedTo') != null
             ) {
                 file_put_contents('/tmp/tag.log', '$assignedTo: null. transit' . PHP_EOL, FILE_APPEND);
-                $this->transit=true;
+                $this->transit = true;
             }
         }
     }

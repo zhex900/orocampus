@@ -18,17 +18,17 @@ class ActivityContextApiEntityManager extends BaseManager
      */
     public function getActivityContext($class, $id)
     {
-        $targets = parent::getActivityContext($class,$id);
-        $result= [];
+        $targets = parent::getActivityContext($class, $id);
+        $result = [];
 
         foreach ($targets as $target) {
 
             if ($class == 'Oro\Bundle\CalendarBundle\Entity\CalendarEvent' &&
                 $target['targetClassName'] == 'Oro_Bundle_ContactBundle_Entity_Contact' ||
-                $target['targetClassName'] == 'Oro_Bundle_UserBundle_Entity_User'){
+                $target['targetClassName'] == 'Oro_Bundle_UserBundle_Entity_User') {
                 continue;
             }
-            $result[]=$target;
+            $result[] = $target;
         }
 
         return $result;

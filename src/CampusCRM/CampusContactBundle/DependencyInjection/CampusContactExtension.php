@@ -26,12 +26,12 @@ class CampusContactExtension extends Extension
 
         $container->setParameter(self::PARAMETER_SOCIAL_URL_FORMAT, $config['social_url_format']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('actions.yml');
-       // $loader->load('services_api.yml');
-       // $loader->load('twig_extensions.yml');
-       // $loader->load('importexport.yml');
-       // $loader->load('form.yml');
+        // $loader->load('services_api.yml');
+        // $loader->load('twig_extensions.yml');
+        // $loader->load('importexport.yml');
+        // $loader->load('form.yml');
     }
 }

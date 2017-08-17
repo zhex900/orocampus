@@ -51,9 +51,9 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
     /**
      * Check whether this is a system calendar event or a calender event
      *
-     * @return true for system calendar event or false
+     * @return boolean for system calendar event or false
      */
-    protected function isSystemCalendar(){
+    protected function isSystemCalendar() {
         $request = $this->requestStack->getCurrentRequest()->getRequestUri();
         return (strpos($request, 'system-calendar') == false);
     }

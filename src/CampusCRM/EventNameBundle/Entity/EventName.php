@@ -175,7 +175,7 @@ class EventName extends ExtendEventName implements NameInterface
     /**
      * Returns the event unique id.
      *
-     * @return mixed
+     * @return integer
      */
     public function getId()
     {

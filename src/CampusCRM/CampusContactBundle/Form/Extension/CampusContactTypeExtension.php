@@ -28,7 +28,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
             $this->current_semester = $this->container
                 ->get('academic_calendar')
                 ->getCurrentSemester();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
         }
     }
@@ -40,7 +40,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     {
         $builder->addEventListener(
             FormEvents::SUBMIT,
-            function (FormEvent $event) {
+            function(FormEvent $event) {
                 /** @var Contact $contact */
                 $contact = $event->getData();
                 $this->defaultFirstContactDate($contact);
@@ -60,7 +60,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     /** @param Contact $contact */
     public function defaultFirstContactDate(Contact $contact)
     {
-        if($contact->getFirstContactDate()==null){
+        if ($contact->getFirstContactDate() == null) {
             $contact->setFirstContactDate(new \DateTime('now'));
         }
     }
@@ -69,7 +69,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     public function defaultSemContacted(Contact $contact)
     {
         // if the semester contacted is empty set the value from first contacted date
-        if($contact->getSemesterContacted()==null){
+        if ($contact->getSemesterContacted() == null) {
 
             $contact->setSemesterContacted(
                 $this->container

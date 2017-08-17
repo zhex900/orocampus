@@ -38,14 +38,14 @@ class CalendarEventApiHandler extends BaseHandler
             if ($this->form->isValid()) {
                 // TODO: should be refactored after finishing BAP-8722
                 // Contexts handling should be moved to common for activities form handler
-                $contexts=null;
+                $contexts = null;
                 if ($this->form->has('contexts') && $request->request->has('contexts')) {
                     $contexts = $this->form->get('contexts')->getData();
                     $owner = $entity->getCalendar() ? $entity->getCalendar()->getOwner() : null;
                     if ($owner && $owner->getId()) {
                         $contexts = array_merge($contexts, [$owner]);
                     }
-                   // $this->activityManager->setActivityTargets($entity, $contexts);
+                    // $this->activityManager->setActivityTargets($entity, $contexts);
                 } elseif (!$entity->getId() && $entity->getRecurringEvent()) {
                     $this->activityManager->setActivityTargets(
                         $entity,
@@ -56,7 +56,7 @@ class CalendarEventApiHandler extends BaseHandler
                 $attendees = $entity->getAttendees();
                 $contexts = $this->attendee_relation_manager->syncActivityandContext($contexts, $attendees);
 
-                if ($contexts !== null){
+                if ($contexts !== null) {
                     $this->activityManager->setActivityTargets($entity, $contexts);
                 }
 

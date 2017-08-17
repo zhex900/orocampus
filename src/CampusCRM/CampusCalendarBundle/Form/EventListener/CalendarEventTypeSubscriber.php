@@ -8,7 +8,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\CalendarBundle\Entity\Calendar;
 use Symfony\Component\Form\FormInterface;
@@ -59,14 +58,14 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
         $form->remove('semester');
     }
 
-    private function setTitle(FormEvent $event){
+    private function setTitle(FormEvent $event) {
         /** @var CalendarEvent $calendar_event */
         $calendar_event = $event->getData();
 
         $event->getData()->setTitle($calendar_event->getOroEventname());
     }
 
-    private function setAcademicCalendar(FormEvent $event){
+    private function setAcademicCalendar(FormEvent $event) {
 
         /** @var CalendarEvent $calendar_event */
         $calendar_event = $event->getData();
@@ -82,11 +81,11 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
                 ->setTeachingWeek($this
                     ->container
                     ->get('academic_calendar')
-                    ->getTeachingWeek($calendar_event->getStart()), substr($sem,4));
+                    ->getTeachingWeek($calendar_event->getStart()), substr($sem, 4));
         }
     }
 
-    private function syncContactAttendees(FormEvent $event){
+    private function syncContactAttendees(FormEvent $event) {
 
         /** @var CalendarEvent $calendar_event */
         $calendar_event = $event->getData();

@@ -20,7 +20,7 @@ class ContactExtraViewList extends ContactsViewList
      */
     private $tokenStorage;
 
-    public function setToken(TokenStorageInterface $tokenStorage){
+    public function setToken(TokenStorageInterface $tokenStorage) {
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -36,8 +36,8 @@ class ContactExtraViewList extends ContactsViewList
 
         $followup_view = new View('oro_contact.followup', ['owner' => ['value' => $owner->getId(), 'type' => '1']]);
         $followup_view->setLabel($this->translator->trans('oro.contact.gridview.followup.label'));
-        $columns =  $followup_view->getColumnsData();
-        file_put_contents('/tmp/a.log',print_r($columns,true),FILE_APPEND);
+        $columns = $followup_view->getColumnsData();
+        file_put_contents('/tmp/a.log', print_r($columns, true), FILE_APPEND);
         $followup_view->setColumnsData(['first_name' => ['renderable' => true, 'order' => 1],
                                         'mhl' => ['renderable' => 0, 'order' => 2],
                                         'birthday' => ['renderable' => 0, 'order' => 3],
@@ -80,8 +80,8 @@ class ContactExtraViewList extends ContactsViewList
             'level_of_study' => ['renderable' => 0, 'order' => 4],
             'country_of_birth' => ['renderable' => 0, 'order' => 4]
                                         ]);
-        $columns =  $followup_view->getColumnsData();
-        file_put_contents('/tmp/a.log',print_r($columns,true),FILE_APPEND);
+        $columns = $followup_view->getColumnsData();
+        file_put_contents('/tmp/a.log', print_r($columns, true), FILE_APPEND);
 
         return array_merge(parent::getViewsList(), [$owner_view, $followup_view]);
     }
