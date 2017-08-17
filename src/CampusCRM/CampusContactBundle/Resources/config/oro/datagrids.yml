@@ -526,7 +526,7 @@ datagrids:
                 renderable:    false
             assignedName:
                 label:         oro.contact.assigned_to.label
-                renderable: false
+                renderable: true
             reportsName:
                 label:         oro.contact.reports_to.label
                 renderable: false
