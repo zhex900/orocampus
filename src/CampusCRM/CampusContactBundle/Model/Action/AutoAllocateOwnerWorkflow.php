@@ -55,7 +55,7 @@ class AutoAllocateOwnerWorkflow extends AbstractAction
             $owner = $array[0];
             $assignto = $array[1];
             $msg = 'Auto allocation. ';
-        }elseif ($owner != null && $assignto != null) {
+        } elseif ($owner != null && $assignto != null) {
             $entity->setOwner($owner);
             $entity->setAssignedTo($assignto);
             $entity->setAutoAllocate(0);

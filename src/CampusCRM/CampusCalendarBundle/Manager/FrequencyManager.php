@@ -57,7 +57,7 @@ class FrequencyManager
         if ($add == 'ADD') {
             $reset_events = array_merge($current_event, $reset_events);
 
-        }elseif ($add == 'DELETE') {
+        } elseif ($add == 'DELETE') {
             // remove the $current_event.
             $reset_events = array_filter($reset_events, function($val) use ($calendar_event) {
                 return ($calendar_event->getId() != $val['event_id']);
@@ -111,12 +111,12 @@ class FrequencyManager
                     ->find($reset_event['attendee_id']);
 
                 $this->commitChange($rest_attendee, $freq, $count);
-                file_put_contents('/tmp/event.log', $reset_event['date'].' N:'.$count.PHP_EOL, FILE_APPEND);
+                file_put_contents('/tmp/event.log', $reset_event['date'] . ' N:' . $count . PHP_EOL, FILE_APPEND);
 
             } else {
                 // the current event have attendee_id as null
-                $this->commitChange($attendee,$freq,$count);
-                file_put_contents('/tmp/event.log', $reset_event['date'].' '.$count.PHP_EOL, FILE_APPEND);
+                $this->commitChange($attendee, $freq, $count);
+                file_put_contents('/tmp/event.log', $reset_event['date'] . ' ' . $count . PHP_EOL, FILE_APPEND);
             }
 
         }
@@ -126,7 +126,7 @@ class FrequencyManager
      * @param string $freq
      * @param integer $count
      */
-    private function commitChange(Attendee $attendee, $freq, $count){
+    private function commitChange(Attendee $attendee, $freq, $count) {
 
         $attendee->setFrequency($freq);
         $attendee->setAttendanceCount($count);
