@@ -1,3 +1,0 @@
-#CampusCRM/CampusContactBundle/Resources/config/oro/assetic.yml
-bundles:
-    - CampusContactBundle

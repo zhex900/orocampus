@@ -1,5 +1,0 @@
-# src/CampusCRM/CampusContactBundle/Resources/config/oro/routing.yml
-campuscrm_parent_bundle:
-    resource:     "@!OroContactBundle/Controller"
-    type:         annotation
-    prefix:       /contact

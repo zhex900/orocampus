@@ -1,7 +1,0 @@
-Oro\Bundle\CalendarBundle\Entity\CalendarEvent:
-    properties:
-        oro_eventname:
-              - NotBlank:     ~
-              - CampusCRM\CampusCalendarBundle\Validator\Constraints\EventName: { groups: [event_name_validation] }
-        title:
-              - CampusCRM\CampusCalendarBundle\Validator\Constraints\CalendarEvent: { groups: [calendar_event_validation] }

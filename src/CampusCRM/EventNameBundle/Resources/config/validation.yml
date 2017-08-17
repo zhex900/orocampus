@@ -1,6 +1,0 @@
-CampusCRM\EventNameBundle\Entity\EventName:
-    properties:
-        name:
-            - NotBlank:     ~
-            - Length:
-                max:        255

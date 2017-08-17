@@ -1,7 +1,0 @@
-#CampusCRM/CampusContactBundle/Resources/config/actions.yml
-services:
-    oro_contact.mass_action.autoallocate:
-        class: CampusCRM\CampusContactBundle\Datagrid\Extension\MassAction\AutoAllocateMassAction
-        scope: prototype
-        tags:
-            - { name: oro_datagrid.extension.mass_action.type, type: autoallocate }

@@ -1,2 +1,0 @@
-bundles:
-  - {name: CampusCRM\EventNameBundle\EventNameBundle, priority: 1}

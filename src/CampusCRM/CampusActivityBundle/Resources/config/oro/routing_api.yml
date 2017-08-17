@@ -1,3 +1,0 @@
-oro_activity_context_api:
-    resource: CampusCRM\CampusActivityBundle\Controller\Api\Rest\ActivityContextController
-    type:     rest

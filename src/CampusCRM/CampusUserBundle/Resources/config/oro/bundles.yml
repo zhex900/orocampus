@@ -1,2 +1,0 @@
-bundles:
-    - { name: CampusCRM\CampusUserBundle\CampusUserBundle, priority: -101}
