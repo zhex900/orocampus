@@ -1,0 +1,30 @@
+services:
+    campus_activity.manger.filter:
+        class: CampusCRM\CampusActivityBundle\Manager\Context
+
+    campus_activity.form.handler.autocomplete:
+        class: CampusCRM\CampusActivityBundle\Autocomplete\ContextSearchHandler
+        arguments:
+            - '@security.token_storage'
+            - '@translator'
+            - '@oro_search.index'
+            - '@oro_activity.manager'
+            - '@oro_entity_config.config_manager'
+            - '@oro_entity.entity_class_name_helper'
+            - '@doctrine.orm.entity_manager'
+            - '@oro_entity.entity_name_resolver'
+            - '@event_dispatcher'
+
+    campus_activity.manager.activity_context.api:
+        class: CampusCRM\CampusActivityBundle\Entity\Manager\ActivityContextApiEntityManager
+        parent: oro_soap.manager.entity_manager.abstract
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@oro_activity.manager'
+            - '@security.token_storage'
+            - '@oro_entity_config.config_manager'
+            - '@router'
+            - '@oro_entity.entity_alias_resolver'
+            - '@oro_entity.entity_name_resolver'
+            - '@oro_entity.doctrine_helper'
+            - '@oro_featuretoggle.checker.feature_checker'

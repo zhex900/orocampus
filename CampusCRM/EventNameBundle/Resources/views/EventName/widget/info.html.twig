@@ -1,0 +1,17 @@
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
+
+<div class="widget-content">
+    <div class="row-fluid form-horizontal">
+        {% if  resource_granted('VIEW', eventname, 'name') %}
+            <div class="responsive-block">
+                {{ UI.renderProperty('oro.eventname.name.label'|trans, eventname.name) }}
+            </div>
+        {% endif %}
+        {% if  resource_granted('VIEW', eventname, 'system_calendar') %}
+            <div class="responsive-block">
+                {{ UI.renderProperty('campuscrm.eventname.system_calendar.label'|trans, eventname.systemCalendar ? 'Yes' : 'No') }}
+            </div>
+        {% endif %}
+    </div>
+</div>

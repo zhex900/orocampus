@@ -1,0 +1,66 @@
+oro:
+    workflow:
+        contact_feedback:
+            label: 'Feedback'
+            step:
+                no_feedback:
+                    label: 'Empty'
+                feedback_completed:
+                    label: 'Completed'
+            attribute:
+                bible_study:
+                    label: 'Bible study'
+                mhl:
+                christian_courses:
+                    label: 'Christian courses'
+                sunday_worship:
+                    label: 'Sunday worship'
+                homes:
+                    label: 'Dinner in the homes'
+                further_activities:
+                    label: 'Further activities'
+            transition:
+                add_feedback:
+                    label: 'Add Feedback'
+                edit_feedback:
+                    label: 'Edit Feedback'
+
+        contact_followup:
+            label: 'Follow-up'
+            step:
+                unassigned:
+                    label: Unassigned
+                assigned:
+                    label: Assigned
+                started:
+                    label: Started
+                followup:
+                    label: Follow-up
+                open:
+                    label: Open
+                closed:
+                    label: Closed
+            attribute:
+                assigned_to:
+                    label: 'Assigned to'
+                owner:
+                    label: 'Owner'
+                auto_allocate:
+                    label: 'Auto allocate'
+                #contact_status:
+                #    label: 'Close reason'
+            transition:
+                assign:
+                    label: Assign
+                reopen:
+                    label: 'Re-open'
+                    warning_message: ''
+                followup:
+                    label: 'Follow-up'
+                    warning_message: ''
+                open:
+                    label: Open
+                    warning_message: ''
+                close:
+                    label: Closed
+                    warning_message: ''

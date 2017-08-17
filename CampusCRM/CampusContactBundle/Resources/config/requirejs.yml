@@ -1,0 +1,4 @@
+#CampusCRM/CampusContactBundle/Resources/config/requirejs.yml
+config:
+    paths:
+        'oro/datagrid/action/autoallocate-action': 'bundles/campuscontact/js/datagrid/action/autoallocate-action.js'

@@ -1,0 +1,100 @@
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{#<div data-page-component-module="campuscrmcampuscalendar/js/app/components/component">#}
+<div class="widget-content">
+    {% if saved is defined and saved %}
+        <script type="text/javascript">
+            require(['oroui/js/widget-manager', 'oroui/js/messenger', 'oroui/js/mediator'],
+            function(widgetManager, messenger, mediator) {
+                widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function(widget) {
+                    messenger.notificationFlashMessage('success', {{ 'oro.calendar.controller.event.saved.message'|trans|json_encode|raw }});
+                    mediator.trigger('widget_success:' + widget.getAlias());
+                    mediator.trigger('widget_success:' + widget.getWid());
+                    mediator.trigger('datagrid:doRefresh:attendance-contacts-grid');
+                    widget.remove();
+                });
+            });
+        </script>
+    {% else %}
+        {% if not form.vars.valid and form.vars.errors|length %}
+            <div class="alert alert-error">
+                <div class="message">
+                    {{ form_errors(form) }}
+                </div>
+            </div>
+        {% endif %}
+
+        {% set calendarEventDateRange = {
+            module: 'orocalendar/js/app/components/calendar-event-date-range-component',
+            name: 'calendar-event-date-range',
+            options: {
+                nativeMode: isMobileVersion()
+            }
+        } %}
+        <div class="form-container">
+            <form id="{{ form.vars.id }}" name="{{ form.vars.name }}" action="{{ formAction }}" method="post">
+
+                {% set hidden = '' %}
+                {% if attendance_button is defined and attendance_button %}
+
+                    {% set contact_attendees = get_attendance(entity.id)   %}
+                    {% set gridName = 'attendance-contacts-grid' %}
+
+                    {{ form_row(form.appendContacts, {'id': 'appendContacts'}) }}
+                    {{ form_row(form.removeContacts, {'id': 'removeContacts'}) }}
+                    {{ dataGrid.renderGrid(gridName, {attendees: contact_attendees}, { cssClass: 'inner-grid' }) }}
+
+                    {% set hidden = 'hidden' %}
+                {% endif %}
+
+                <fieldset class="form form-horizontal" {{ hidden }}>
+
+                    {% set rightColumn %}
+                        <div {{ UI.renderPageComponentAttributes(calendarEventDateRange) }}>
+                            {{ form_row(form.start) }}
+                            {{ form_row(form.end) }}
+                            {{ form_row(form.allDay) }}
+                        </div>
+                        {% if form.recurrence is defined %}
+                            {{ form_row(form.recurrence) }}
+                        {% endif %}
+                    {% endset %}
+
+                    {% set leftColumn %}
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.oro_eventname)  }}
+                       {# {{ form_row(form.description) }}#}
+                        {{ form_row(form.backgroundColor) }}
+                        {% if form.calendarUid is defined %}
+                            {{ form_row(form.calendarUid) }}
+                        {% endif %}
+                        {{ form_row(form.attendees) }}
+                        {% if form.vars.value.recurrence is null %}
+                            {{ form_row(form.reminders) }}
+                        {% else %}
+                            {% do form.reminders.setRendered %}
+                        {% endif %}
+
+                    {% endset %}
+
+                    <fieldset class="form form-horizontal" hidden >
+                        {{ form_rest(form) }}
+                    </fieldset>
+
+                    <div class="span6">
+                        {{ leftColumn }}
+                    </div>
+                    <div class="span6">
+                        {{ rightColumn }}
+                    </div>
+                    <div class="widget-actions form-actions">
+                        <button class="btn" type="reset">{{ 'Cancel'|trans }}</button>
+                        <button class="btn btn-primary" type="submit">{{ 'Save'|trans }}</button>
+                    </div>
+                </fieldset>
+            </form>
+            {{ oro_form_js_validation(form) }}
+        </div>
+    {% endif %}
+</div>
+{#</div>#}

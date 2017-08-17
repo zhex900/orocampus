@@ -1,0 +1,5 @@
+# src/CampusCRM/AddressBundle/Resources/config/oro/routing.yml
+acme_parent_bundle:
+    resource:     "@!OroAddressBundle/Controller"
+    type:         annotation
+    prefix:       /address

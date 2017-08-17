@@ -1,0 +1,3 @@
+api:
+    entities:
+        CampusCRM\EventNameBundle\Entity\EventName: ~

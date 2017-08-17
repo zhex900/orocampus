@@ -1,0 +1,448 @@
+datagrids:
+    campus_contact-contact-event-summary-grid:
+        acl_resource: oro_calendar_event_view
+        source:
+            type: orm
+            query:
+                select:
+                    - contact.id
+                    - event.title
+                    - event.semester as semester
+                    - COUNT(event.title) as attended
+                from:
+                    - { table: %oro_calendar.calendar_event.entity.class%, alias: event }
+                join:
+                    inner:
+                      - { join: event.contact_a6d273bd, alias: contact }
+                where:
+                    and:
+                        - contact.id = :contactId
+                groupBy: >
+                    event.title
+            bind_parameters:
+                - contactId
+        columns:
+            title:
+                label: oro.calendar.calendarevent.title.label
+            attended:
+                label: '#'
+            semester:
+                label: 'Semester'
+        sorters:
+            columns:
+                semester:
+                    data_name: event.semester
+                title:
+                    data_name: event.title
+        filters:
+            columns:
+                semester:
+                    type: string
+                    data_name: event.semester
+                title:
+                    type: string
+                    data_name: event.title
+
+    campus_user-user-event-summary-grid:
+        acl_resource: oro_calendar_event_view
+        source:
+            type: orm
+            query:
+                select:
+                    - user.id
+                    - event.title
+                    - event.semester as semester
+                    - COUNT(event.title) as attended
+                from:
+                    - { table: %oro_calendar.calendar_event.entity.class%, alias: event }
+                join:
+                    inner:
+                      - { join: event.user_d41b1c4b, alias: user }
+                where:
+                    and:
+                        - user.id = :userId
+                groupBy: >
+                    event.title
+            bind_parameters:
+                - userId
+        columns:
+            title:
+                label: oro.calendar.calendarevent.title.label
+            attended:
+                label: '#'
+            semester:
+                label: 'Semester'
+        sorters:
+            columns:
+                semester:
+                    data_name: event.semester
+                title:
+                    data_name: event.title
+        filters:
+            columns:
+                semester:
+                    type: string
+                    data_name: event.semester
+                title:
+                    type: string
+                    data_name: event.title
+
+    campuscalendar-event-attendance-grid:
+       # extended_entity_name: %oro_contact.entity.class%
+        acl_resource: oro_contact_view
+        source:
+            type: orm
+            query:
+                select:
+                      - c.id
+                      - c.firstName
+                      - c.lastName
+                      - c.gender
+                      - c.semester_contacted
+                      - phone.phone
+                      - a.frequency
+                      - a.attendance_count
+                from:
+                      - { table: %oro_calendar.calendar_event_attendee.entity.class%, alias: a }
+                where:
+                    and:
+                      - event.id = :eventId
+                      #attendees. contact = contact id
+                join:
+                    inner:
+                      - { join: a.calendarEvent, alias: event }
+                      - { join: a.contact, alias: c }
+                    left:
+                      - { join: c.phones, alias: phone, conditionType: WITH, condition: 'phone.primary = true' }
+            bind_parameters:
+                eventId: viewEventId
+        columns:
+            firstName:
+                label: oro.contact.first_name.label
+            lastName:
+                lable: oro.contact.last_name.label
+            gender:
+                label: oro.contact.gender.label
+            phone:
+                label: oro.contact.phones.label
+            semester_contacted:
+                label: 'Semester Contacted'
+            frequency:
+                labe: 'Frequency'
+            attendance_count:
+                label: 'Count'
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      oro_contact_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      oro_contact_update
+                params:     [ id ]
+        sorters:
+            columns:
+                gender:
+                    data_name: c.gender
+                firstName:
+                    data_name: c.firstName
+                lastName:
+                    data_name: c.lastName
+        actions:
+            view:
+                type: navigate
+                acl_resource: oro_contact_view
+                label: oro.grid.action.view
+                icon: eye
+                link: view_link
+                rowAction: true
+            update:
+                type: navigate
+                acl_resource: oro_contact_update
+                label: oro.grid.action.update
+                icon: edit
+                link: update_link
+        options:
+            entityHint: contacts
+            export: true
+            entity_pagination: true
+            #requireJSModules:
+           #     - orodatagrid/js/datagrid/jake-grid-builderss
+        views_list: '@oro_contact.contacts_view_list'
+
+    campus_calendar-event-grid:
+        acl_resource: oro_calendar_event_view
+        source:
+            type: orm
+            query:
+                select:
+                    - partial event.{ id, start, recurrence, cancelled }
+                    - a.displayName
+                    - event.id
+                    - COALESCE(calendar.name, CONCAT_WS(' ', owner.firstName, owner.lastName)) AS name
+                    - event.title
+                    - event.start
+                    - event.end
+                    - COALESCE(status.id, 'Oro\Bundle\CalendarBundle\Entity\Attendee::STATUS_NONE') as invitationStatus
+                    - parent.id as parentId
+                    - owner.id as ownerId
+                    - relatedAttendeeUser.id as relatedAttendeeUserId
+                    - (CASE WHEN (event.recurrence IS NOT NULL OR parent.recurrence IS NOT NULL) THEN true ELSE false END) as is_recurrent
+                    - recurringEvent
+                    - recurringEventRecurrence
+                    - parent
+                    - parentRecurringEvent
+                    - parentRecurringEventRecurrence
+                from:
+                    - { table: %oro_calendar.calendar_event.entity.class%, alias: event }
+                join:
+                    left:
+                        - { join: event.parent, alias: parent }
+                        - { join: event.relatedAttendee, alias: ra }
+                        - { join: event.attendees, alias: a }
+                        - { join: ra.status, alias: status }
+                        - { join: ra.user, alias: relatedAttendeeUser }
+                        - { join: event.recurrence, alias: recurrence }
+                        - { join: event.recurringEvent, alias: recurringEvent }
+                        - { join: recurringEvent.recurrence, alias: recurringEventRecurrence }
+                        - { join: parent.recurringEvent, alias: parentRecurringEvent }
+                        - { join: parentRecurringEvent.recurrence, alias: parentRecurringEventRecurrence }
+                    inner:
+                        - { join: event.calendar, alias: calendar }
+                        - { join: calendar.owner, alias: owner }
+                        -
+                            join: %oro_calendar.calendar_property.entity.class%
+                            alias: connection
+                            conditionType: WITH
+                            condition: "connection.calendarAlias = 'user' AND connection.calendar = calendar.id AND connection.visible = true"
+                        - { join: connection.targetCalendar, alias: targetCalendar }
+                where:
+                    and:
+                        - targetCalendar.owner = @oro_security.security_facade->getLoggedUserId
+                        - event.cancelled = false
+                        - event.id = :eventId
+                groupBy: >
+                    event.id,
+                    calendar.name,
+                    owner.firstName,
+                    owner.lastName,
+                    parent.id,
+                    owner.id,
+                    status.id,
+                    relatedAttendeeUser.id,
+                    recurrence.id,
+                    recurringEvent.id,
+                    recurringEventRecurrence.id,
+                    parentRecurringEvent.id,
+                    parentRecurringEventRecurrence.id
+            bind_parameters:
+                eventId: viewEventId
+        columns:
+            displayName:
+                label: oro.calendar.calendarevent.title.label
+            title:
+                label: oro.calendar.calendarevent.title.label
+            name:
+                label: oro.calendar.calendarevent.calendar.label
+            start:
+                label: oro.calendar.calendarevent.start.label
+                frontend_type: datetime
+            end:
+                label: oro.calendar.calendarevent.end.label
+                frontend_type: datetime
+            is_recurrent:
+                label: oro.calendar.calendarevent.recurrence.alias.recurrent
+                frontend_type: boolean
+            recurrence:
+                label: oro.calendar.calendarevent.recurrence.label
+                type: twig
+                template: OroCalendarBundle:CalendarEvent:Datagrid/Property/recurrence.html.twig
+                frontend_type: html
+            invitationStatus:
+                label: oro.calendar.calendarevent.invitation_status.label
+                type: twig
+                template: OroCalendarBundle:CalendarEvent:Datagrid/Property/status.html.twig
+                frontend_type: html
+        sorters:
+            columns:
+                title:
+                    data_name: event.title
+                name:
+                    data_name: name
+                start:
+                    data_name: event.start
+                end:
+                    data_name: event.end
+                invitationStatus:
+                    data_name: invitationStatus
+            default:
+                start: ASC
+        filters:
+            columns:
+                title:
+                    type: string
+                    data_name: event.title
+                name:
+                    type: string
+                    data_name: name
+                start:
+                    type: datetime
+                    data_name: event.start
+                end:
+                    type: datetime
+                    data_name: event.end
+                is_recurrent:
+                    type: boolean
+                    data_name: is_recurrent
+                invitationStatus:
+                    type: enum
+                    enum_code: ce_attendee_status
+                    data_name: invitationStatus
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      oro_calendar_event_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      oro_calendar_event_update
+                params:     [ id ]
+            delete_link:
+                type:     callback
+                callable: "@oro_calendar.datagrid.helper.calendar_event_grid->getDeleteLinkProperty"
+                route:    oro_calendar_event_delete
+            accept_link:
+                type:       url
+                route:      oro_calendar_event_accepted
+                params:     [ id ]
+            tentative_link:
+                type:       url
+                route:      oro_calendar_event_tentative
+                params:     [ id ]
+            decline_link:
+                type:       url
+                route:      oro_calendar_event_declined
+                params:     [ id ]
+        actions:
+            accept:
+                type:         ajax
+                label:        oro.calendar.calendarevent.action.status.accepted.label
+                link:         accept_link
+                icon:         check
+                acl_resource: oro_calendar_event_view
+            tentative:
+                type:         ajax
+                label:        oro.calendar.calendarevent.action.status.tentative.label
+                link:         tentative_link
+                icon:         question
+                acl_resource: oro_calendar_event_view
+            decline:
+                type:         ajax
+                label:        oro.calendar.calendarevent.action.status.declined.label
+                link:         decline_link
+                icon:         close
+                acl_resource: oro_calendar_event_view
+            view:
+                type:         navigate
+                label:        oro.grid.action.view
+                link:         view_link
+                icon:         eye
+                acl_resource: oro_calendar_event_view
+                rowAction:    true
+            update:
+                type:          navigate
+                acl_resource:  oro_calendar_event_create
+                label:         oro.grid.action.update
+                icon:          pencil-square-o
+                link:          update_link
+            delete:
+                type:          delete
+                acl_resource:  oro_calendar_event_delete
+                label:         oro.grid.action.delete
+                icon:          trash-o
+                link:          delete_link
+        action_configuration: ['@oro_calendar.datagrid.action_permission_provider', "getInvitationPermissions"]
+        mass_actions:
+            delete:
+                type: delete
+                icon: trash
+                label: oro.grid.action.delete
+                entity_name: Oro\Bundle\CalendarBundle\Entity\CalendarEvent
+                data_identifier: event.id
+                handler: oro_calendar.datagrid.mass_action.handler.delete
+        options:
+            entityHint: calendar event
+            entity_pagination: true
+
+    attendance-contacts-grid:
+        acl_resource: oro_contact_view
+        source:
+            type: orm
+            query:
+                select:
+                    - c.id
+                    - c.firstName
+                    - c.lastName
+                    - email.email
+                 #   - c.semesterContacted
+                    - >
+                        CASE WHEN (c.id IN (:attendees) OR c.id IN (:data_in)) AND c.id NOT IN (:data_not_in)
+                        THEN true ELSE false END
+                        as Attendance
+                from:
+                    - { table: %oro_contact.entity.class%, alias: c }
+                join:
+                    left:
+                      - { join: c.emails, alias: email, conditionType: WITH, condition: 'email.primary = true' }
+            bind_parameters:
+                - attendees
+        columns:
+            Attendance:
+                label: 'Attendance'
+                editable: true
+                frontend_type: boolean
+            firstName:
+                label: oro.contact.first_name.label
+            lastName:
+                label: oro.contact.last_name.label
+          #  semesterContacted:
+          #      lable: oro.contact.semester_contacted.label
+            email:
+                label: 'Email'
+        properties:
+            id: ~
+        filters:
+            columns:
+                Attendance:
+                    data_name: Attendance
+                    type:  boolean
+                firstName:
+                    type: string
+                    data_name: c.firstName
+                lastName:
+                    type: string
+                    data_name: c.firstName
+              #  semesterContacted:
+              #      type: string
+               #     data_name: c.semesterContacted
+        sorters:
+            columns:
+                Attendance:
+                    data_name: Attendance
+                firstName:
+                    data_name: c.firstName
+                lastName:
+                    data_name: c.lastName
+            default: { Attendance: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC }
+        options:
+           # requireJSModules:
+              #  - campuscrmcampuscalendar/js/grid-builder
+            entityHint: contacts
+            rowSelection:
+                dataField: id
+                columnName: Attendance
+                selectors:
+                    included: '#appendContacts'
+                    excluded: '#removeContacts'

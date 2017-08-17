@@ -1,0 +1,4 @@
+/Users/jake/Code/orocrm-dev/www/src/CampusCRM/CampusCalendarBundle/Resources/config/requirejs.yml
+config:
+    paths:
+      'campuscrmcampuscalendar/grid-builder': 'bundles/campuscrmcampuscalendar/js/datagrid/grid-builder.js'

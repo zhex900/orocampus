@@ -1,0 +1,48 @@
+Addresses: Addresses
+Basic Information: Basic Information
+campuscrm:
+    eventname:
+      entity_label:               Event Name
+      system_calendar.label:      System Calendar
+oro:
+    dashboard:
+        my_eventnames_activity:
+            title:                  Recently accessed eventnames
+            view_all:               View all
+            description:            This widget displays the list of recently accessed eventnames
+
+    eventname:
+
+        menu:
+            eventname_tab.label: Event Names
+            account_list.description: List of accounts
+            shortcut_new_account.label: Create new eventname
+            shortcut_new_account.description: Create new eventname instance
+            shortcut_list_accounts.label: Show accounts list
+            shortcut_list_accounts.description: List of accounts
+        widgets:
+            magento_channel:        Magento Channel
+            eventname_information:  Event Name Information
+
+        sections:
+            general:                General
+            website_activity:       Website Activity
+        form:
+            choose_eventname:       Choose an eventname...
+            select_contacts:        Select contacts
+        controller:
+            eventname.saved.message:  "Event Name saved"
+        #
+        # CampusCRM\EventNameBundle/Entity/EventName
+        #
+        entity_label:               Event Name
+        entity_plural_label:        Event Names
+        entity_description:         Event Name
+        id.label:                   Id
+        name.label:                 Event Name
+        owner.label:                Owner
+        assigned.label:             Assigned
+        referred_by.label:          Referred By
+
+        extend_description.label:   Description
+

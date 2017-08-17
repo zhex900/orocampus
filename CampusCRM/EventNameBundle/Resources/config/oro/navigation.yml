@@ -1,0 +1,20 @@
+navigation:
+    menu_config:
+        items:
+            eventname_list:
+                label: 'Event Name'
+                route: 'oro_eventname_index'
+                extras:
+                    position: 5
+
+        tree:
+            application_menu:
+                children:
+                    campus_calendar_tab:
+                        children:
+                            eventname_list: ~
+    titles:
+        oro_eventname_index: ~
+        oro_eventname_view: '%%eventname.name%%'
+        oro_eventname_create: 'Create Event Name'
+        oro_eventname_update: '%%eventname.name%% - Edit'

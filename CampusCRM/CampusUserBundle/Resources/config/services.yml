@@ -1,0 +1,6 @@
+services:
+    campus_user.form.extension.type:
+        class: CampusCRM\CampusUserBundle\Form\Extension\UserTypeExtension
+        public: true
+        tags:
+            - { name: form.type_extension, alias: oro_user_user }
