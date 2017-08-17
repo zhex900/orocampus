@@ -3,7 +3,6 @@
 namespace CampusCRM\CampusCalendarBundle\EventListener;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
-
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
 use Oro\Bundle\CalendarBundle\EventListener\CalendarEventAttendeesListener as BaseListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,7 +40,7 @@ class CalendarEventAttendeesListener extends BaseListener
 
             if ($entity instanceof Attendee) {
                 // remove duplicate inserts of attendee
-                if( $this->attendeeExist($entity) ){
+                if ($this->attendeeExist($entity)) {
                     $unitOfWork->remove($entity);
                     continue;
                 }
@@ -49,7 +48,7 @@ class CalendarEventAttendeesListener extends BaseListener
                 $this
                     ->container
                     ->get('frequency_manager')
-                    ->updateAttendanceFrequency($entity,'ADD');
+                    ->updateAttendanceFrequency($entity, 'ADD');
             }
 
             if ($this->isAttendeeApplicable($entity, $unitOfWork)) {
@@ -63,7 +62,7 @@ class CalendarEventAttendeesListener extends BaseListener
                 $this
                     ->container
                     ->get('frequency_manager')
-                    ->updateAttendanceFrequency($entity,'UPDATE');
+                    ->updateAttendanceFrequency($entity, 'UPDATE');
             }
 
             if ($this->isAttendeeApplicable($entity, $unitOfWork)) {
@@ -101,6 +100,6 @@ class CalendarEventAttendeesListener extends BaseListener
                 ++$i;
             }
         }
-       return $i>1;
+        return $i>1;
     }
 }

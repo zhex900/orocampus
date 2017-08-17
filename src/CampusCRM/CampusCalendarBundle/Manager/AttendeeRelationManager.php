@@ -4,7 +4,6 @@ namespace CampusCRM\CampusCalendarBundle\Manager;
 
 use Doctrine\Common\Util\ClassUtils;
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
-use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\CalendarBundle\Manager\AttendeeRelationManager as BaseManager;
@@ -25,7 +24,7 @@ class AttendeeRelationManager extends BaseManager
             $attendee
                 ->setUser($relatedEntity)
                 //HACK: Append the contact id to the back of display name separated by #
-                ->setDisplayName($this->nameFormatter->format($relatedEntity).'   #'.$relatedEntity->getContact()->getId() )
+                ->setDisplayName($this->nameFormatter->format($relatedEntity) . '   #' . $relatedEntity->getContact()->getId())
                 ->setEmail($relatedEntity->getEmail());
 
         } elseif ($relatedEntity instanceof Contact) {
@@ -34,7 +33,7 @@ class AttendeeRelationManager extends BaseManager
                 ->setContact($relatedEntity)
                 //HACK: Append the contact id to the back of display name separated by #
                 //This is to add the contact entity to attendee.
-                ->setDisplayName($this->nameFormatter->format($relatedEntity).'   #'.$relatedEntity->getId() )
+                ->setDisplayName($this->nameFormatter->format($relatedEntity) . '   #' . $relatedEntity->getId())
                 ->setEmail($relatedEntity->getEmail());
 
             // check if the contact have a linked user

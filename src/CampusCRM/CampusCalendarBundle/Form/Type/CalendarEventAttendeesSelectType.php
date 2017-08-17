@@ -11,7 +11,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
 use CampusCRM\CampusCalendarBundle\Manager\AttendeeRelationManager;
 use CampusCRM\CampusCalendarBundle\Manager\AttendeeManager;
@@ -93,7 +92,7 @@ class CalendarEventAttendeesSelectType extends AbstractType
         }
 
         // add owner as default attendee when it is not system calendar
-        if ($calendarEvent->getSystemCalendar()==null) {
+        if ($calendarEvent->getSystemCalendar() == null) {
             /** @var User $owner */
             $owner = $this->tokenStorage->getToken()->getUser();
 
@@ -174,7 +173,7 @@ class CalendarEventAttendeesSelectType extends AbstractType
         $resolver->setDefaults([
             'tooltip' => false,
             'layout_template' => false,
-            'configs' => function (Options $options, $value) {
+            'configs' => function(Options $options, $value) {
                 $configs = [
                     'placeholder'        => 'oro.user.form.choose_user',
                     'allowClear'         => true,

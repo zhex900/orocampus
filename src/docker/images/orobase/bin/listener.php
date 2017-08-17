@@ -24,13 +24,13 @@ class Listener
             exit(1);
         }
         
-        $this->stdLog  = fopen($this->logFile, 'w+');
+        $this->stdLog = fopen($this->logFile, 'w+');
         chmod($this->logFile, 0777);
         
         if (!count($argv)) {
             $cmd = $executable;
         } else {
-            $argv = array_map(function ($v){
+            $argv = array_map(function($v) {
                 return sprintf("'%s'", $v);
             }, $argv);
             $cmd = sprintf('%s %s', $executable, implode(' ', $argv));
@@ -59,6 +59,9 @@ class Listener
         fwrite($this->stdLog, $msg);
     }
     
+    /**
+     * @param string $msg
+     */
     protected function out($msg)
     {
         fwrite($this->stdOut, $msg);
@@ -75,7 +78,7 @@ class Listener
     }
 
     /**
-     * @param $str
+     * @param string $str
      * @return array
      */
     protected function parse($str)

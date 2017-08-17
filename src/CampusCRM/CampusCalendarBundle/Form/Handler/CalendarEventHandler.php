@@ -48,7 +48,7 @@ class CalendarEventHandler extends BaseHandler
             if ($this->form->isValid()) {
                 // TODO: should be refactored after finishing BAP-8722
                 // Contexts handling should be moved to common for activities form handler
-                $contexts=null;
+                $contexts = null;
                 if ($this->form->has('contexts')) {
                     $contexts = $this->form->get('contexts')->getData();
                     $owner = $entity->getCalendar() ? $entity->getCalendar()->getOwner() : null;
@@ -67,7 +67,7 @@ class CalendarEventHandler extends BaseHandler
 
                 $contexts = $this->attendee_relation_manager->syncActivityandContext($contexts, $attendees);
 
-                if ($contexts !== null){
+                if ($contexts !== null) {
                     $this->activityManager->setActivityTargets($entity, $contexts);
                 }
 

@@ -11,7 +11,7 @@ class ActivityController extends BaseController
     {
         $entityClass = ClassUtils::getClass($entity);
         $targetClasses = array_keys($this->getActivityManager()->getActivityTargets($entityClass));
-        $targetClasses = $this->get('campus_activity.manger.filter')->filter($entityClass,$targetClasses);
+        $targetClasses = $this->get('campus_activity.manger.filter')->filter($entityClass, $targetClasses);
 
         return $this->getMultiGridProvider()->getEntitiesData($targetClasses);
     }

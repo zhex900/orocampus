@@ -5,19 +5,15 @@ namespace CampusCRM\EventNameBundle\Controller\Api\Rest;
 use Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
-
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\SoapBundle\Form\Handler\ApiFormHandler;
 use Oro\Bundle\SoapBundle\Controller\Api\Rest\RestController;
-
 use Oro\Bundle\ChannelBundle\Provider\Lifetime\AmountProvider;
 use CampusCRM\EventNameBundle\Entity\EventName;
 
@@ -172,7 +168,7 @@ class EventNameController extends RestController implements ClassResourceInterfa
     {
         $result = [];
         $ids = array_map(
-            function (eventname $eventname) {
+            function(eventname $eventname) {
                 return $eventname->getId();
             },
             $entities

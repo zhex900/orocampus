@@ -3,15 +3,10 @@
 namespace CampusCRM\CampusCalendarBundle\Form\EventListener;
 
 use CampusCRM\EventNameBundle\Entity\EventName;
-use Oro\Bundle\CalendarBundle\Entity\Attendee;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-
-use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
-use Oro\Bundle\CalendarBundle\Entity\Calendar;
-use Symfony\Component\Form\FormInterface;
 
 class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
 {
@@ -71,9 +66,9 @@ class CalendarEventApiTypeSubscriber implements EventSubscriberInterface
         $time_stamp = strtotime($data['start']);
         $start = new \DateTime("@$time_stamp");
         $sem = $this->container->get('academic_calendar')->getSemester($start);
-        $teaching_week = $this->container->get('academic_calendar')->getTeachingWeek($start, substr($sem,4));
-        $data['semester']=$sem;
-        $data['teaching_week'] =$teaching_week;
+        $teaching_week = $this->container->get('academic_calendar')->getTeachingWeek($start, substr($sem, 4));
+        $data['semester'] = $sem;
+        $data['teaching_week'] = $teaching_week;
 
         $event->setData($data);
     }

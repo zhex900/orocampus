@@ -3,7 +3,6 @@
 namespace CampusCRM\CampusUserBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
-use CampusCRM\CampusUserBundle\Validator\UserContactLinkValidator;
 
 class UserContactLink extends Constraint
 {
@@ -17,6 +16,6 @@ class UserContactLink extends Constraint
      */
     public function validatedBy()
     {
-        return  get_class($this).'Validator';
+        return  get_class($this) . 'Validator';
     }
 }

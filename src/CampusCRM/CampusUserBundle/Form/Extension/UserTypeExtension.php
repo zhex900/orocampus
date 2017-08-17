@@ -50,14 +50,14 @@ class UserTypeExtension extends AbstractTypeExtension
 
         $builder->addEventListener(
             FormEvents::POST_SUBMIT,
-            function (FormEvent $event) {
+            function(FormEvent $event) {
 
                 /** @var User $user */
                 $user = $event->getData();
                 /** @var Contact $contact */
                 $contact = $user->getContact();
 
-                if ($contact !== null){
+                if ($contact !== null) {
                     $contact->setUser($user);
                 }
                 file_put_contents('/tmp/validation.log',

@@ -5,8 +5,6 @@ namespace CampusCRM\CampusUserBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Oro\Bundle\ContactBundle\Entity\Contact;
-use Oro\Bundle\UserBundle\Entity\User;
-
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -22,11 +20,11 @@ class UserContactLinkValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
 
-        if( $value == null){
+        if ($value == null) {
             $this->context->addViolation('You must select at list one contact!');
         }
         // Contact already linked to an user.
-        elseif( $value->getUser() != null){
+        elseif ($value->getUser() != null) {
 
             $root = $this->context->getRoot();
             // Get the current user id
@@ -37,18 +35,18 @@ class UserContactLinkValidator extends ConstraintValidator
                 $user_id = $propertyAccessor->getValue($root, 'id');
             }
 
-            if($value->getUser()->getId() != $user_id){
+            if ($value->getUser()->getId() != $user_id) {
                 $this->context->addViolation($constraint->message);
             }
             // Linked contact should have the same first and last name as the user.
-            elseif( $value->getFirstName() != $value->getUser()->getFirstName() ||
-                $value->getLastName() != $value->getUser()->getLastName() ){
+            elseif ($value->getFirstName() != $value->getUser()->getFirstName() ||
+                $value->getLastName() != $value->getUser()->getLastName()) {
                 //return;
                 $this->context->addViolation('Names of contact and user does not match.');
             }
-            else{return;}
+            else {return; }
         }
-        else{
+        else {
             return;
         }
     }

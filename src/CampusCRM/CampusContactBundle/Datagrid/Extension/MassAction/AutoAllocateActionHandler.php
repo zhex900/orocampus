@@ -79,13 +79,13 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
         foreach ($entities as $entity) {
             if ($entity instanceof Contact) {
                 // if the current work flow step is unassigned.
-                file_put_contents('/tmp/tag.log','handler:->'. $entity->getFirstName().' '.$entity->getLastName().PHP_EOL, FILE_APPEND);
+                file_put_contents('/tmp/tag.log', 'handler:->' . $entity->getFirstName() . ' ' . $entity->getLastName() . PHP_EOL, FILE_APPEND);
 
                 // auto allocate owner when follow-up workflow step is unassigned.
                 if ($this->container
                     ->get('campus_contact.workflow.manager')
                     ->isUnassignedStep($entity)) {
-                    file_put_contents('/tmp/tag.log',$entity->getFirstName().' '.$entity->getLastName().' is unassigned'. PHP_EOL, FILE_APPEND);
+                    file_put_contents('/tmp/tag.log', $entity->getFirstName() . ' ' . $entity->getLastName() . ' is unassigned' . PHP_EOL, FILE_APPEND);
 
                     $count++;
                     $this->container
@@ -95,16 +95,16 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
                     //move workflow step to assigned.
                     $this->container
                         ->get('campus_contact.workflow.manager')
-                        ->transitTo($entity,self::FOLLOWUP_WORKFLOW,'assign');
+                        ->transitTo($entity, self::FOLLOWUP_WORKFLOW, 'assign');
 
-                    file_put_contents('/tmp/tag.log',$entity->getFirstName().' '.$entity->getLastName().' flush'. PHP_EOL, FILE_APPEND);
+                    file_put_contents('/tmp/tag.log', $entity->getFirstName() . ' ' . $entity->getLastName() . ' flush' . PHP_EOL, FILE_APPEND);
 
                     $this->container->get('doctrine.orm.entity_manager')->flush();
                 }
             }
         }
 
-        file_put_contents('/tmp/tag.log','handler'. PHP_EOL, FILE_APPEND);
+        file_put_contents('/tmp/tag.log', 'handler' . PHP_EOL, FILE_APPEND);
 
         return $this->generateResponse($count);
     }

@@ -36,12 +36,12 @@ class AttendanceExtension extends \Twig_Extension
      *
      */
 
-    public function getAttendance($id){
+    public function getAttendance($id) {
         $result = $this->em->getRepository('OroCalendarBundle:CalendarEvent')
             ->createQueryBuilder('ce')
             ->select('contact.id')
-            ->innerJoin('ce.attendees','attendees')
-            ->innerJoin('attendees.contact','contact')
+            ->innerJoin('ce.attendees', 'attendees')
+            ->innerJoin('attendees.contact', 'contact')
             ->andWhere('ce.id = :id')
             ->setParameter('id', $id)
             ->getQuery()

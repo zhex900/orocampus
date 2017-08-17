@@ -19,15 +19,15 @@ class ContactController extends BaseController
     public function infoAction(Contact $contact)
     {
 
-        $request=$this->getRequest()->getRequestUri();
+        $request = $this->getRequest()->getRequestUri();
         preg_match('/block(.*)\?/', $request, $matches);
-        $block=$matches[1];
+        $block = $matches[1];
 
         if (!$this->getRequest()->get('_wid')) {
-            return $this->redirect($this->get('router')->generate('oro_contact_view', ['id' => $contact->getId(),'block'=>$block]));
+            return $this->redirect($this->get('router')->generate('oro_contact_view', ['id' => $contact->getId(), 'block'=>$block]));
         }
 
-       // file_put_contents('/tmp/url.log','$request: '. $request.PHP_EOL,FILE_APPEND);
+        // file_put_contents('/tmp/url.log','$request: '. $request.PHP_EOL,FILE_APPEND);
         return array(
             'entity'  => $contact,
             'block' => $block
