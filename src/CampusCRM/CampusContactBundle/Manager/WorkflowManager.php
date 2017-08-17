@@ -65,9 +65,8 @@ class WorkflowManager extends BaseManager
     {
         $workflowItems = $this->getWorkflowItemsByEntity($contact);
         file_put_contents('/tmp/tag.log', 'Enter workflow' . PHP_EOL, FILE_APPEND);
-        if (0 !== count($workflowItems)) {
-            /** @var WorkflowItem $workflowItem */
-            $workflowItem = array_shift($workflowItems);
+
+        foreach ($workflowItems as $workflowItem){
             file_put_contents('/tmp/tag.log', 'workflow: ' . $workflowItem->getWorkflowName() . PHP_EOL, FILE_APPEND);
             file_put_contents('/tmp/tag.log', 'workflow step: ' . $workflowItem->getCurrentStep()->getName() . PHP_EOL, FILE_APPEND);
             //find the follow-up workflow
@@ -76,6 +75,7 @@ class WorkflowManager extends BaseManager
                 return $workflowItem; //->getCurrentStep()->getName();
             }
         }
+        return null;
     }
 
     /*
