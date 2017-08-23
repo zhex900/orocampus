@@ -27,12 +27,12 @@ orocrm:
     - APP_DB_USER=orocrm
     - APP_HOSTNAME=localhost
     - APP_IS_INSTALLED=
-    - APP_MAILER_ENCRYPTION=
-    - APP_MAILER_HOST=mail
-    - APP_MAILER_PASSWORD=password
-    - APP_MAILER_PORT=25
+    - APP_MAILER_ENCRYPTION=ssl
+    - APP_MAILER_HOST=smtp.zoho.com
+    - APP_MAILER_PASSWORD=fheman123
+    - APP_MAILER_PORT=465
     - APP_MAILER_TRANSPORT=smtp
-    - APP_MAILER_USER=user
+    - APP_MAILER_USER=admin@unswchristians.com
     - APP_SECRET=123456789
     - APP_WEBSOCKET_BACKEND_PORT=8080
     - APP_WEBSOCKET_FRONTEND_PORT=3088
@@ -40,7 +40,7 @@ orocrm:
     - CMD_INIT_BEFORE=
     - CMD_INIT_CLEAN=
     - CMD_INIT_INSTALLED=
-    - VIRTUAL_HOST=orocampus.tk
+    - VIRTUAL_HOST=1.orocampus.tk
   image: 'zhex900/oromono:latest'
   links:
     - db
@@ -53,13 +53,6 @@ orocrm:
     - '993:993'
     - '3088:8080'
   restart: always
-mail:
-  environment:
-    - maildomain=localhost
-    - 'smtp_user=user@localhost:password'
-  expose:
-    - '25'
-  image: 'catatnight/postfix:latest'
 phpmyadmin:
   image: 'phpmyadmin/phpmyadmin:latest'
   links:
@@ -71,7 +64,7 @@ redis:
   environment:
     - REDIS_APPENDFSYNC=always
     - REDIS_APPENDONLY=yes
-  image: 'redis:latest'
+    image: 'redis:latest'
   ports:
     - '6379:6379'
   volumes:
