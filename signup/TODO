@@ -1,0 +1,56 @@
+* Add user session. Make zurmo authorisation per zurmo user. Pass zurmo username to the form html. Save zurmo authorisation data for each user. 
+* username to be shown on the form.
+* success and already registered form with return to form button
+* 'bible received' pop-up window to appear straight after form is submitted
+
+* To add to registration form
+	1) change field to year
+	2) add a comments box
+	3) make the course text box autocomplete
+	
+* Fields to zurmo
+	1) username to owner
+	5) date of first contact? (I believe zurmo does this automatically)
+	6) year of degree
+
+* form validation
+* custom address for curtin housing.
+
+* Error page. Catch all errors. Print some debugging info.
+
+################################
+Jason this is for you to do. I have added the response page with a button back to the selected registration form.
+I still need setup a fresh copy of Zurmo. It will be great if you can help me to setup it up.
+
+* LOGIN PAGE
+    * Add a source drop down. (Table, Bible Study) Check the spelling is the same as Zurmo source value.
+    * Save the source value in $_SESSION and pass it to $source in register.php
+    * Remove the source hidden field in the registration form. 
+ 
+* RESPONSE PAGE.
+    * Make the response message look better.
+    * Make the button look nicer.
+
+* REGISTRATION FORM
+    * Course auto fill.
+    * Change the semester completed to year. (1-5). Add a new field in Zurmo called year of first contact. Map to it.
+    * Add validation to mobile, phone, email, student id.
+    * Make religious background compulsory.
+    * Remove BBQ $5. (We might not have it)
+    * Add first contact date.
+
+* TESTING
+    * MAPPING TO ZURMO - Check all the information is passed to zurmo.
+
+TESTED
+ * OWNER
+ * Multiple logins.
+ * ERROR PAGE
+
+
+BUGS
+* Auto dropdown does not work on Safari
+
+IMPROVEMENTS
+* ADD Hints to registration form
+
