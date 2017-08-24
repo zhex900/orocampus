@@ -12,9 +12,10 @@ define("ERROR_LOG", "/tmp/error.log");
 define("URL", "http://app1.orocampus.tk/app.php/api/");
 define("CONTACT_SEARCH", "");
 define("CONTACT_ADD", "contacts");
+
 define("CONTACT_TEST", "contacts/1");
-define("APIKEY", "e59c3f6071ebcbe71b5e4bc0f9f588f5c7c03281");
-define("LOGIN","admin");
+define("APIKEY", "17c9b0c24553e91b8ed84235ca4808327fbcf1c9");
+define("LOGIN","system");
 //
 // starting a session to enable session variables to be stored
 //session_start();
@@ -26,11 +27,11 @@ $new_contact =
         'data' => [
             'type'       => 'contacts',
             'attributes' => [
-                'firstName' => 'May',
+                'firstName' => 'Osher',
                 'lastName' => 'Pie',
-                'gender' => 'female',
+                'gender' => 'male',
                 'primaryPhone' => '0421169154',
-                'primaryEmail' => 'mayie@gmail.com',
+                'primaryEmail' => 'usherpie@gmail.com',
                 'birthday' => '1995-01-25'
             ],
             'relationships' => [
@@ -49,8 +50,10 @@ $new_contact =
             ]
         ]
     ];
+
 $result = $api->curl_req(CONTACT_ADD,null,$new_contact);
-//var_dump($result);
+var_dump($result);
+
 /*
  * @return bool
  * Check if the orocampus.tk API is alive.
@@ -82,23 +85,19 @@ class ApiRestHelper
         $wsseHeader[]= sprintf(
             'X-WSSE: UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"', $this->_username, $digest, $nonce, $created
         );
+        $wsseHeader[] = "Content-type:application/vnd.api+json";
+        $wsseHeader[] = "Accept: application/json";
         var_dump($wsseHeader);
         return $wsseHeader;
     }
 
     public function curl_req($path, $verb=NULL, $data=array()) {
 
-
-
-        $wsseHeader[] = "Content-type:application/vnd.api+json";
-        $wsseHeader[] = "Accept: application/json";
-        $wsseHeader = array_merge($wsseHeader,$this->getHeader());
-
         $request = new \cURL\Request($this->_url . $path);
         $request->getOptions()
             ->set(CURLOPT_TIMEOUT, 5)
             ->set(CURLOPT_RETURNTRANSFER, true)
-            ->set(CURLOPT_HTTPHEADER, $wsseHeader)
+            ->set(CURLOPT_HTTPHEADER, $this->getHeader())
             ->set(CURLOPT_HEADER,false)
             ->set(CURLOPT_VERBOSE,true)
             ->set(CURLOPT_USERAGENT,'curl');
@@ -116,37 +115,6 @@ class ApiRestHelper
         $feed = json_decode($response->getContent(), true);
         $result = $feed;
 
-/*
-        $options = array(
-            CURLOPT_URL => $this->_url . $path,
-            CURLOPT_HTTPHEADER => $wsseHeader,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => false,
-            CURLOPT_VERBOSE => true,
-            CURLOPT_USERAGENT => 'curl'
-        );
-
-        if( !empty($data) ) {
-            $options += array(
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_SAFE_UPLOAD => true
-            );
-        }
-
-        if( isset($verb) ) {
-            $options += array(CURLOPT_CUSTOMREQUEST => $verb);
-        }
-
-        $ch = curl_init();
-        curl_setopt_array($ch, $options);
-        $result = curl_exec($ch);
-
-
-        if(false === $result ) {
-            echo curl_error($ch);
-        }
-
-        curl_close($ch);*/
         return $result;
     }
 }
