@@ -22,6 +22,7 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
         <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
         <script src="../js/jquery-datepicker.js"></script>
+
         <!--
             <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
         -->
@@ -43,7 +44,8 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
         <![endif]-->
 
         <!-- Automatically completes the address as the user is typing it -->
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQpSg-uWZkbaydLNvkXcwhNvIA6BfffJQ&libraries=places&callback=initAutocomplete"
+            async defer></script>
         <script src="../js/address-autocomplete.js"></script>
 
 
