@@ -1,3 +1,5 @@
+
+
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
 
@@ -14,6 +16,10 @@ var componentForm = {
     country: 'long_name',
     postal_code: 'short_name'
 };
+
+function initialize() {
+    initAutocomplete();
+}
 
 function initAutocomplete() {
     // Create the autocomplete object, restricting the search to geographical
