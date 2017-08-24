@@ -27,7 +27,7 @@ $new_contact =
         'data' => [
             'type'       => 'contacts',
             'attributes' => [
-                'firstName' => 'Osher',
+                'firstName' => 'Zsher',
                 'lastName' => 'Pie',
                 'gender' => 'male',
                 'primaryPhone' => '0421169154',
@@ -51,7 +51,7 @@ $new_contact =
         ]
     ];
 
-$result = $api->curl_req(CONTACT_ADD,null,$new_contact);
+$result = $api->curl_req(CONTACT_ADD,$new_contact);
 var_dump($result);
 
 /*
@@ -91,7 +91,7 @@ class ApiRestHelper
         return $wsseHeader;
     }
 
-    public function curl_req($path, $verb=NULL, $data=array()) {
+    public function curl_req($path, $data=array()) {
 
         $request = new \cURL\Request($this->_url . $path);
         $request->getOptions()
@@ -107,10 +107,7 @@ class ApiRestHelper
                 ->set(CURLOPT_POSTFIELDS, json_encode($data))
                 ->set(CURLOPT_SAFE_UPLOAD, true);
         }
-        if( isset($verb) ) {
-            $request->getOptions()
-                ->set(CURLOPT_CUSTOMREQUEST, $verb);
-        }
+
         $response = $request->send();
         $feed = json_decode($response->getContent(), true);
         $result = $feed;
