@@ -6,7 +6,7 @@
  * Time: 9:11 PM
  */
 
-include("zurmo.php");
+include("orocampus.php");
 
 // an array representing the activities the registering user is interested in
 $ACTIVITIES = Array('Not interested', 'Not interested', 'Not interested', 'Not interested', 'Not interested');

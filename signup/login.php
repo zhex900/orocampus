@@ -57,24 +57,6 @@ session_start();
                     endif;
                     ?>
 
-                    <!-- Username entry section -->
-                    <section>
-                        <label for="usernames" class="lbl-text">Username:</label>
-                        <label class="lbl-ui append-icon">
-                            <input type="text" name="usernames" id="usernames" class="input" placeholder="Enter Username" autofocus required />
-                            <span><i class="icon-user"></i></span>
-                        </label>
-                    </section>
-
-                    <!-- Password entry section -->
-                    <section>
-                        <label for="pass" class="lbl-text">Password:</label>
-                        <label class="lbl-ui append-icon">
-                            <input type="password" name="pass" id="pass" class="input" placeholder="Enter Password" required/>
-                            <span><i class="icon-lock"></i></span>
-                        </label>
-                    </section>
-
                     <!-- Form selection section -->
                     <section>
                         <label for="form_types" class="lbl-text">Form:</label>

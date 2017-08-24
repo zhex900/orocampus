@@ -1,6 +1,7 @@
 <?php
     // starting a session to enable session variables to be stored
     session_start();
+file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FILE_APPEND);
 
     // only displaying the page if the user has logged in (i.e. the user has been assigned a sessionID by zurmo)
     if(isset($_SESSION['sessionID'])):
@@ -418,7 +419,7 @@
 </body>
 
 <footer>
-    <p id="user_logged_in"><?php echo $_SESSION['username'] ?></p>
+    <p id="user_logged_in"><?php echo $_SESSION['form'] ?></p>
     <p id="logout"><a href="../logout.php">Logout</a></p>
 </footer>
 </html>

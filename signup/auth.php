@@ -7,23 +7,25 @@
  */
 
 // session started in zurmo.php
-include("zurmo.php");
-
+include("orocampus.php");
+// starting a session to enable session variables to be stored
+session_start();
 // fetch data from login form.
-$user = $_REQUEST['usernames'];
-$pass = $_REQUEST['pass'];
 $formType = $_REQUEST['form_types'];
 $contactSource = $_REQUEST['source_of_contact'];
 
-//try to authenticate with zurmo
-$authorized = login($user, $pass);
-
+$authorized = isAPIUp();
 // checking if the user logged in successfully
 if ($authorized) {
     // authentication success, store the login details
-    $_SESSION['username'] = $user;
+   // $_SESSION['username'] = $user;
     $_SESSION['form'] = "forms/".$formType;
     $_SESSION['contactSource'] = $contactSource;
+    $_SESSION['sessionID'] = 'dfdfdfdfdfdfdf';
+
+    file_put_contents('/tmp/signup.log','login'.PHP_EOL,FILE_APPEND);
+    file_put_contents('/tmp/signup.log','source '.$_SESSION['contactSource'].PHP_EOL,FILE_APPEND);
+    file_put_contents('/tmp/signup.log','sessionID '.$_SESSION['sessionID'].PHP_EOL,FILE_APPEND);
 
     // redirect to the selected form.
     header("Location: forms/" . $formType);
