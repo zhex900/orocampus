@@ -11,47 +11,6 @@ include("orocampus.php");
 // an array representing the activities the registering user is interested in
 $ACTIVITIES = Array('Not interested', 'Not interested', 'Not interested', 'Not interested', 'Not interested');
 
-// fetching data from the form
-$userState = $_REQUEST['userstate'];
-$form = $_REQUEST['form'];
-$source = $_SESSION['contactSource'];
-$type = $_REQUEST['type'];
-
-// user information
-$firstname = ucwords ( strtolower ($_REQUEST['fname'] ));
-$lastname = ucwords ( strtolower ($_REQUEST['lname']));
-$studentId = $_REQUEST['student_id'];
-$email = strtolower($_REQUEST['email']);
-$gender = $_REQUEST['gender'];
-if ($_REQUEST['dob']=="") { $_REQUEST['dob']= "01/01/1900"; }
-$dob = date_format(date_create_from_format('d/m/Y', $_REQUEST['dob']), 'Y-m-d');
-$intstudent = $_REQUEST['int_student'];
-
-// names of array indexes are named according to zurmo
-$address = Array
-(
-    //'street1' => $_REQUEST['address'],
-    'street1' => $_REQUEST['street_number'] . " ". $_REQUEST['street_name'],
-    'city' => $_REQUEST['city'],
-    'state' => $_REQUEST['state'],
-    'postalCode' => $_REQUEST['postal_code'],
-    'country' => $_REQUEST['country'],
-);
-
-// make the whole address in line one if the address is not find in Google map.
-if ($_REQUEST['street_number']=='') {
-    $address['street1'] = ucwords ( strtolower ($_REQUEST['address']));
-}
-
-$mobile = $_REQUEST['mobile'];
-$telephone = $_REQUEST['telephone'];
-$degree = $_REQUEST['degree'];
-$course = $_REQUEST['course'];
-$uni = $_REQUEST['uni'];
-$year = $_REQUEST['year'];
-$religion = $_REQUEST['areyouchristian'];
-$country = $_REQUEST['countryorigin'];
-
 // checking if any activity checkboxes were selected
 if (!empty($_REQUEST['enquiries'])) {
     $enquiries = $_REQUEST['enquiries'];
@@ -66,99 +25,163 @@ if (!empty($_REQUEST['enquiries'])) {
     }
 }
 
+// user information
+$firstname = ucwords ( strtolower ($_REQUEST['fname'] ));
+
 $NEWCONTACT_RESPONSE_TITLE = "Registration Successful!";
 $EXISTINGCONACT_REPSONSE_TITLE = "Already Registered";
 $NEWCONTACT_RESPONSE =  "Thank you for signing up " . $firstname . "!";
 $EXISTINGCONACT_REPSONSE = "Looks like you have already registered. <br> Thanks for coming back " . $firstname . "!";
 
-$leadDetails = Array
-(
+function getAddress($contact_id)
+{
+    // make the whole address in line one if the address is not find in Google map.
+    if ($_REQUEST['street_number']=='') {
+        $street = ucwords ( strtolower ($_REQUEST['address']));
+    }else{
+        $street = $_REQUEST['street_number'] . " ". $_REQUEST['street_name'];
+    }
 
-    'source' => Array
-    (
-        'value' => $source
-    ),
+    if (empty($_SESSION['countries'])){
+        $_SESSION['countries'] = json_decode(file_get_contents("./data/countries.json"), true);
+    }
 
-    'typeCstm' => Array
-    (
-        'value' => $type
-    ),
+    $address = [
+        'data' => [
+            'type' => 'contactaddresses',
+            'attributes' => [
+                'primary' => true,
+                'label' => 'Primary Address',
+                'street' => $street,
+                'city' => $_REQUEST['city'],
+                'postalCode' => $_REQUEST['postal_code']
+            ],
+            'relationships' => [
+                'owner' => [
+                    'data' => [
+                        'type' => 'contacts',
+                        'id' => $contact_id
+                    ]
+                ],
+                'country' => [
+                    'data' => [
+                        'type' => 'countries',
+                        'id' => $_SESSION['countries'][$_REQUEST['country']]
+                    ]
+                ]
+            ]
+        ]
+    ];
+    // Add Australian region (state)
+    if ($_REQUEST['country']=='Australia'){
+        $address['data']['relationships']['region']=
+            [
+                'data' => [
+                'type' => 'regions',
+                'id' => 'AU-' . $_REQUEST['state']]
+            ];
+    }
 
-    'state' => Array
-    (
-        'id' => $userState
-    ),
+    return $address;
+}
 
-    'firstName' => $firstname,
-    'lastName' => $lastname,
-    'studidCstm' => $studentId,
+function getContact()
+{
+    // add field only when it is filled.
 
-    'primaryEmail' => Array
-    (
-        'emailAddress' => $email
-    ),
+    $phones = [['phone'=>$_REQUEST['mobile']]];
+    if ($_REQUEST['telephone']!=''){
+        $phones=array_merge($phones,[['phone'=>$_REQUEST['phone']]]);
+    }
+    //var_dump($_REQUEST['countryorigin']);
+    $contact = [
+        'data' => [
+            'type' => 'contacts',
+            'attributes' => [
+                'firstName' => ucwords ( strtolower ($_REQUEST['fname'] )),
+                'lastName' => ucwords ( strtolower ($_REQUEST['lname'])),
+                'gender' => $_REQUEST['gender'],
+                'primaryEmail' => strtolower($_REQUEST['email']),
+                'student_id' => $_REQUEST['student_id'],
+                'christian' => $_REQUEST['areyouchristian'],
+                'int_student' => $_REQUEST['int_student'],
+                'primaryPhone' => $_REQUEST['mobile'],
+                'phones' => $phones,
+                'church_kid' => $_REQUEST['churchkid']
+            ],
+            'relationships' => [
+                'country_of_birth' => [
+                    'data' => [
+                        'type' => 'countries',
+                        'id' => $_REQUEST['countryorigin']
+                    ]
+                ],
+                'degrees' => [
+                    'data' => [
+                        'type' => 'degreessources',
+                        'id' => $_REQUEST['course']
+                    ]
+                ],
+                'institutions' => [
+                    'data' => [
+                        'type' => 'institutionssources',
+                        'id' => $_REQUEST['uni']
+                    ]
+                ],
+                'level_of_study' => [
+                    'data' => [
+                        'type' => 'levelofstudysources',
+                        'id' => $_REQUEST['degree']
+                    ]
+                ],
+                'owner' => [
+                    'data' => [
+                        'type' => 'users',
+                        'id' => '12'
+                    ]
+                ],
+                'contact_source' => [
+                    'data' => [
+                        'type' => 'contactsourcesources',
+                        'id' => $_SESSION['contactSource']
+                    ]
+                ]
+            ],
+            'organization' => [
+                'data' => [
+                    'type' => 'organizations',
+                    'id' => '1'
+                ]
+            ]
+        ]
+    ];
+    // add DOB when it is not empty.
+    if ($_REQUEST['dob']!="") {
+        $dob = date_format(date_create_from_format('d/m/Y', $_REQUEST['dob']), 'Y-m-d');
+        $contact['data']['attributes']['birthday']=$dob;
+    }
+    return $contact;
+}
 
-    'dobCstm' => $dob,
+var_dump(createContact(getContact()));
+function createContact($contact){
+    file_put_contents('/tmp/signup.log','address state: '. $_REQUEST['userstate'].PHP_EOL,FILE_APPEND);
 
-    'genderCstm' => Array(
-        'value' => $gender
-    ),
+    $api = new ApiRest(URL,LOGIN,APIKEY);
+    //create new contact
+    var_dump($contact);
+    $result = $api->curl_req(CONTACT, $contact);
+    // check if create contact is successful
+    var_dump(print_r($result,true));
+    file_put_contents('/tmp/signup.log','new contact id: '. $result['data']['id'].PHP_EOL.PHP_EOL,FILE_APPEND);
+    var_dump(getAddress($result['data']['id']));
+    //add address to the new contact
+    $result = $api->curl_req(ADDRESS, getAddress($result['data']['id']));
+    // check if create address is successful
+    return $result;
+}
 
-    'intstudentCstm' => Array (
-        'value' => $intstudent
-    ),
-
-    'countryCstm' => Array (
-        'value' => $country
-    ),
-
-    'primaryAddress' => $address,
-    'mobilePhone' => $mobile,
-    'homephoneCstm' => $telephone,
-
-    'degreeCstm' => Array (
-        'value' => $degree
-    ),
-
-    'courseCstm' => Array (
-        'value' => $course
-    ),
-
-    'industry' => Array (
-        'value' => $uni
-    ),
-
-    'yearCstm' => Array (
-        'value' => $year
-    ),
-
-    'backgroundCstm' => Array (
-        'value' => $religion
-    ),
-
-    'activitiesCstm' => Array (
-        'value' => $ACTIVITIES[0]
-    ),
-
-    'biblestudyCstm' => Array (
-        'value' => $ACTIVITIES[1]
-    ),
-
-    'christcourseCstm' => Array (
-        'value' => $ACTIVITIES[2]
-    ),
-
-    'homesCstm' => Array (
-        'value' => $ACTIVITIES[3]
-    ),
-
-    'freebibleCstm' => Array (
-        'value' => $ACTIVITIES[4]
-    ),
-
-    'description' => ''//some desc;
-);
-
+/*
 // checking if the new form data is a previous contact or lead
 // searching leads first
 $lead = contact_search($firstname, $lastname, $email, ZURMO_URL_LEAD_SEARCH);
@@ -170,10 +193,10 @@ if ($lead == null) {
     if ($contact == null) {
 
         if ($form == "members"){
-            $leadDetails['account'] = Array( 'id' => '3' );
-            create_contact($leadDetails,ZURMO_URL_CONTACT_ADD);
+            $contactDetails['account'] = Array( 'id' => '3' );
+            create_contact($contactDetails,ZURMO_URL_CONTACT_ADD);
         }else {
-            create_contact($leadDetails,ZURMO_URL_LEAD_ADD);
+            create_contact($contactDetails,ZURMO_URL_LEAD_ADD);
         }
 
         $_SESSION['response_msg_title'] = $NEWCONTACT_RESPONSE_TITLE;
@@ -193,4 +216,4 @@ if ($lead == null) {
     $_SESSION['response_msg_title'] = $EXISTINGCONACT_REPSONSE_TITLE;
     $_SESSION['response_msg'] = $EXISTINGCONACT_REPSONSE;
     header("Location: registration_response.php");
-}
+}*/

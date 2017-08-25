@@ -6,53 +6,23 @@
  * Time: 1:58 PM
  */
 require_once __DIR__ . '/vendor/autoload.php';
-
-// zurmo url
+session_start();
 define("ERROR_LOG", "/tmp/error.log");
-define("URL", "http://app1.orocampus.tk/app.php/api/");
-define("CONTACT_SEARCH", "");
-define("CONTACT_ADD", "contacts");
 
-define("CONTACT_TEST", "contacts/1");
+define("URL", "http://orocampus.tk/app.php/api/");
+
+define("DEGREES", 'degreessources');
+define("INSTITUTIONS", 'institutionssources');
+define("LEVELOFSTUDY", 'levelofstudysources');
+define("ADDRESS", "contactaddresses");
+define("CONTACT", "contacts");
+define("COUNTRIES", "countries");
+define("SOURCE", "contactsourcesources");
+
+define("CONTACT_TEST", "contacts/50");
+
 define("APIKEY", "17c9b0c24553e91b8ed84235ca4808327fbcf1c9");
 define("LOGIN","system");
-//
-// starting a session to enable session variables to be stored
-//session_start();
-
-$api = new ApiRestHelper(URL,LOGIN,APIKEY);
-
-$new_contact =
-    [
-        'data' => [
-            'type'       => 'contacts',
-            'attributes' => [
-                'firstName' => 'Zsher',
-                'lastName' => 'Pie',
-                'gender' => 'male',
-                'primaryPhone' => '0421169154',
-                'primaryEmail' => 'usherpie@gmail.com',
-                'birthday' => '1995-01-25'
-            ],
-            'relationships' => [
-                'owner' => [
-                    'data' => [
-                        'type' => 'users',
-                        'id'=> '1'
-                    ]
-                ]
-            ],
-            'organization' => [
-                'data' => [
-                    'type' => 'organizations',
-                    'id'=> '1'
-                ]
-            ]
-        ]
-    ];
-
-$result = $api->curl_req(CONTACT_ADD,$new_contact);
-var_dump($result);
 
 /*
  * @return bool
@@ -60,11 +30,11 @@ var_dump($result);
  */
 function isAPIUp(){
     /** @var ApiRestHelper $api */
-    $api = new ApiRestHelper(URL,LOGIN,APIKEY);
+    $api = new ApiRest(URL,LOGIN,APIKEY);
     return !empty($api->curl_req(CONTACT_TEST));
 }
 
-class ApiRestHelper
+class ApiRest
 {
     protected $_url;
     protected $_username;
@@ -87,7 +57,7 @@ class ApiRestHelper
         );
         $wsseHeader[] = "Content-type:application/vnd.api+json";
         $wsseHeader[] = "Accept: application/json";
-        var_dump($wsseHeader);
+       // var_dump($wsseHeader);
         return $wsseHeader;
     }
 
@@ -99,7 +69,7 @@ class ApiRestHelper
             ->set(CURLOPT_RETURNTRANSFER, true)
             ->set(CURLOPT_HTTPHEADER, $this->getHeader())
             ->set(CURLOPT_HEADER,false)
-            ->set(CURLOPT_VERBOSE,true)
+            ->set(CURLOPT_VERBOSE,false)
             ->set(CURLOPT_USERAGENT,'curl');
 
         if( !empty($data) ) {
@@ -110,8 +80,9 @@ class ApiRestHelper
 
         $response = $request->send();
         $feed = json_decode($response->getContent(), true);
-        $result = $feed;
 
-        return $result;
+        return $feed;
     }
+
+
 }
