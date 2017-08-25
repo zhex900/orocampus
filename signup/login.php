@@ -15,6 +15,9 @@ session_start();
 
     <link type="text/css" rel="stylesheet"   href="css/golden-forms.css"/>
     <link type="text/css" rel="stylesheet"   href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
 
     <!--[if lte IE 9]>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -29,6 +32,16 @@ session_start();
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <link type="text/css" rel="stylesheet" href="css/golden-forms-ie8.css">
     <![endif]-->
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="js/mySelect2.js"></script>
+
+    <!-- Use jquery to load contact source json file and fill the drop down-->
+    <script>
+        $(document).ready(function() {
+            mySelect2("./data/contactsourcesources.json",'#source_of_contact');
+        });
+    </script>
 
 </head>
 
@@ -37,7 +50,7 @@ session_start();
 <div class="gforms">
 
     <div class="golden-forms wrapper mini">
-        <form action="auth.php" method="post">
+        <form action="init.php" method="post">
 
             <div class="form-title">
                 <h2>CSAC Sign-up Account Login</h2>
@@ -45,17 +58,6 @@ session_start();
 
             <div class="form-enclose">
                 <div class="form-section">
-
-                    <!-- Error message section -->
-                    <!-- An error message is only displayed when needed, for example on failed login -->
-                    <?php if( isset($_SESSION['error']) ): ?>
-                        <section id="error-message"><?php echo $_SESSION['error'] ?></section>
-                        <?php
-                        // unsetting the session variable 'error' so that error messages aren't
-                        // displayed on the login page if the user refreshes the page
-                        unset($_SESSION['error']);
-                    endif;
-                    ?>
 
                     <!-- Form selection section -->
                     <section>
@@ -71,12 +73,10 @@ session_start();
 
                     <!-- Source selection section -->
                     <section>
-                        <label for="source_of_contact" class="lbl-text">Contact Method:</label>
-                        <label for="source_of_contact" class="lbl-ui select">
-                            <select id="source_of_contact" name="source_of_contact">
+                        <label for="source_of_contact">
+                            Contact Method:
+                            <select class="source_of_contact" id="source_of_contact" name="source_of_contact">
                                 <!-- value must be the same as the source of contact values in zurmo -->
-                                <option value="Table">Table</option>
-                                <option value="Bible Study">Bible Study</option>
                             </select>
                         </label>
                     </section>
@@ -90,7 +90,8 @@ session_start();
                     <!-- Forms original buttons. Left for reference -->
                     <!-- <button class="button blue">Login</button> -->
                     <!--<a class="button red" href="#">Register</a>-->
-                    <input type="Submit" name="Form1_Submit"  class="button blue" value="Login">
+                    <input type="Submit" name="login"  class="button blue" value="Login">
+                    <input type="Submit" name="reload" class="button" value="Reload details">
                 </section>
             </div><!-- end .form-buttons section -->
 

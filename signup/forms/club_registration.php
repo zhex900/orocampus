@@ -1,10 +1,9 @@
 <?php
     // starting a session to enable session variables to be stored
     session_start();
-file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FILE_APPEND);
 
     // only displaying the page if the user has logged in (i.e. the user has been assigned a sessionID by zurmo)
-    if(isset($_SESSION['sessionID'])):
+    if(isset($_SESSION['form'])):
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +14,10 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
         <title> Registration Form | CSAC </title>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
+
         <link rel="stylesheet" type="text/css" media="all" href="../css/auto-complete-style.css">
         <link type="text/css" rel="stylesheet" href="../css/golden-forms.css"/>
         <link type="text/css" rel="stylesheet" href="../css/font-awesome.min.css"/>
@@ -22,12 +25,9 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
         <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
         <script src="../js/jquery-datepicker.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
-        <!--
-            <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
-        -->
-        <script type="text/javascript" src="../js/jquery.autocomplete.min.js"></script>
-        <script type="text/javascript" src="../js/autocomplete.js"></script>
+
 
         <!--[if lte IE 9]>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -46,7 +46,17 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
         <!-- Automatically completes the address as the user is typing it -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQpSg-uWZkbaydLNvkXcwhNvIA6BfffJQ&libraries=places&callback=initAutocomplete"
             async defer></script>
+        <script src="../js/mySelect2.js"></script>
         <script src="../js/address-autocomplete.js"></script>
+        <script type="text/javascript" src="../js/jquery.autocomplete.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                mySelect2("../data/levelofstudysources.json",'#degree');
+                mySelect2("../data/institutionssources.json",'#uni');
+                mySelect2("../data/countries.json",'#countryorigin');
+                mySelect2("../data/degreessources.json",'#course');
+            });
+        </script>
 
 
 </head>
@@ -68,7 +78,7 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
 
                     <!-- hidden fields containing form specific information -->
                     <!-- each hidden fields value is case sensitive and equal the values required by zurmo -->
-                    <input type="hidden" name="type" value="New One"/>
+                    <input type="hidden" name="churchkid" value=0 />
                     <input type="hidden" name="form" value="newcontacts"/>
                     <input type="hidden" name="userstate" value=1 />
                     <!-- hidden fields used for parsing the user's entered address -->
@@ -138,7 +148,7 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
 
                                     <span class="goption">
                                         <label class="options">
-                                            <input id="gender_op1" name="gender" value="Male" type="radio" required>
+                                            <input id="gender_op1" name="gender" value="male" type="radio" required>
                                             <span class="radio"></span>
                                         </label>
                                         <label for="gender_op1">Male</label>
@@ -146,7 +156,7 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
 
                                     <span class="goption">
                                         <label class="options">
-                                            <input id="gender_op2" name="gender" value="Female" type="radio">
+                                            <input id="gender_op2" name="gender" value="female" type="radio">
                                             <span class="radio"></span>
                                         </label>
                                         <label for="gender_op2">Female</label>
@@ -165,7 +175,7 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
                                     <span class="goption">
                                         <label class="options">
 
-                                            <input id="areyouchristian_op1" name="areyouchristian" value="Christian" type="radio" required/>
+                                            <input id="areyouchristian_op1" name="areyouchristian" value=1 type="radio" required/>
                                             <span class="radio"></span>
                                         </label>
                                         <label for="areyouchristian_op1">Yes</label>
@@ -174,7 +184,7 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
                                     <span class="goption">
                                         <label class="options">
 
-                                            <input id="areyouchristian_op2" name="areyouchristian" value="Not a Christian" type="radio">
+                                            <input id="areyouchristian_op2" name="areyouchristian" value=0 type="radio">
                                             <span class="radio"></span>
                                         </label>
                                         <label for="areyouchristian_op2">No</label>
@@ -197,7 +207,7 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
 
                                     <span class="goption">
                                         <label class="options">
-                                            <input id="int_student_op1" name="int_student" value="Yes" type="radio" required/>
+                                            <input id="int_student_op1" name="int_student" value=1 type="radio" required/>
                                             <span class="radio"></span>
                                         </label>
                                         <label for="int_student_op1">Yes</label>
@@ -205,7 +215,7 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
 
                                     <span class="goption">
                                         <label class="options">
-                                            <input id="int_student_op2" name="int_student" value="No" type="radio">
+                                            <input id="int_student_op2" name="int_student" value=0 type="radio">
                                             <span class="radio"></span>
                                         </label>
                                         <label for="int_student_op2">No</label>
@@ -230,11 +240,12 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
                         <!-- end .row section-->
                     </section>
 		    <section>
-<label for="countryorigin" class="lbl-text">Country of origin:<span id="required">*</span></label>
-                                <label class="lbl-ui">
-                                    <input type="text" name="countryorigin" id="country_autocomplete" class="input" pattern="[a-zA-Z -]+"
-                                           placeholder="Where are your from?" required list="countryorigin" autocomplete="off"/>
-                                </label>
+
+                <label for="countryorigin" class="lbl-text">Country of origin:<span id="required">*</span>
+                    <select class="countryorigin" id="countryorigin" name="countryorigin">
+                    </select>
+                </label>
+
 	
 		    <!-- end .row section-->
 		    </section>
@@ -276,25 +287,17 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
                     <section>
                         <div class="row">
                             <div class="col6 first">
-                                <label for="degree" class="lbl-text">Degree Type:<span id="required">*</span></label>
-                                <label for="degree" class="lbl-ui select">
-                                    <select id="degree" name="degree">
-                                        <option value="Bachelor">Bachelor</option>
-                                        <option value="Honors">Honors</option>
-                                        <option value="Masters">Masters</option>
-                                        <option value="PhD">PhD</option>
-                                        <option value="Diploma">Diploma</option>
-                                        <option value="Bridging Course">Bridging Course</option>
+                                <label for="degree" class="lbl-text">Degree Type:<span id="required">*</span>
+                                    <select class="degree" id="degree" name="degree">
                                     </select>
                                 </label>
                             </div>
                             <!-- end .col6 section -->
 
                             <div class="col6 last colspacer-two">
-                                <label for="course" class="lbl-text">Course:<span id="required">*</span></label>
-                                <label class="lbl-ui">
-                                    <input type="text" name="course" id="course_autocomplete" class="input" pattern="[a-zA-Z -]+"
-                                           placeholder="Enter Course" required list="courses" autocomplete="off"/>
+                                <label for="course" class="lbl-text">Course:<span id="required">*</span>
+                                    <select class="course" id="course" name="course">
+                                    </select>
                                 </label>
                             </div>
                             <!-- end .col6 section -->
@@ -306,17 +309,8 @@ file_put_contents('/tmp/signup.log','form:  '.$_SESSION['sessionID'].PHP_EOL,FIL
                     <section>
                         <div class="row">
                             <div class="col6 first">
-                                <label for="uni" class="lbl-text">University:<span id="required">*</span></label>
-                                <label for="uni" class="lbl-ui select">
-                                    <select id="uni" name="uni">
-                                        <option value="Curtin University">Curtin University</option>
-                                        <option value="Curtin College">Curtin College</option>
-                                        <option value="Edith Cowen University">Edith Cowen University</option>
-                                        <option value="Murdoch University">Murdoch University</option>
-                                        <option value="TAFE Central">TAFE Central</option>
-                                        <option value="Taylors College">Taylors College</option>
-                                        <option value="University of Notre Dame">University of Notre Dame</option>
-                                        <option value="University of Western Australia">University of Western Australia</option>
+                                <label for="uni" class="lbl-text">University:<span id="required">*</span>
+                                    <select class="uni" id="uni" name="uni">
                                     </select>
                                 </label>
                             </div>
