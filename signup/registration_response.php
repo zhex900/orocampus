@@ -3,7 +3,7 @@
     session_start();
 
     // only displaying the page if the user has logged in (i.e. the user has been assigned a sessionID by zurmo)
-    if(isset($_SESSION['sessionID'])):
+    if(isset($_SESSION['form'])):
 ?>
 
 <!DOCTYPE html>

@@ -7,10 +7,8 @@
  */
 require_once __DIR__ . '/vendor/autoload.php';
 session_start();
-define("ERROR_LOG", "/tmp/error.log");
 
 define("URL", "http://orocampus.tk/app.php/api/");
-
 define("DEGREES", 'degreessources');
 define("INSTITUTIONS", 'institutionssources');
 define("LEVELOFSTUDY", 'levelofstudysources');
@@ -18,10 +16,8 @@ define("ADDRESS", "contactaddresses");
 define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
-
 define("CONTACT_TEST", "contacts/50");
-
-define("APIKEY", "17c9b0c24553e91b8ed84235ca4808327fbcf1c9");
+define("APIKEY", "10a8c562829409f64174386c8400deb30223436f");
 define("LOGIN","system");
 
 /*
@@ -69,8 +65,8 @@ class ApiRest
             ->set(CURLOPT_RETURNTRANSFER, true)
             ->set(CURLOPT_HTTPHEADER, $this->getHeader())
             ->set(CURLOPT_HEADER,false)
-            ->set(CURLOPT_VERBOSE,false)
-            ->set(CURLOPT_USERAGENT,'curl');
+            ->set(CURLOPT_VERBOSE,false);
+            //->set(CURLOPT_USERAGENT,'curl');
 
         if( !empty($data) ) {
             $request->getOptions()
@@ -83,6 +79,4 @@ class ApiRest
 
         return $feed;
     }
-
-
 }

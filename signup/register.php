@@ -28,11 +28,6 @@ if (!empty($_REQUEST['enquiries'])) {
 // user information
 $firstname = ucwords ( strtolower ($_REQUEST['fname'] ));
 
-$NEWCONTACT_RESPONSE_TITLE = "Registration Successful!";
-$EXISTINGCONACT_REPSONSE_TITLE = "Already Registered";
-$NEWCONTACT_RESPONSE =  "Thank you for signing up " . $firstname . "!";
-$EXISTINGCONACT_REPSONSE = "Looks like you have already registered. <br> Thanks for coming back " . $firstname . "!";
-
 function getAddress($contact_id)
 {
     // make the whole address in line one if the address is not find in Google map.
@@ -66,7 +61,7 @@ function getAddress($contact_id)
                 'country' => [
                     'data' => [
                         'type' => 'countries',
-                        'id' => $_SESSION['countries'][$_REQUEST['country']]
+                        'id' => $_SESSION['dataCache']['countries'][$_REQUEST['country']]
                     ]
                 ]
             ]
@@ -163,18 +158,33 @@ function getContact()
     return $contact;
 }
 
-var_dump(createContact(getContact()));
+
+$NEWCONTACT_RESPONSE_TITLE = "Registration Successful!";
+$EXISTINGCONACT_REPSONSE_TITLE = "Already Registered";
+$NEWCONTACT_RESPONSE =  "Thank you for signing up " . $firstname . "!";
+$EXISTINGCONACT_REPSONSE = "Looks like you have already registered. <br> Thanks for coming back " . $firstname . "!";
+
+if(createContact(getContact())!=null){
+    $_SESSION['response_msg_title'] = $NEWCONTACT_RESPONSE_TITLE;
+    $_SESSION['response_msg'] = $NEWCONTACT_RESPONSE;
+}else{
+    $_SESSION['response_msg_title'] = "Registration failed";
+    $_SESSION['response_msg'] = "Please try again";
+}
+
+header("Location: registration_response.php");
+
 function createContact($contact){
     file_put_contents('/tmp/signup.log','address state: '. $_REQUEST['userstate'].PHP_EOL,FILE_APPEND);
 
     $api = new ApiRest(URL,LOGIN,APIKEY);
     //create new contact
-    var_dump($contact);
+    //var_dump($contact);
     $result = $api->curl_req(CONTACT, $contact);
     // check if create contact is successful
-    var_dump(print_r($result,true));
+    //var_dump(print_r($result,true));
     file_put_contents('/tmp/signup.log','new contact id: '. $result['data']['id'].PHP_EOL.PHP_EOL,FILE_APPEND);
-    var_dump(getAddress($result['data']['id']));
+   // var_dump(getAddress($result['data']['id']));
     //add address to the new contact
     $result = $api->curl_req(ADDRESS, getAddress($result['data']['id']));
     // check if create address is successful

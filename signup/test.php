@@ -16,13 +16,13 @@ define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
-define("APIKEY", "17c9b0c24553e91b8ed84235ca4808327fbcf1c9");
+define("APIKEY", "10a8c562829409f64174386c8400deb30223436f");
 define("LOGIN","system");
 //
 // starting a session to enable session variables to be stored
 //session_start();
 
-$api = new ApiRest(URL,LOGIN,APIKEY);
+$api = new ApiRestTest(URL,LOGIN,APIKEY);
 
 
 $new_contact =
@@ -82,13 +82,13 @@ $new_contact =
         ]
     ];
 
-/*$result = $api->curl_req(SOURCE);
+$result = $api->curl_req(CONTACT_TEST);
 
-foreach ($result['data'] as $item){
-    $array[$item['attributes']['name']] =$item['id'];
-}
-var_dump(json_encode($array));
-*/
+//foreach ($result['data'] as $item){
+//    $array[$item['attributes']['name']] =$item['id'];
+//}
+var_dump($result);
+
 //var_dump($result);
 $contact_id = 1 ; //$result['data']['id'];
 $new_address =
@@ -118,32 +118,7 @@ $new_address =
             ]
         ]
     ];
-//$result = $api->curl_req(CONTACT, $new_contact);
-//var_dump($result);
 
-//$countries=null;
-//foreach ($result['data'] as $country){
-//    $countries[$country['attributes']['name']] =$country['id'];
-//}
-//$_SESSION['Countries'] =$countries;
-//var_dump(json_encode($countries));
-/*
- * @return bool
- * Check if the orocampus.tk API is alive.
- */
-function isAPIUp(){
-    /** @var ApiRestHelper $api */
-    $api = new ApiRestHelper(URL,LOGIN,APIKEY);
-    return !empty($api->curl_req(CONTACT_TEST));
-}
-/*
- * @param array $contactDetails
- * @return int
- * returns contact id if fails return null
- */
-function createContact($contactDetails){
-
-}
 
 class ApiRestTest
 {
@@ -180,8 +155,8 @@ class ApiRestTest
             ->set(CURLOPT_RETURNTRANSFER, true)
             ->set(CURLOPT_HTTPHEADER, $this->getHeader())
             ->set(CURLOPT_HEADER,false)
-            ->set(CURLOPT_VERBOSE,true)
-            ->set(CURLOPT_USERAGENT,'curl');
+            ->set(CURLOPT_VERBOSE,true);
+          //  ->set(CURLOPT_USERAGENT,'curl');
 
         if( !empty($data) ) {
             $request->getOptions()

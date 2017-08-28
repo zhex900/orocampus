@@ -27,8 +27,6 @@
         <script src="../js/jquery-datepicker.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
-
-
         <!--[if lte IE 9]>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="../js/jquery.placeholder.min.js"></script>
@@ -49,15 +47,15 @@
         <script src="../js/mySelect2.js"></script>
         <script src="../js/address-autocomplete.js"></script>
         <script type="text/javascript" src="../js/jquery.autocomplete.min.js"></script>
-        <script>
+        <script type="text/javascript">
             $(document).ready(function() {
-                mySelect2("../data/levelofstudysources.json",'#degree');
-                mySelect2("../data/institutionssources.json",'#uni');
-                mySelect2("../data/countries.json",'#countryorigin');
-                mySelect2("../data/degreessources.json",'#course');
+                var json = <?php echo json_encode($_SESSION['dataCache']); ?>;
+                mySelect2(json.levelofstudysources,'#degree');
+                mySelect2(json.institutionssources,'#uni');
+                mySelect2(json.countries,'#countryorigin');
+                mySelect2(json.degreessources,'#course');
             });
         </script>
-
 
 </head>
 
