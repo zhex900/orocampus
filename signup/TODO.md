@@ -26,12 +26,15 @@
     * Use local css and js files.
     * Load google address at login.php
     
-### New forms
+### Forms
+* Change club logo to UNSW CHRISTIAN STUDENTS
+* Add year of commencement
+
+#### New forms
 * Table signup
 * Event signup
 * Web signup
 
-### Changes
-* Change club logo to UNSW CHRISTIAN STUDENTS
+
 
 
