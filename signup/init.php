@@ -17,11 +17,13 @@ if (isset($_POST['reload'])) {
     $result = array_merge($result, get($api, DEGREES));
     $result = array_merge($result, get($api, INSTITUTIONS));
     $result = array_merge($result, get($api, LEVELOFSTUDY));
+
+    // TODO
+    // Write over data.json if $result is success
     file_put_contents('./data/data.json', json_encode($result));
 
     // redirect to the selected form.
     header("Location: login.php");
-
 }
 
 if (isset($_POST['login'])) {
@@ -29,18 +31,6 @@ if (isset($_POST['login'])) {
     $formType = $_REQUEST['form_types'];
     $_SESSION['form'] = "forms/" . $formType;
     $_SESSION['contactSource'] = $_REQUEST['source_of_contact'];
-   // $_SESSION['countries'] = json_decode(file_get_contents("./data/countries.json"), true);
-
-    //load drop-down values
-    $file = './data/data.json';
-    if (!is_file($file) || !is_readable($file)) {
-        die("File not accessible.");
-    }
-    $contents = file_get_contents($file);
-    $_SESSION['dataCache'] = json_decode($contents, true);
-
-    file_put_contents('/tmp/signup.log', 'dataCache: ' . print_r($_SESSION['dataCache'], true) . PHP_EOL, FILE_APPEND);
-    file_put_contents('/tmp/signup.log', 'source: ' . $_SESSION['contactSource'] . PHP_EOL, FILE_APPEND);
 
     // redirect to the selected form.
     header("Location: forms/" . $formType);

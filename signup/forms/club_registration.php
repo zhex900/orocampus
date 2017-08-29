@@ -14,11 +14,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
         <title> Registration Form | CSAC </title>
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
+        <link rel="stylesheet" type="text/css" href="../css/select2.css">
 
-        <link rel="stylesheet" type="text/css" media="all" href="../css/auto-complete-style.css">
+         <link rel="stylesheet" type="text/css" media="all" href="../css/auto-complete-style.css">
         <link type="text/css" rel="stylesheet" href="../css/golden-forms.css"/>
         <link type="text/css" rel="stylesheet" href="../css/font-awesome.min.css"/>
         <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
@@ -315,7 +313,7 @@
                             <!-- end .col6 section -->
 
                             <div class="col6 last colspacer-two">
-                                <label for="year" class="lbl-text">Year:<span id="required">*</span></label>
+                                <label for="year" class="lbl-text">Year of Commencement:<span id="required">*</span></label>
                                 <label for="year" class="lbl-ui select">
                                     <select id="year" name="year">
                                         <option value="1">1</option>
@@ -343,7 +341,7 @@
 
 							<span class="goption">
 								<label class="options">
-                                    <input type="checkbox" id="enquiry1" name="enquiries[]" value="0"/>
+                                    <input type="checkbox" id="enquiry2" name="enquiries[]" value="further_activities" />
                                     <span class="checkbox"></span>
                                 </label>
 								<label for="enquiry1">Please contact me for further activities</label>
@@ -351,7 +349,7 @@
 
 							<span class="goption">
 								<label class="options">
-                                    <input type="checkbox" id="enquiry2" name="enquiries[]" value="1"/>
+                                    <input type="checkbox" id="enquiry2" name="enquiries[]" value="bible_study" />
                                     <span class="checkbox"></span>
                                 </label>
 								<label for="enquiry2">Please contact me for Bible study</label>
@@ -359,7 +357,7 @@
 
 							<span class="goption">
 								<label class="options">
-                                    <input type="checkbox" id="enquiry3" name="enquiries[]" value="2"/>
+                                    <input type="checkbox" id="enquiry3" name="enquiries[]" value="christian_courses" />
                                         <span class="checkbox"></span>
                                 </label>
 								<label for="enquiry3">I would like to know about free Christian courses</label>
@@ -367,7 +365,7 @@
 
 							<span class="goption">
 								<label class="options">
-                                    <input type="checkbox" id="enquiry4" name="enquiries[]" value="3"/>
+                                    <input type="checkbox" id="enquiry4" name="enquiries[]" value="homes" />
                                     <span class="checkbox"></span>
                                 </label>
 								<label for="enquiry4">I would like to attend dinner and fellowship in the homes</label>
@@ -375,10 +373,18 @@
 
                             <span class="goption">
 								<label class="options">
-                                    <input type="checkbox" id="enquiry5" name="enquiries[]" value="4"/>
+                                    <input type="checkbox" id="enquiry5" name="enquiries[]" value="mhl" />
                                     <span class="checkbox"></span>
                                 </label>
-								<label for="enquiry5">I would like to receive a free New Testament Bible</label>
+								<label for="enquiry5">I would like to know the meaning of human life</label>
+							</span><!-- end .goption section -->
+
+                            <span class="goption">
+								<label class="options">
+                                    <input type="checkbox" id="enquiry5" name="enquiries[]" value="sunday_worship" />
+                                    <span class="checkbox"></span>
+                                </label>
+								<label for="enquiry5">I would like attend Sunday worship</label>
 							</span><!-- end .goption section -->
 
                         </div>

@@ -1,0 +1,1 @@
+curl -v -H "Content-type:application/vnd.api+json" -H "Accept: application/json" -H 'Authorization: WSSE profile="UsernameToken"' -H 'X-WSSE: UsernameToken Username="system", PasswordDigest="O0JFGZ+NKDxvUKb4USJ/Illo9aw=", Nonce="MGY4YThmMmM1MDY4NDY3Yw==", Created="2017-08-29T14:31:52+10:00"' http://orocampus.tk/app.php/api/contacts/2

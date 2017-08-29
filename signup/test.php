@@ -82,15 +82,27 @@ $new_contact =
         ]
     ];
 
-$result = $api->curl_req(CONTACT_TEST);
-
+//.'?filter[primaryEmail]=112@sw.com&page[number]=1&page[size]=10&sort=id');
+$_REQUEST['email'] = '34343@gmail.com';
+function findContactByEmail(){
+    if (!isset($_REQUEST['email'])){
+        return null;
+    }
+    $api = new ApiRestTest(URL,LOGIN,APIKEY);
+    $result = $api->curl_req(CONTACT .'?filter[primaryEmail]='.$_REQUEST['email']);
+    if (isset($result['data'][0]['id'])){
+        return $result['data'][0]['id'];
+    }else{
+        return null;
+    }
+}
+//$result = findContactByEmail();
 //foreach ($result['data'] as $item){
 //    $array[$item['attributes']['name']] =$item['id'];
 //}
-var_dump($result);
 
 //var_dump($result);
-$contact_id = 1 ; //$result['data']['id'];
+$contact_id = 90 ; //$result['data']['id'];
 $new_address =
     [
         'data' => [
@@ -106,7 +118,7 @@ $new_address =
                 'owner' => [
                     'data' => [
                         'type' => 'contacts',
-                        'id'  => $contact_id
+                        'id'  => '90'
                     ]
                 ],
                 'country' => [
@@ -119,6 +131,38 @@ $new_address =
         ]
     ];
 
+/*
+ * return if successful return created contact id otherwise return null
+ */
+function createContact($contact){
+    $api = new ApiRest(URL,LOGIN,APIKEY);
+    $result = $api->curl_req(CONTACT, $contact);
+
+    if (isset($result['data']['id'])){
+        return $result['data']['id'];
+    }else{
+        return null;
+    }
+}
+
+/*
+ * return if successful return created contact address id otherwise return null
+ */
+function addAddress($contact_id){
+    $api = new ApiRest(URL,LOGIN,APIKEY);
+    //add address to the new contact
+    $result = $api->curl_req(ADDRESS, getAddress($contact_id));
+    if (isset($result['data']['id'])){
+        return $result['data']['id'];
+    }else{
+        return null;
+    }
+}
+$id = createContact($new_contact);
+var_dump($id);
+
+$result = $api->curl_req(ADDRESS, $new_address) ;
+var_dump($result);
 
 class ApiRestTest
 {
@@ -137,26 +181,37 @@ class ApiRestTest
         $created = date('c');
         $digest = base64_encode(sha1(base64_decode($nonce) . $created . $this->_apiKey, true));
 
+        $wsseHeader[] = "Content-type:application/vnd.api+json";
+        $wsseHeader[] = "Accept: application/json";
         $wsseHeader[] = "Authorization: WSSE profile=\"UsernameToken\"";
         $wsseHeader[]= sprintf(
             'X-WSSE: UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"', $this->_username, $digest, $nonce, $created
         );
-        $wsseHeader[] = "Content-type:application/vnd.api+json";
-        $wsseHeader[] = "Accept: application/json";
         var_dump($wsseHeader);
         return $wsseHeader;
     }
 
     public function curl_req($path, $data=array()) {
-
+/*
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$this->_url . $path);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+       // curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'curl/7.54.0');
+       // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET'); //LET OP!! PATCH voor updates!!
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getHeader());
+        $data = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+*/
         $request = new \cURL\Request($this->_url . $path);
         $request->getOptions()
             ->set(CURLOPT_TIMEOUT, 5)
             ->set(CURLOPT_RETURNTRANSFER, true)
-            ->set(CURLOPT_HTTPHEADER, $this->getHeader())
             ->set(CURLOPT_HEADER,false)
-            ->set(CURLOPT_VERBOSE,true);
-          //  ->set(CURLOPT_USERAGENT,'curl');
+            ->set(CURLOPT_VERBOSE,true)
+            ->set(CURLOPT_USERAGENT,'curl/7.54.0')
+            ->set(CURLOPT_HTTPHEADER, $this->getHeader());
 
         if( !empty($data) ) {
             $request->getOptions()

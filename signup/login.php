@@ -16,8 +16,6 @@ session_start();
     <link type="text/css" rel="stylesheet"   href="css/golden-forms.css"/>
     <link type="text/css" rel="stylesheet"   href="css/font-awesome.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
 
     <!--[if lte IE 9]>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -34,12 +32,23 @@ session_start();
     <![endif]-->
     <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <script src="js/mySelect2.js"></script>
+    <script src="./js/mySelect2.js"></script>
 
     <!-- Use jquery to load contact source json file and fill the drop down-->
     <script>
         $(document).ready(function() {
-            var json = <?php echo json_encode($_SESSION['dataCache']); ?>;
+            var json =
+                <?php
+                //load drop-down values
+                $file = './data/data.json';
+                if (!is_file($file) || !is_readable($file)) {
+                    die("File not accessible.");
+                }
+                $contents = file_get_contents($file);
+                $_SESSION['dataCache'] = json_decode($contents, true);
+
+                echo json_encode($_SESSION['dataCache']);
+                ?>;
             mySelect2(json.contactsourcesources,'#source_of_contact');
         });
     </script>
