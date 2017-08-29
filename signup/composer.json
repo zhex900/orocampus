@@ -1,5 +1,6 @@
 {
     "require": {
-        "stil/curl-easy": "^1.2"
+        "stil/curl-easy": "^1.2",
+        "monolog/monolog": "^1.23"
     }
 }
