@@ -149,7 +149,7 @@ function createContact($contact){
  * return if successful return created contact address id otherwise return null
  */
 function addAddress($contact_id){
-    $api = new ApiRest(URL,LOGIN,APIKEY);
+    $api = new ApiRestTest(URL,LOGIN,APIKEY);
     //add address to the new contact
     $result = $api->curl_req(ADDRESS, getAddress($contact_id));
     if (isset($result['data']['id'])){
@@ -158,10 +158,10 @@ function addAddress($contact_id){
         return null;
     }
 }
-$id = createContact($new_contact);
-var_dump($id);
+//$id = createContact($new_contact);
+//var_dump($id);
 
-$result = $api->curl_req(ADDRESS, $new_address) ;
+$result = $api->curl_req(CONTACT_TEST); //, $new_address) ;
 var_dump($result);
 
 class ApiRestTest

@@ -23,7 +23,9 @@ switch ($_SESSION['form']) {
         if ($api->findContactByEmail()==null) {
             // create new contact
             $contact_id = $api->createContact($api->getContact());
+            $api->getLogger()->info('Create new contact '. ucwords(strtolower($_REQUEST['fname'])));
             if (isset($contact_id)){
+                $api->getLogger()->info('New contact '. $contact_id);
                 $api->addAddress($contact_id);
                 $_SESSION['response_msg_title'] = $NEWCONTACT_RESPONSE_TITLE;
                 $_SESSION['response_msg'] = $NEWCONTACT_RESPONSE;

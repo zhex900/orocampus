@@ -22,6 +22,10 @@ define("APIKEY", "10a8c562829409f64174386c8400deb30223436f");
 define("LOGIN", "system");
 define("LOGIN_ID", "12");
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+
 class orocampus
 {
     protected $_url;
@@ -29,6 +33,7 @@ class orocampus
     protected $_apiKey;
     protected $request;
     protected $session;
+    protected $logger;
 
     public function __construct($url, $username, $apiUserKey,$session,$request)
     {
@@ -38,6 +43,13 @@ class orocampus
         $this->session = $session;
         $this->request = $request;
 
+        $this->logger =  new Logger('logger');
+        $this->logger->pushHandler(new StreamHandler(__DIR__.'/log/signup.log', Logger::DEBUG));
+        $this->logger->pushHandler(new FirePHPHandler());
+    }
+
+    public function getLogger(){
+        return $this->logger;
     }
 
     public function getAddress($contact_id)

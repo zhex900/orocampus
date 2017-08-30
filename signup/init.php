@@ -11,7 +11,11 @@ include("orocampus.php");
 if (isset($_POST['reload'])) {
     // download selection values from server
     /** @var orocampus $api */
-    $api = new orocampus(URL, LOGIN, APIKEY,'','');
+    $api = new orocampus(URL,
+        LOGIN,
+        APIKEY,
+        '',
+        '');
 
     $result = get($api, SOURCE);
     $result = array_merge($result, get($api, COUNTRIES));
@@ -19,6 +23,7 @@ if (isset($_POST['reload'])) {
     $result = array_merge($result, get($api, INSTITUTIONS));
     $result = array_merge($result, get($api, LEVELOFSTUDY));
 
+    $api->getLogger()->info('Reload dropdown values:',$result);
     // TODO
     // Write over data.json if $result is success
     file_put_contents('./data/data.json', json_encode($result));
