@@ -10,7 +10,8 @@ include("orocampus.php");
 
 if (isset($_POST['reload'])) {
     // download selection values from server
-    $api = new ApiRest(URL, LOGIN, APIKEY);
+    /** @var orocampus $api */
+    $api = new orocampus(URL, LOGIN, APIKEY);
 
     $result = get($api, SOURCE);
     $result = array_merge($result, get($api, COUNTRIES));
@@ -36,6 +37,11 @@ if (isset($_POST['login'])) {
     header("Location: forms/" . $formType);
 }
 
+/**
+ * @param orocampus $api
+ * @param $source
+ * @return null
+ */
 function get($api, $source)
 {
     $result = $api->curl_req($source);
