@@ -11,7 +11,7 @@ include("orocampus.php");
 if (isset($_POST['reload'])) {
     // download selection values from server
     /** @var orocampus $api */
-    $api = new orocampus(URL, LOGIN, APIKEY);
+    $api = new orocampus(URL, LOGIN, APIKEY,'','');
 
     $result = get($api, SOURCE);
     $result = array_merge($result, get($api, COUNTRIES));

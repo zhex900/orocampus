@@ -27,25 +27,30 @@ class orocampus
     protected $_url;
     protected $_username;
     protected $_apiKey;
+    protected $request;
+    protected $session;
 
-    public function __construct($url, $username, $apiUserKey)
+    public function __construct($url, $username, $apiUserKey,$session,$request)
     {
         $this->_url = $url;
         $this->_username = $username;
         $this->_apiKey = $apiUserKey;
+        $this->session = $session;
+        $this->request = $request;
+
     }
 
     public function getAddress($contact_id)
     {
         // make the whole address in line one if the address is not find in Google map.
-        if ($_REQUEST['street_number'] == '') {
-            $street = ucwords(strtolower($_REQUEST['address']));
+        if ($this->request['street_number'] == '') {
+            $street = ucwords(strtolower($this->request['address']));
         } else {
-            $street = $_REQUEST['street_number'] . " " . $_REQUEST['street_name'];
+            $street = $this->request['street_number'] . " " . $this->request['street_name'];
         }
         $country = "AU"; //default country code
-        if (isset($_SESSION['dataCache']['countries'][$_REQUEST['country']])) {
-            $country = $_SESSION['dataCache']['countries'][$_REQUEST['country']];
+        if (isset($this->session['dataCache']['countries'][$this->request['country']])) {
+            $country = $this->session['dataCache']['countries'][$this->request['country']];
         }
 
         $address = [
@@ -55,8 +60,8 @@ class orocampus
                     'primary' => true,
                     'label' => 'Primary Address',
                     'street' => $street,
-                    'city' => $_REQUEST['city'],
-                    'postalCode' => $_REQUEST['postal_code']
+                    'city' => $this->request['city'],
+                    'postalCode' => $this->request['postal_code']
                 ],
                 'relationships' => [
                     'owner' => [
@@ -75,12 +80,12 @@ class orocampus
             ]
         ];
         // Add Australian region (state)
-        if ($_REQUEST['country'] == 'Australia') {
+        if ($this->request['country'] == 'Australia') {
             $address['data']['relationships']['region'] =
                 [
                     'data' => [
                         'type' => 'regions',
-                        'id' => 'AU-' . $_REQUEST['state']]
+                        'id' => 'AU-' . $this->request['state']]
                 ];
         }
 
@@ -99,21 +104,21 @@ class orocampus
          * contactSource
          */
 
-        $phones = [['phone' => $_REQUEST['mobile']]];
+        $phones = [['phone' => $this->request['mobile']]];
         // add additional telephone number
-        if (isset($_REQUEST['telephone'])) {
-            $phones = array_merge($phones, [['phone' => $_REQUEST['telephone']]]);
+        if (isset($this->request['telephone'])) {
+            $phones = array_merge($phones, [['phone' => $this->request['telephone']]]);
         }
 
         $contact = [
             'data' => [
                 'type' => 'contacts',
                 'attributes' => [
-                    'firstName' => ucwords(strtolower($_REQUEST['fname'])),
-                    'lastName' => ucwords(strtolower($_REQUEST['lname'])),
-                    'gender' => $_REQUEST['gender'],
-                    'primaryEmail' => strtolower($_REQUEST['email']),
-                    'primaryPhone' => $_REQUEST['mobile'],
+                    'firstName' => ucwords(strtolower($this->request['fname'])),
+                    'lastName' => ucwords(strtolower($this->request['lname'])),
+                    'gender' => $this->request['gender'],
+                    'primaryEmail' => strtolower($this->request['email']),
+                    'primaryPhone' => $this->request['mobile'],
                     'phones' => $phones,
                 ],
                 'relationships' => [
@@ -126,7 +131,7 @@ class orocampus
                     'contact_source' => [
                         'data' => [
                             'type' => 'contactsourcesources',
-                            'id' => $_SESSION['contactSource']
+                            'id' => $this->session['contactSource']
                         ]
                     ]
                 ],
@@ -142,63 +147,63 @@ class orocampus
         /*
          * Optional fields
          */
-        if (isset($_REQUEST['countryorigin'])) {
+        if (isset($this->request['countryorigin'])) {
             $contact['data']['relationships']['country_of_birth'] =
                 [
                     'data' => [
                         'type' => 'countries',
-                        'id' => $_REQUEST['countryorigin']
+                        'id' => $this->request['countryorigin']
                     ]
                 ];
         }
-        if (isset($_REQUEST['course'])) {
+        if (isset($this->request['course'])) {
             $contact['data']['relationships']['degrees'] =
                 [
                     'data' => [
                         'type' => 'degreessources',
-                        'id' => $_REQUEST['course']
+                        'id' => $this->request['course']
                     ]
                 ];
         }
-        if (isset($_REQUEST['uni'])) {
+        if (isset($this->request['uni'])) {
             $contact['data']['relationships']['institutions'] =
                 [
                     'data' => [
                         'type' => 'institutionssources',
-                        'id' => $_REQUEST['uni']
+                        'id' => $this->request['uni']
                     ]
                 ];
         }
-        if (isset($_REQUEST['degree'])) {
+        if (isset($this->request['degree'])) {
             $contact['data']['relationships']['level_of_study'] =
                 [
                     'data' => [
                         'type' => 'levelofstudysources',
-                        'id' => $_REQUEST['degree']
+                        'id' => $this->request['degree']
                     ]
                 ];
         }
 
-        if (isset($_REQUEST['student_id'])) {
-            $contact['data']['attributes']['student_id'] = $_REQUEST['student_id'];
+        if (isset($this->request['student_id'])) {
+            $contact['data']['attributes']['student_id'] = $this->request['student_id'];
         }
-        if (isset($_REQUEST['int_student'])) {
-            $contact['data']['attributes']['int_student'] = $_REQUEST['int_student'];
+        if (isset($this->request['int_student'])) {
+            $contact['data']['attributes']['int_student'] = $this->request['int_student'];
         }
-        if (isset($_REQUEST['churchkid'])) {
-            $contact['data']['attributes']['church_kid'] = $_REQUEST['churchkid'];
+        if (isset($this->request['churchkid'])) {
+            $contact['data']['attributes']['church_kid'] = $this->request['churchkid'];
         }
-        if (isset($_REQUEST['areyouchristian'])) {
-            $contact['data']['attributes']['christian'] = $_REQUEST['areyouchristian'];
+        if (isset($this->request['areyouchristian'])) {
+            $contact['data']['attributes']['christian'] = $this->request['areyouchristian'];
         }
         // Feedback section
-        if (isset($_REQUEST['enquiries'])) {
-            foreach ($_REQUEST['enquiries'] as $i => $feedback) {
+        if (isset($this->request['enquiries'])) {
+            foreach ($this->request['enquiries'] as $i => $feedback) {
                 $contact['data']['attributes'][$feedback] = '1';
             }
         }
-        if ($_REQUEST['dob'] != "") {
-            $dob = date_format(date_create_from_format('d/m/Y', $_REQUEST['dob']), 'Y-m-d');
+        if ($this->request['dob'] != "") {
+            $dob = date_format(date_create_from_format('d/m/Y', $this->request['dob']), 'Y-m-d');
             $contact['data']['attributes']['birthday'] = $dob;
         }
         return $contact;
@@ -224,7 +229,7 @@ class orocampus
     public function addAddress($contact_id)
     {
         //add address to the new contact
-        $result = $this->curl_req(ADDRESS, getAddress($contact_id));
+        $result = $this->curl_req(ADDRESS, $this->getAddress($contact_id));
         if (isset($result['data']['id'])) {
             return $result['data']['id'];
         } else {
@@ -237,10 +242,10 @@ class orocampus
      */
     public function findContactByEmail()
     {
-        if (!isset($_REQUEST['email'])) {
+        if (!isset($this->request['email'])) {
             return null;
         }
-        $result = $this->curl_req(CONTACT . '?filter[primaryEmail]=' . $_REQUEST['email']);
+        $result = $this->curl_req(CONTACT . '?filter[primaryEmail]=' . $this->request['email']);
         if (isset($result['data'][0]['id'])) {
             return $result['data'][0]['id'];
         } else {
@@ -250,17 +255,16 @@ class orocampus
 
     public function curl_req($path, $data = array())
     {
-
         $request = new \cURL\Request($this->_url . $path);
         $request->getOptions()
             ->set(CURLOPT_TIMEOUT, 5)
             ->set(CURLOPT_RETURNTRANSFER, true)
-            ->set(CURLOPT_HEADER, false)
-            ->set(CURLOPT_VERBOSE, true)
-            ->set(CURLOPT_USERAGENT, 'curl/7.54.0')
+            ->set(CURLOPT_HEADER,false)
+            ->set(CURLOPT_VERBOSE,true)
+            ->set(CURLOPT_USERAGENT,'curl/7.54.0')
             ->set(CURLOPT_HTTPHEADER, $this->getHeader());
 
-        if (!empty($data)) {
+        if( !empty($data) ) {
             $request->getOptions()
                 ->set(CURLOPT_POSTFIELDS, json_encode($data))
                 ->set(CURLOPT_SAFE_UPLOAD, true);
