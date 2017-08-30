@@ -11,32 +11,19 @@ session_start();
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <title> Account Login  | Curtin Christians </title>
+    <title> Signup Login | UNSW Christian Students </title>
 
-    <link type="text/css" rel="stylesheet"   href="css/golden-forms.css"/>
-    <link type="text/css" rel="stylesheet"   href="css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
+    <link type="text/css" rel="stylesheet" href="css/golden-forms.css"/>
+    <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/select2-4.0.3.css">
 
-    <!--[if lte IE 9]>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="js/jquery.placeholder.min.js"></script>
-    <![endif]-->
-
-    <!--[if IE 9]>
-    <link type="text/css" rel="stylesheet" href="css/golden-forms-ie9.css">
-    <![endif]-->
-
-    <!--[if lte IE 8]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <link type="text/css" rel="stylesheet" href="css/golden-forms-ie8.css">
-    <![endif]-->
-    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/select2-4.0.3.min.js"></script>
     <script src="./js/mySelect2.js"></script>
 
     <!-- Use jquery to load contact source json file and fill the drop down-->
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var json =
                 <?php
                 //load drop-down values
@@ -49,7 +36,7 @@ session_start();
 
                 echo json_encode($_SESSION['dataCache']);
                 ?>;
-            mySelect2(json.contactsourcesources,'#source_of_contact');
+            mySelect2(json.contactsourcesources, '#source_of_contact');
         });
     </script>
 
@@ -76,8 +63,8 @@ session_start();
                             <select id="form_types" name="form_types">
                                 <!-- value must be the actual file name of the form. -->
                                 <option value="club_registration.php">New member sign up form</option>
-                            	<option value="members_registration.php">Club member sign up form</option>
-			    </select>
+                                <option value="members_registration.php">Club member sign up form</option>
+                            </select>
                         </label>
                     </section>
 
@@ -100,7 +87,7 @@ session_start();
                     <!-- Forms original buttons. Left for reference -->
                     <!-- <button class="button blue">Login</button> -->
                     <!--<a class="button red" href="#">Register</a>-->
-                    <input type="Submit" name="login"  class="button blue" value="Login">
+                    <input type="Submit" name="login" class="button blue" value="Login">
                     <input type="Submit" name="reload" class="button" value="Reload details">
                 </section>
             </div><!-- end .form-buttons section -->
