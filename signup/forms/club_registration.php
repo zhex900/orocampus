@@ -60,9 +60,8 @@ if (isset($_SESSION['form'])):
 
                         <!-- hidden fields containing form specific information -->
                         <!-- each hidden fields value is case sensitive and equal the values required by zurmo -->
-                        <input type="hidden" name="churchkid" value=0/>
+                        <input type="hidden" name="churchkid" value="0"/>
                         <input type="hidden" name="form" value="newcontacts"/>
-                        <input type="hidden" name="userstate" value=1/>
                         <!-- hidden fields used for parsing the user's entered address -->
                         <input type="hidden" id="street_number" name="street_number"/>
                         <input type="hidden" id="route" name="street_name"/>
