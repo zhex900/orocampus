@@ -1,0 +1,1 @@
+ docker run -d --name signup -e WEB_ALIAS_DOMAIN=signup.unswchristians.com -e WEB_DOCUMENT_INDEX=login.php -e VIRTUAL_HOST=signup.unswchristians.com -p 80:80 zhex900/unswchristian_signup:latest
