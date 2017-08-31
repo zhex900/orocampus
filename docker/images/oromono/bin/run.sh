@@ -73,12 +73,22 @@ then
     cp -r orocampus/CampusCRM src/
 fi
 
+# rebuild assets
+# if js are not there
+if [ ! -d /var/www/web/bundles/orosync/js/content-manager.js ]
+then
+
+    php /var/www/app/console oro:platform:update --force
+
+fi
+
 #clear cache.
 info "Rebuild cache"
 rm -rf /var/www/app/cache/*
 php /var/www/app/console cache:clear --env=prod -vvv
 info "Fix ownership for /var/www/ /srv/app-data/"
 chown -R www-data:www-data /var/www/ /srv/app-data/
+
 
 # add redis config to parameters.yml
 # When docker container is restarted, the redis dns config always get deleted.
