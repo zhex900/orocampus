@@ -71,7 +71,7 @@ chown -R www-data:www-data /var/www/ /srv/app-data/
 # add redis config to parameters.yml
 # When docker container is restarted, the redis dns config always get deleted.
 # This is a workaroud.
-fix_parameters.sh
+#fix_parameters.sh
 
 # Starting services
 if php -r 'foreach(json_decode(file_get_contents("'${APP_ROOT}'/composer.lock"))->{"packages"} as $p) { echo $p->{"name"} . ":" . $p->{"version"} . PHP_EOL; };' | grep 'platform:2' > /dev/null
