@@ -83,7 +83,3 @@ fi
 rm -rf /tmp/*
 rm -rf ~/.ssh
 rm -rf ~/.composer
-
-chmod +x /usr/local/bin/download-orocampus.sh
-sleep 2
-download-orocampus.sh
