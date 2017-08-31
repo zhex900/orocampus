@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+certbot certonly -a webroot --webroot-path=/app/orocampus/signup --email=zhex900@gmail.com -d signup.unswchristians.com --agree-tos --non-interactive --text --rsa-key-size 4096
+rm /opt/docker/etc/nginx/ssl/*
+ln -s /etc/letsencrypt/live/signup.unswchristians.com/fullchain.pem /opt/docker/etc/nginx/ssl/server.crt
+ln -s /etc/letsencrypt/live/signup.unswchristians.com/privkey.pem /opt/docker/etc/nginx/ssl/server.key
 
 echo '
 server {
@@ -27,10 +31,6 @@ server {
     include /opt/docker/etc/nginx/vhost.ssl.conf;
 }' >  /opt/docker/etc/nginx/vhost.conf
 
-certbot certonly -a webroot --webroot-path=/app --email=zhex900@gmail.com -d signup.unswchristians.com --agree-tos --non-interactive --text --rsa-key-size 4096
-rm /opt/docker/etc/nginx/ssl/*
-ln -s /etc/letsencrypt/live/signup.unswchristians.com/fullchain.pem /opt/docker/etc/nginx/ssl/server.crt
-ln -s /etc/letsencrypt/live/signup.unswchristians.com/privkey.pem /opt/docker/etc/nginx/ssl/server.key
 supervisorctl restart nginx:nginxd
 
 
