@@ -6,6 +6,9 @@ function info {
     printf "\033[0;36m===> \033[0;33m${1}\033[0m\n"
 }
 
+info "Fix ownership for /var/www/ /srv/app-data/"
+chown -R www-data:www-data /var/www/ /srv/app-data/
+
 # Check if the local usage
 if [[ -z ${IS_LOCAL} ]]; then
     # Map environment variables
@@ -62,8 +65,17 @@ if [[ ! -z ${CMD_INIT_AFTER} ]]; then
     sh -c "${CMD_INIT_AFTER}"
 fi
 
+if [ ! -d /var/www/src/CampusCRM ]
+then
+    info "Download orocampus"
+    cd /var/www/
+    git clone https://github.com/zhex900/orocampus.git
+    cp -r orocampus/CampusCRM src/
+fi
+
 #clear cache.
 info "Rebuild cache"
+rm -rf /var/www/app/cache/*
 php /var/www/app/console cache:clear --env=prod -vvv
 info "Fix ownership for /var/www/ /srv/app-data/"
 chown -R www-data:www-data /var/www/ /srv/app-data/
