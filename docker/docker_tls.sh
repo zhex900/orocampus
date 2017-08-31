@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
-HOST='app1.orocampus.tk'
+
+if [ "$#" -gt 0 ]; then
+  HOST="$1"
+else
+  echo " => ERROR: You must specify the docker host as the first arguement to this scripts! <="
+  exit 1
+fi
+
 openssl genrsa -out ca-key.pem 4096
 openssl req -new -x509 -days 3650 -key ca-key.pem -out ca.pem -subj "/C=AU/ST=Sydney/L=NSW/O=orocampus/OU=IT"
 openssl genrsa -out server-key.pem 4096
 openssl req -subj "/CN=$HOST" -new -key server-key.pem -out server.csr
-echo subjectAltName = DNS:$HOST,IP:10.10.10.20,IP:127.0.0.1 > extfile.cnf
+echo subjectAltName = DNS:$HOST,IP:127.0.0.1 > extfile.cnf
 echo extendedKeyUsage = serverAuth >> extfile.cnf
 openssl x509 -req -days 3650  -in server.csr -CA ca.pem -CAkey ca-key.pem \
   -CAcreateserial -out server-cert.pem -extfile extfile.cnf
@@ -40,7 +47,7 @@ Type=notify
 # the default is not to use systemd for cgroups because the delegate issues still
 # exists and systemd currently does not support the cgroup feature set required
 # for containers run by docker
-ExecStart=/usr/bin/dockerd -H=0.0.0.0:2376 --tlsverify --tlscacert=/etc/docker/ssl/ca.pem --tlscert=/etc/docker/ssl/server-cert.pem --tlskey=/etc/docker/ssl/server-key.pem
+ExecStart=/usr/bin/dockerd -H=0.0.0.0:2376 -H unix:///var/run/docker.sock --tlsverify --tlscacert=/etc/docker/ssl/ca.pem --tlscert=/etc/docker/ssl/server-cert.pem --tlskey=/etc/docker/ssl/server-key.pem
 ExecReload=/bin/kill -s HUP $MAINPID
 LimitNOFILE=1048576
 # Having non-zero Limit*s causes performance problems due to accounting overhead
