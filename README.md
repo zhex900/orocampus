@@ -19,7 +19,7 @@ CampusCRM is built on [OroCRM][1].
 #### Install CampusCRM Application
 1. move to crm-application directory
 ``` bash
-cd dir/to/your/crm-application
+cd dir/to/your/crm-application/
 ```
 2. Clone orocampus from GitHub.
 ``` bash
@@ -40,7 +40,7 @@ php app/console oro:migration:load --show-queries --force
 ```
 6. Load fixtures
 ``` bash
-php /var/www/app/console oro:migration:data:load
+php app/console oro:migration:data:load
 ```
 7. Rebuild assets
 ``` bash
