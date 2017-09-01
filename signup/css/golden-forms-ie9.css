@@ -1,0 +1,150 @@
+
+/* 
+================================================================================
++ Gradients in IE9 
++ Note that the forms still looks great without these filters
++ Added to beautify the forms so that IE9 closely matches modern browsers
+================================================================================
+*/
+
+
+/* Gradient on buttons, select and options (checkbox and radio) */
+.golden-forms .select,
+.golden-forms .button,
+.golden-forms a.button,
+.golden-forms input:checked + .checkbox{
+    border: 1px solid #BBBBBB;
+	border-bottom-color:#aaa;
+	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#ffffff',  EndColorStr='#E6E6E6',  GradientType=0);
+}
+
+.golden-forms .select:hover, 
+.golden-forms .select:focus, 
+.golden-forms .select.focus,
+.golden-forms .button:hover, 
+.golden-forms .button:focus, 
+.golden-forms a.button:hover, 
+.golden-forms a.button:focus{
+    filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#ffffff',  EndColorStr='#dae5ed',  GradientType=0);	
+}
+
+.golden-forms .button:active, 
+.golden-forms .button.active,
+.golden-forms a.button:active, 
+.golden-forms a.button.active{
+    filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#dddddd',  EndColorStr='#ffffff',  GradientType=0);	
+}
+
+/* Button Theme Gradients | Blue | Green | Red | Black */
+
+.golden-forms .button.blue{
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#4baadc',  EndColorStr='#074dda',  GradientType=0);
+}
+
+.golden-forms .button.blue:hover, 
+.golden-forms .button.blue.hover, 
+.golden-forms .button.blue:focus, 
+.golden-forms .button.blue.focus{
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#2160de',  EndColorStr='#1e55c8',  GradientType=0);	
+}
+
+.golden-forms .button.blue:active, 
+.golden-forms .button.blue.active {
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#0D4DC1',  EndColorStr='#48a4ff',  GradientType=0);
+}
+
+.golden-forms .button.green{
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#a1d254',  EndColorStr='#63a62f',  GradientType=0);
+}
+
+.golden-forms .button.green:hover, 
+.golden-forms .button.green.hover, 
+.golden-forms .button.green:focus, 
+.golden-forms .button.green.focus{
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#76b347',  EndColorStr='#5e9e2e',  GradientType=0);		
+}
+	
+.golden-forms .button.green:active, 
+.golden-forms .button.green.active {
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#71b533',  EndColorStr='#a7d757',  GradientType=0);	
+}
+
+.golden-forms .button.red{
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#fc4138',  EndColorStr='#cf3025',  GradientType=0);	
+}
+.golden-forms .button.red:hover, 
+.golden-forms .button.red.hover,
+.golden-forms .button.red:focus, 
+.golden-forms .button.red.focus{
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#F81003',  EndColorStr='#BC2D21',  GradientType=0);
+}
+
+.golden-forms .button.red:active, 
+.golden-forms .button.red.active {
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#DD0000',  EndColorStr='#FF9966',  GradientType=0);	
+}
+
+.golden-forms .button.black{
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#4F4F4F',  EndColorStr='#181818',  GradientType=0);	
+}
+.golden-forms .button.black:hover, 
+.golden-forms .button.black.hover,
+.golden-forms .button.black:focus, 
+.golden-forms .button.black.focus{
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#333333',  EndColorStr='#111111',  GradientType=0);	
+}
+
+.golden-forms .button.black:active, 
+.golden-forms .button.black.active {
+   filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#070707',  EndColorStr='#444444',  GradientType=0);
+}
+
+
+/*
+============================================= 
+Gradients for notifications 
+=============================================
+*/
+.golden-forms .notification.info {
+	 filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#E7F2FE',  EndColorStr='#C7E1FC',  GradientType=0);	
+}
+
+.golden-forms .notification.success {
+	 filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#E4FBCE',  EndColorStr='#CEF7A6',  GradientType=0);
+}
+
+.golden-forms .notification.warning {
+	 filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#FFFFC6',  EndColorStr='#FAE49C',  GradientType=0);		
+}
+
+.golden-forms .notification.error {
+	 filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#FFE7D3',  EndColorStr='#FFD1A8',  GradientType=0);	
+}
+
+ 
+.golden-forms input:checked + .radio, 
+.golden-forms .toggle-switch > label:before, 
+.golden-forms .toggle-switch > input:checked + label:before{ 
+	background-color:#fafafa; filter:none; 
+	box-shadow: inset 0 -6px 6px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255, 1), inset 0 1px 0 rgba(255,255,255, 1);
+}
+
+.golden-forms .toggle-switch > label:after{  top:1px; }
+.golden-forms .round > label:before { 	font:34px/19px Arial, Helvetica, sans-serif!important; }
+.golden-forms .round > label{ top:-1px; }
+.golden-forms .button.search-icon, 
+.golden-forms .search.rnd .button.round{ 
+	filter:none; 
+	background-color:#FBFBFB; 	
+	box-shadow: inset 0 -15px 15px rgba(0,0,0,0.07);
+}
+
+.golden-forms .button.search-icon:hover, 
+.golden-forms .search.rnd .button.round:hover,
+.golden-forms .button.search-icon:focus, 
+.golden-forms .search.rnd .button.round:focus{ 
+	background-color:#dae5ed; 	
+	box-shadow: inset 15px 15px 15px rgba(255,255,255,0.75);
+}
+
+.golden-forms form fieldset legend{ top:0; display:block; }

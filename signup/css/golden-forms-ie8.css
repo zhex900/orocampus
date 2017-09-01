@@ -1,0 +1,54 @@
+
+.golden-forms .button, 
+.golden-forms a.button, 
+.golden-forms .select {
+    border: 1px solid #BBBBBB;
+    background-color:#fafafa;
+}
+
+.golden-forms .button.search-icon:before{  
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-style: solid;
+	margin: -4px 0 0 -2px;
+    border-color: transparent #aaa;
+	border-width: 5px 0 5px 5px;	
+}
+
+.golden-forms .search > .input { width: 100%; padding: 0 13px 0 12px; }
+.golden-forms .search:before, 
+.golden-forms .search:after { display:none; }
+.golden-forms .input { line-height:36px; }
+.golden-forms .button.search-icon:after{ background:none; }
+.golden-forms .radio,
+.golden-forms .checkbox{ display:none; }
+.golden-forms .toggle-switch {
+    width:20px;
+    height: 20px;
+    background: none;
+    border:0;
+}
+
+.golden-forms .toggle-switch > label {
+    display: none;
+}
+
+.golden-forms .toggle-switch > input {    
+	width: inherit;
+    height: inherit;
+    position: static;
+	vertical-align: top;   
+}
+
+.file-input .button input{
+  filter:alpha(opacity=0);
+  cursor:pointer;
+  zoom: 1;
+}
+
+
+

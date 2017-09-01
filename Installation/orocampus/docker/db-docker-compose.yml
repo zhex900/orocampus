@@ -1,0 +1,47 @@
+#docker-compose.yml
+ portainer:
+   image: 'portainer/portainer'
+   ports:
+     - '9000:9000'
+   restart: always
+   volumes:
+     - '/var/run/docker.sock:/var/run/docker.sock'
+     - '/home/db/data/portainer:/data'
+ db:
+   environment:
+     - MYSQL_DATABASE=orocrm
+     - MYSQL_PASSWORD=orocrm
+     - MYSQL_ROOT_PASSWORD=root
+     - MYSQL_USER=orocrm
+   image: 'mysql:5.5'
+   ports:
+     - '3306:3306'
+   restart: always
+   volumes:
+     - '/home/db/data/mysql:/var/lib/mysql'
+ nginx-proxy:
+   image: 'jwilder/nginx-proxy:latest'
+   ports:
+     - '80:80'
+   restart: always
+   volumes:
+     - '/var/run/docker.sock:/tmp/docker.sock:ro'
+ phpmyadmin:
+   image: 'phpmyadmin/phpmyadmin:latest'
+   environment:
+     - VIRTUAL_HOST=db.orocampus.tk
+   links:
+     - db
+   ports:
+     - '8888:80'
+   restart: always
+ redis:
+   environment:
+     - REDIS_APPENDFSYNC=always
+     - REDIS_APPENDONLY=yes
+   image: 'redis:alpine'
+   ports:
+     - '6379:6379'
+   volumes:
+     - '/home/db/data/redis:/data'
+   restart: always
