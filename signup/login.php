@@ -23,7 +23,7 @@ session_start();
 
     <!-- Use jquery to load contact source json file and fill the drop down-->
     <script>
-        $(document).ready(function () {
+        $(function() {
             var json =
                 <?php
                 //load drop-down values
@@ -37,6 +37,8 @@ session_start();
                 echo json_encode($_SESSION['dataCache']);
                 ?>;
             mySelect2(json.contactsourcesources, '#source_of_contact');
+           // mySelect2(json.events, '#events');
+
         });
     </script>
 

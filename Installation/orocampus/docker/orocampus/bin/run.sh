@@ -65,6 +65,11 @@ if [[ ! -z ${CMD_INIT_AFTER} ]]; then
     sh -c "${CMD_INIT_AFTER}"
 fi
 
+if [ ! -d /var/www/app/import_export ]
+then
+    mkdir -p /var/www/app/import_export
+fi
+
 if [ ! -d /var/www/src/CampusCRM ]
 then
     info "Download orocampus"
@@ -77,7 +82,7 @@ fi
 # if js are not there
 if [ ! -d /var/www/web/bundles/orosync/js/content-manager.js ]
 then
-
+    sed -i 's/height:\sauto\;//g' ./vendor/oro/platform/src/Oro/Bundle/UIBundle/Resources/public/css/less/mobile/layout.less
     php /var/www/app/console oro:platform:update --force
 
 fi

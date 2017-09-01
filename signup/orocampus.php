@@ -9,7 +9,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 session_start();
 
-define("URL", "http://orocampus.tk/app.php/api/");
+define("URL", "https://orocampus.tk/app.php/api/");
 define("DEGREES", 'degreessources');
 define("INSTITUTIONS", 'institutionssources');
 define("LEVELOFSTUDY", 'levelofstudysources');

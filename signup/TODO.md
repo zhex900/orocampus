@@ -16,6 +16,9 @@
 * select2 css rendering
 
 ### Improvements
+* Use HTTPS, otherwise geo doesn't work
+* Use sentry.io
+* renew ssl cert every month 
 * Use monolog
     * log all actions
     * log duplicates
@@ -29,6 +32,8 @@
 ### Forms
 * Change club logo to UNSW CHRISTIAN STUDENTS
 * Add year of commencement
+* Add month of commencement or commencement semester 
+* Add default values
 
 #### New forms
 * Table signup

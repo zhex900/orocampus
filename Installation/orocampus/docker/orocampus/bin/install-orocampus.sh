@@ -18,6 +18,7 @@ php /var/www/app/console oro:migration:load --show-queries --force
 php app/console oro:migration:load --show-queries --force
 php /var/www/app/console oro:migration:data:load
 #php app/console cache:clear -–env=prod -vvv
+# rebuild eng
 #php app/console assets:install
 #php app/console assetic:dump
 #php app/console oro:requirejs:build

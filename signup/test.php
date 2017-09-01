@@ -9,7 +9,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 // zurmo url
 define("ERROR_LOG", "/tmp/error.log");
-define("URL", "http://orocampus.tk/app.php/api/");
+define("URL", "https://orocampus.tk/app.php/api/");
 define("CONTACT_SEARCH", "");
 define("ADDRESS", "contactaddresses");
 define("CONTACT", "contacts");
@@ -17,6 +17,7 @@ define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
 define("APIKEY", "10a8c562829409f64174386c8400deb30223436f");
+define("events","system");
 define("LOGIN","system");
 //
 // starting a session to enable session variables to be stored
