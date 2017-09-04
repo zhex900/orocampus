@@ -1,9 +1,9 @@
-#New node setup
+# New node setup
 
-####Operating System
+####O perating System
     debian 9
 
-####Install docker engine and docker-compose
+#### Install docker engine and docker-compose
     apt-get update && \ 
     apt-get install sudo && \
     apt-get install apt-transport-https dirmngr && \
@@ -12,12 +12,13 @@
     apt-get update && apt-get -y install docker-engine && \
     curl -L https://github.com/docker/compose/releases/download/1.15.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
-####Secure docker socket with tls
+#### Secure docker socket with tls
+
 * Download setup script docker_tls.sh
     `sh docker_tls.sh`
 * Copy client keys to host
 
-#Workarounds
+# Workarounds
 
 ## Mobile version login rendering problem
     sed -i 's/height:\sauto\;//g' ./vendor/oro/platform/src/Oro/Bundle/UIBundle/Resources/public/css/less/mobile/layout.less
