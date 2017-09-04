@@ -1,6 +1,6 @@
 <?php
 
-namespace CampusCRM\CampusUserBundle\Migrations\Data\ORM;
+namespace CampusCRM\DefaultDataBundle\Migrations\Data\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;

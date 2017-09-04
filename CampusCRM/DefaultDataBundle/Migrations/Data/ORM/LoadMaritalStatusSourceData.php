@@ -1,6 +1,6 @@
 <?php
 
-namespace CampusCRM\CampusContactBundle\Migrations\Data\ORM;
+namespace CampusCRM\DefaultDataBundle\Migrations\Data\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -20,7 +20,7 @@ class LoadMaritalStatusSourceData extends AbstractFixture
         $enumRepo = $manager->getRepository($className);
 
         $priority = 1;
-        $dir = getcwd() . "/src/CampusCRM/CampusContactBundle/Migrations/Data/ORM/dictionaries/";
+        $dir = getcwd() . "/src/CampusCRM/DefaultDataBundle/Migrations/Data/ORM/dictionaries/";
         $handle = fopen($dir . "marital_status.csv", "r");
 
         while (!feof($handle)) {
