@@ -41,21 +41,17 @@ cp -r orocampus/CampusCRM/ src/
 ``` bash
 php app/console cache:clear --env=dev -vvv
 ```
-5. Migrate
+5. Load new database schema
 ``` bash
-php app/console oro:migration:load --show-queries --force --bundles="EventNameBundle"
 php app/console oro:migration:load --show-queries --force
 ```
-6. Load fixtures
+6. Load fixtures or default data
 ``` bash
 php app/console oro:migration:data:load
 ```
 7. Rebuild assets
 ``` bash
 php app/console oro:platform:update --force
-php app/console assets:install
-php app/console assetic:dump
-php app/console oro:requirejs:build
 ```
 8. Load workflows
 ``` bash
@@ -80,3 +76,7 @@ php app/console cache:clear --env=dev -vvv
 [1]:    https://github.com/orocrm/crm
 [2]:    https://www.orocrm.com/documentation/index/current/system-requirements
 [3]:    https://github.com/orocrm/crm-application/blob/master/README.md
+
+# Useful commands
+## Reset user password
+    app/console oro:user:update admin --user-password=123456 --env=prod
