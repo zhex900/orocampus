@@ -2,7 +2,7 @@ Addresses: Addresses
 Basic Information: Basic Information
 campuscrm:
     eventname:
-      owner:                      Owner
+      owner.label:                Owner
       entity_label:               Event Name
       system_calendar.label:      System Calendar
 oro:
