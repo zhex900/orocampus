@@ -7,16 +7,24 @@
 
 CampusCRM is built on [OroCRM][1].
 
-# Installation
+# Table of content
+* [Installation](#installation)
+  * [Docker container](#docker-container)
+  * [Or native install](#native-install)
+    * [Setup OroCRM](#setup-orocrm)
+    * [Install CampusCRM Application](#install-campuscrm-application)
+    * [Manually add some data](#manual-procedure)
+
+# <a name="installation"></a>Installation
 ## Docker container
 *(instructions here)*
 
-## Or install natively
-### Setup OroCRM
+## <a name="native-install"></a>Or native install
+### <a name="setup-orocrm"></a>Setup OroCRM
 1. Check [system requirements][2].
 2. Install a [crm-application][3].
 
-### Install CampusCRM Application
+### <a name="install-campuscrm-application"></a>Install CampusCRM Application
 1. move to crm-application directory
 ``` bash
 cd dir/to/your/crm-application/
@@ -64,7 +72,7 @@ rm -rf app/cache/*
 php app/console cache:clear --env=dev -vvv
 ```
 
-### Manually add some data to the application
+### <a name="manual-procedure"></a>Manually add some data to the application
 1. *(instructions here)*
 2. *(all set. your application is ready to go)*
 
