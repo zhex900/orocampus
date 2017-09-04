@@ -1,6 +1,6 @@
 # New node setup
 
-####O perating System
+#### Operating System
     debian 9
 
 #### Install docker engine and docker-compose
