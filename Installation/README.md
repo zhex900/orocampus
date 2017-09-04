@@ -1,6 +1,8 @@
 #New node setup
+
 ####Operating System
     debian 9
+
 ####Install docker engine and docker-compose
     apt-get update && \ 
     apt-get install sudo && \
