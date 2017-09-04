@@ -1,0 +1,15 @@
+search:
+   CampusCRM\EventTopicsBundle\Entity\EventTopics:
+        alias: oro_eventtopics
+        label: oro.eventtopics.entity_plural_label
+        title_fields: [name]
+        route:
+            name: oro_eventtopics_view
+            parameters:
+                id: id
+        search_template: CampusCRMEventTopicsBundle:EventTopics:searchResult.html.twig
+        fields:
+            -
+                name: name
+                target_type: text
+                target_fields: [name]

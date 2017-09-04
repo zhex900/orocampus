@@ -1,0 +1,101 @@
+parameters:
+    event_topics.entity.eventtopics.class:            CampusCRM\EventTopicsBundle\Entity\EventTopics
+    event_topics.type.eventtopics.class:              CampusCRM\EventTopicsBundle\Form\Type\EventTopicsType
+    event_topics.handler.eventtopics.class:           CampusCRM\EventTopicsBundle\Form\Handler\EventTopicsHandler
+    event_topics.form.type.eventtopics_select.class:  CampusCRM\EventTopicsBundle\Form\Type\EventTopicsSelectType
+    event_topics.eventtopics.manager.api.class:       Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager
+    event_topics.type.eventtopics.api.class:          CampusCRM\EventTopicsBundle\Form\Type\EventTopicsApiType
+    event_topics.activity_widget_provider.class:      %oro_activity.widget_provider.activities.menu.class%
+
+services:
+    event_topics.form.autocomplete.account.search_handler:
+            parent: oro_form.autocomplete.search_handler
+            arguments:
+                - %event_topics.entity.eventtopics.class%
+                - ["name"]
+            tags:
+                - { name: oro_form.autocomplete.search_handler, alias: eventtopics, acl_resource: oro_eventtopics_view }
+
+    event_topics.form.eventtopics:
+        class:                                      Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["oro_eventtopics_form", "event_topics", null]
+
+    event_topics.form.type.eventtopics:
+        class:                                      %event_topics.type.eventtopics.class%
+        arguments:
+            - "@router"
+            - "@oro_entity.entity_name_resolver"
+            - "@oro_security.security_facade"
+        tags:
+            - { name: form.type, alias: event_topics }
+
+    event_topics.form.handler.eventtopics:
+        class:                                      %event_topics.handler.eventtopics.class%
+        scope: request
+        arguments:
+            - "@event_topics.form.eventtopics"
+            - "@request"
+            - "@doctrine.orm.entity_manager"
+
+    # Form type
+    event_topics.form.type.eventtopics_select:
+        class:                                      %event_topics.form.type.eventtopics_select.class%
+        tags:
+            - { name: form.type, alias: oro_eventtopics_select }
+
+    # eventtopics API
+    event_topics.eventtopics.manager.api:
+        class:                                      %event_topics.eventtopics.manager.api.class%
+        parent: oro_soap.manager.entity_manager.abstract
+        arguments:
+            - %event_topics.entity.eventtopics.class%
+            - "@doctrine.orm.entity_manager"
+
+    event_topics.form.type.eventtopics.api:
+        class:                                      %event_topics.type.eventtopics.api.class%
+        arguments:
+            - "@router"
+            - "@oro_entity.entity_name_resolver"
+            - "@oro_security.security_facade"
+        tags:
+            - { name: form.type, alias: eventtopics }
+
+    event_topics.form.eventtopics.api:
+        class:                                      Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["eventtopics", "eventtopics", null]
+
+    event_topics.form.handler.eventtopics.api:
+        class: %event_topics.handler.eventtopics.class%
+        scope: request
+        arguments:
+            - "@event_topics.form.eventtopics.api"
+            - "@request"
+            - "@doctrine.orm.entity_manager"
+
+    event_topics.activity_widget_provider:
+        class: %event_topics.activity_widget_provider.class%
+        arguments:
+           - "@oro_entity.entity_identifier_accessor"
+           - "@oro_ui.twig.tab_extension"
+           - 'eventtopics_activity_tab_panel'
+           - %event_topics.entity.eventtopics.class%
+        tags:
+           - { name: oro_activity.activity_widget_provider, priority: -10 }
+
+    event_topics.event_listener.datagrid.my_eventtopics_activity:
+        class: Oro\Bundle\UserBundle\Datagrid\WidgetOwnerListener
+        arguments:
+            - '@oro_user.dashboard.owner_helper'
+            - '@oro_dashboard.widget_configs'
+            - 'owner'
+        tags:
+            - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.before.dashboard-my-eventtopics-activity-grid, method: onResultBefore }
+
+    event_topics.eventtopics_view_list:
+        class: CampusCRM\EventTopicsBundle\Datagrid\EventTopicsViewList
+        arguments:
+            - @translator

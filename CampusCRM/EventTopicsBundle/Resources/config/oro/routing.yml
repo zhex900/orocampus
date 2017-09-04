@@ -1,0 +1,14 @@
+oro_eventtopics_bundle:
+    resource:     "@EventTopicsBundle/Controller"
+    type:         annotation
+    prefix:       /eventtopics
+
+oro_eventtopics_api_account:
+    resource:     "@EventTopicsBundle/Controller/Api/Rest/EventTopicsController.php"
+    type:         rest
+    prefix:       api/rest/{version}/
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest
+

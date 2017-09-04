@@ -1,0 +1,6 @@
+CampusCRM\EventTopicsBundle\Entity\EventTopics:
+    properties:
+        name:
+            - NotBlank:     ~
+            - Length:
+                max:        255

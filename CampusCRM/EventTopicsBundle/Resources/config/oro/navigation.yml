@@ -1,0 +1,20 @@
+navigation:
+    menu_config:
+        items:
+            eventtopics_list:
+                label: 'Event Topics'
+                route: 'oro_eventtopics_index'
+                extras:
+                    position: 5
+
+        tree:
+            application_menu:
+                children:
+                    campus_calendar_tab:
+                        children:
+                            eventtopics_list: ~
+    titles:
+        oro_eventtopics_index: ~
+        oro_eventtopics_view: '%%eventtopics.name%%'
+        oro_eventtopics_create: 'Create Event Topics'
+        oro_eventtopics_update: '%%eventtopics.name%% - Edit'
