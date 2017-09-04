@@ -131,6 +131,23 @@ class EventName extends ExtendEventName implements NameInterface
      */
     protected $owner;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="system_calendar", type="boolean")
+     * @ConfigField(
+     *      defaultValues={
+     *          "entity"={
+     *              "label"="campuscrm.eventname.system_calendar.label"
+     *          },
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+
+    protected $system_calendar;
 
     /**
      * @var \DateTime
@@ -166,12 +183,17 @@ class EventName extends ExtendEventName implements NameInterface
      */
     protected $updatedAt;
 
+
     public function __construct()
     {
         parent::__construct();
         $this->events = new ArrayCollection();
     }
 
+    public function getSystemCalendar()
+    {
+        return $this->system_calendar;
+    }
     /**
      * Returns the event unique id.
      *
@@ -201,6 +223,12 @@ class EventName extends ExtendEventName implements NameInterface
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    public function setSystemCalendar($systemCalendar)
+    {
+        $this->system_calendar=$systemCalendar;
+        return $this;
     }
 
     /**

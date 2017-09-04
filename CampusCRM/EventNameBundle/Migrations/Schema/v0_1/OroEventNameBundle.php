@@ -42,6 +42,17 @@ class EventNameBundle implements Migration
             ['onDelete' => 'SET NULL', 'onUpdate' => null]
         );
 
+        $table->addColumn('system_calendar', 'boolean'); /*,
+            [
+                'oro_options' => [
+                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
+                    'merge' => ['display' => false],
+                    'dataaudit' => ['auditable' => false]
+                ]
+            ]
+        );*/
+
         //Add organization fields to ownership entity config
         $queries->addQuery(
             new UpdateOwnershipTypeQuery(
