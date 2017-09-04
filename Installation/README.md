@@ -1,3 +1,14 @@
+# Deployment Architecture
+
+![alt text](https://assets.digitalocean.com/articles/letsencrypt/haproxy-letsencrypt.png)
+
+| Node # | Service       | Applications | Resources
+| ------ |:-------------:| ------------:| ------------:|
+| 1      | load balance  | haproxy      | 1GB 1 Core
+| 2      | databases     | mysql, redis | 2GB 1 Core
+| 3      | app server    | orocampus    | 1GB 1 Core
+| 4      | app server    | orocampus    | 1GB 1 Core
+
 # New node setup
 
 #### Operating System
