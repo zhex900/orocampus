@@ -44,15 +44,15 @@ cp bap.conf /etc/nginx/sites-enabled/
 # Install certbot
 if ! [ -x "$(command -v certonly)" ]; then
     echo 'Error: certbot is not installed. Installing certbot'
-    apt-get install software-properties-common
+    apt-get install software-properties-common -y
     add-apt-repository ppa:certbot/certbot
     apt-get update
-    apt-get install certbot
+    apt-get install certbot -y
 fi
 
 certbot certonly -a webroot --webroot-path=/var/www/web --email=zhex900@gmail.com -d $HOST --agree-tos --non-interactive --text --rsa-key-size 4096
 
-supervisorctl restart nginx:nginxd
+supervisorctl restart nginx
 
 # Automatic renewal using Cron
 (crontab -l 2>/dev/null; echo "20 3 * * * certbot renew --noninteractive --renew-hook  /usr/local/bin/supervisorctl restart nginx") | crontab -

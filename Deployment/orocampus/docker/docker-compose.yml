@@ -1,45 +1,19 @@
-data:
-  image: 'djocker/orodata:latest'
-db:
-  environment:
-    - MYSQL_DATABASE=orocrm
-    - MYSQL_PASSWORD=orocrm
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_USER=orocrm
-  image: 'mysql:5.5'
-  ports:
-    - '3306:3306'
-  volumes:
-    - /home/root/data/mysql:/var/lib/mysql
-mail:
-  environment:
-    - maildomain=localhost
-    - 'smtp_user=user@localhost:password'
-  expose:
-    - '25'
-  image: 'catatnight/postfix:latest'
-nginx-proxy:
-  image: 'jwilder/nginx-proxy:latest'
-  ports:
-    - '80:80'
-  volumes:
-    - '/var/run/docker.sock:/tmp/docker.sock:ro'
 orocrm:
   environment:
     - APP_DB_DRIVER=pdo_mysql
-    - APP_DB_HOST=db
+    - APP_DB_HOST=db.orocampus.tk
     - APP_DB_NAME=orocrm
     - APP_DB_PASSWORD=orocrm
     - APP_DB_PORT=3306
     - APP_DB_USER=orocrm
-    - APP_HOSTNAME=localhost
-    - APP_IS_INSTALLED=
-    - APP_MAILER_ENCRYPTION=
-    - APP_MAILER_HOST=mail
-    - APP_MAILER_PASSWORD=password
-    - APP_MAILER_PORT=25
+    - APP_HOSTNAME=orocampus.tk
+    - APP_IS_INSTALLED=true
+    - APP_MAILER_ENCRYPTION=ssl
+    - APP_MAILER_HOST=smtp.zoho.com
+    - APP_MAILER_PASSWORD=fheman123
+    - APP_MAILER_PORT=465
     - APP_MAILER_TRANSPORT=smtp
-    - APP_MAILER_USER=user
+    - APP_MAILER_USER=admin@unswchristians.com
     - APP_SECRET=123456789
     - APP_WEBSOCKET_BACKEND_PORT=8080
     - APP_WEBSOCKET_FRONTEND_PORT=3088
@@ -47,28 +21,11 @@ orocrm:
     - CMD_INIT_BEFORE=
     - CMD_INIT_CLEAN=
     - CMD_INIT_INSTALLED=
-    - VIRTUAL_HOST=orocampus.tk
-  image: 'zhex900/oromono:latest'
-  links:
-    - db
-    - mail
-    - redis
+    - VIRTUAL_HOST=*.orocampus.tk, orocampus.tk
+  image: 'zhex900/orocampus:latest'
   ports:
-    - '2222:22'
-    - '80'
-    - '3088:8080'
-  volumes_from:
-    - data
-    - source-code
-phpmyadmin:
-  image: 'phpmyadmin/phpmyadmin:latest'
-  links:
-    - db
-  ports:
-    - '8888:80'
-redis:
-  image: 'redis:alpine'
-  ports:
-    - '6379:6379'
-source-code:
-  image: 'zhex900/orocrm:latest'
+    - '80:80'
+    - '443:443'
+    - '465:465'
+    - '587:587'
+    - '993:993'

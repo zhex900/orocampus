@@ -4,9 +4,7 @@
 #Enable https
 
 ## Setup SSL certificate
-    add-apt-repository ppa:certbot/certbot -y && \
-    apt-get update && \
-    apt-get install -y python-certbot-nginx && \
+    apt-get install -y python-certbot-nginx
     
 reference https://gist.github.com/cecilemuller/a26737699a7e70a7093d4dc115915de8
     
