@@ -68,17 +68,25 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
             ->remove('attendees')
             ->remove('oro_eventname');
 
+        if (!$this->isSystemCalendar()){
+            $builder->remove('oro_eventtopics');
+        }
+
         $builder
-            ->add('oro_eventname', 'entity', array(
-            'class' => 'CampusCRM\EventNameBundle\Entity\EventName',
-            'label' => 'oro.calendar.calendarevent.oro_eventname.label',
-            'query_builder' => function(EntityRepository $repository) {
-                $qb = $repository->createQueryBuilder('e');
-                return $qb
-                    ->where($qb->expr()->neq('e.system_calendar', '?1'))
-                    ->setParameter('1', $this->isSystemCalendar())
-                    ->orderBy('e.name', 'ASC');
-            },))
+            ->add(
+                'oro_eventname',
+                'entity',
+                array(
+                    'class' => 'CampusCRM\EventNameBundle\Entity\EventName',
+                    'label' => 'oro.calendar.calendarevent.oro_eventname.label',
+                    'query_builder' => function(EntityRepository $repository) {
+                          $qb = $repository->createQueryBuilder('e');
+                          return $qb
+                              ->where($qb->expr()->neq('e.system_calendar', '?1'))
+                              ->setParameter('1', $this->isSystemCalendar())
+                              ->orderBy('e.name', 'ASC');},
+                    )
+            )
             ->add(
                 'title',
                 'hidden',
