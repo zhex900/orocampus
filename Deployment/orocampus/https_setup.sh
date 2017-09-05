@@ -1,36 +1,58 @@
 #!/usr/bin/env bash
-certbot certonly -a webroot --webroot-path=/var/www/web --email=zhex900@gmail.com -d orocampus.tk -d app2.orocampus.tk -d app1.orocampus.tk --agree-tos --non-interactive --text --rsa-key-size 4096
-mkdir /etc/nginx/ssl
-ln -s /etc/letsencrypt/live/signup.unswchristians.com/fullchain.pem /opt/docker/etc/nginx/ssl/server.crt
-ln -s /etc/letsencrypt/live/signup.unswchristians.com/privkey.pem /opt/docker/etc/nginx/ssl/server.key
+# https://gist.github.com/cecilemuller/a26737699a7e70a7093d4dc115915de8
+
+if [ "$#" -gt 0 ]; then
+  HOST="$1"
+else
+  echo " => ERROR: You must specify the host URL as the first arguement to this scripts! <="
+  exit 1
+fi
 
 echo '
-server {
-    listen 80 default_server;
-    server_name signup.unswchristians.com docker;
+location ^~ /.well-known/acme-challenge/ {
+	default_type "text/plain";
+	root /var/www/letsencrypt;
+}' > /etc/nginx/snippets/letsencrypt.conf
 
-    root "/app/orocampus/signup";
-    index login.php;
-    return 301 https://$server_name$request_uri;
-    include /opt/docker/etc/nginx/vhost.common.d/*.conf;
-}
+echo '
+ssl_session_timeout 1d;
+ssl_session_cache shared:SSL:50m;
+ssl_session_tickets off;
 
-##############
-# SSL
-##############
+ssl_protocols TLSv1.2;
+ssl_ciphers EECDH+AESGCM:EECDH+AES;
+ssl_ecdh_curve secp384r1;
+ssl_prefer_server_ciphers on;
 
-server {
-    listen 443 default_server;
+ssl_stapling on;
+ssl_stapling_verify on;
 
-    server_name  signup.unswchristians.com docker;
+add_header Strict-Transport-Security "max-age=15768000; includeSubdomains; preload";
+add_header X-Frame-Options DENY;
+add_header X-Content-Type-Options nosniff;' > /etc/nginx/snippets/ssl.conf
 
-    root "/app/orocampus/signup";
-    index login.php;
+mkdir -p /var/www/letsencrypt/.well-known/acme-challenge
 
-    include /opt/docker/etc/nginx/vhost.common.d/*.conf;
-    include /opt/docker/etc/nginx/vhost.ssl.conf;
-}' >  /opt/docker/etc/nginx/vhost.conf
+# download nginx conf file
+curl -O https://raw.githubusercontent.com/zhex900/orocampus/dev/Deployment/orocampus/bap.conf
+
+# insert host url
+sed -i s/HOST_URL/$HOST/g bap.conf
+
+cp bap.conf /etc/nginx/sites-enabled/
+
+# Install certbot
+if ! [ -x "$(command -v certonly)" ]; then
+    echo 'Error: certbot is not installed. Installing certbot'
+    apt-get install software-properties-common
+    add-apt-repository ppa:certbot/certbot
+    apt-get update
+    apt-get install certbot
+fi
+
+certbot certonly -a webroot --webroot-path=/var/www/web --email=zhex900@gmail.com -d $HOST --agree-tos --non-interactive --text --rsa-key-size 4096
 
 supervisorctl restart nginx:nginxd
 
-
+# Automatic renewal using Cron
+(crontab -l 2>/dev/null; echo "20 3 * * * certbot renew --noninteractive --renew-hook  /usr/local/bin/supervisorctl restart nginx") | crontab -
