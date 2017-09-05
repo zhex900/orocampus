@@ -26,8 +26,26 @@
 #### Secure docker socket with tls
 
 * Download setup script docker_tls.sh
+    `curl -O https://github.com/zhex900/orocampus/blob/dev/Deployment/docker_tls.sh`
     `sh docker_tls.sh`
 * Copy client keys to host
+    `scp -r root@[HOST_URL]`
+    
+### Download docker-compose.yml
+    curl -O https://github.com/zhex900/orocampus/blob/dev/Deployment/orocampus/docker/docker-compose.yml
+
+### Spin up docker container
+    docker-compose up -d
+    
+### Get into the container
+    docker exec -it root_orocrm_1 bash
+    
+### Install SSL certificates
+    cd /tmp
+    curl -O https://raw.githubusercontent.com/zhex900/orocampus/dev/Deployment/orocampus/https_setup.sh
+    sh https_setup.sh [HOST URL]
+
+Good to go!
 
 # Workarounds
 
