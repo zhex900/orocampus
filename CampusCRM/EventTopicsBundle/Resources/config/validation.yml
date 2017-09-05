@@ -4,3 +4,4 @@ CampusCRM\EventTopicsBundle\Entity\EventTopics:
             - NotBlank:     ~
             - Length:
                 max:        255
+            - CampusCRM\EventTopicsBundle\Validator\Constraints\UniqueName: { groups: [unique_name] }

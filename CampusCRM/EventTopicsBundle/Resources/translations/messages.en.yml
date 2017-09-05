@@ -9,6 +9,8 @@ oro:
           general:                  General
         widgets:
           eventtopics_information:  Event Topics Information
+        controller:
+                    eventname.saved.message:  "Event topic saved"
         form.choose_label:          Select a topic
         entity_label:               Event Topic
         entity_plural_label:        Event Topics
