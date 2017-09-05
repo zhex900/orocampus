@@ -82,7 +82,7 @@ fi
 # if js are not there
 if [ ! -d /var/www/web/bundles/orosync/js/content-manager.js ]
 then
-    sed -i 's/height:\sauto\;//g' ./vendor/oro/platform/src/Oro/Bundle/UIBundle/Resources/public/css/less/mobile/layout.less
+    sed -i 's/height:\sauto\;//g' /var/www/vendor/oro/platform/src/Oro/Bundle/UIBundle/Resources/public/css/less/mobile/layout.less
     php /var/www/app/console oro:platform:update --force
 
 fi
