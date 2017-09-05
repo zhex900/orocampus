@@ -88,6 +88,7 @@ class EventNameType extends AbstractType
                 'data_class' => 'CampusCRM\EventNameBundle\Entity\EventName',
                 'intention' => 'eventname',
                 'extra_fields_message' => 'This form should not contain extra fields: "{{ extra_fields }}"',
+                'validation_groups' => ['unique_name'],
                 'cascade_validation' => true
             )
         );

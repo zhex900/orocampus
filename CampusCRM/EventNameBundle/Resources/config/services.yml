@@ -10,6 +10,13 @@ parameters:
     event_name.activity_widget_provider.class:    %oro_activity.widget_provider.activities.menu.class%
 
 services:
+    event_name.validator.uniquename:
+        class: 'CampusCRM\EventNameBundle\Validator\Constraints\UniqueNameValidator'
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: validator.constraint_validator, alias: event_name.uniquename.validator }
+
     event_name.form.autocomplete.account.search_handler:
             parent: oro_form.autocomplete.search_handler
             arguments:
