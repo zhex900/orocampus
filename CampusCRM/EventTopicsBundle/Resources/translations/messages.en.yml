@@ -2,8 +2,10 @@ campuscrm:
     eventtopics:
       owner.label:                Owner
       entity_label:               Event Topics
+      name.label:                 Topic
 oro:
     eventtopics:
+        form.choose_label:          Select a topic
         entity_label:               Event Topic
         entity_plural_label:        Event Topics
         entity_description:         Event Topics

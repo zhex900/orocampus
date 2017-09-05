@@ -43,7 +43,7 @@ class ExtendEventTopicsEntity implements Migration, ExtendExtensionAwareInterfac
             ['title'], // column names are used to show detailed info about owning side entity
             ['title'], // Column names are used to show owning side entity in a grid
             [
-                'entity' => ['label' => 'What did you cover during this time?'],
+                'entity' => ['label' => 'oro.eventtopics.entity_label'],
                 'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
             ]
         );

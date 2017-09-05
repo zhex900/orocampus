@@ -16,7 +16,7 @@ class EventTopicsSelectType extends AbstractType
                 'autocomplete_alias' => 'eventtopics',
                 'create_form_route' => 'oro_eventtopics_create',
                 'configs' => [
-                    'placeholder' => 'oro.event_topics.form.choose_eventtopics'
+                    'placeholder' => 'oro.eventtopics.form.choose_label'
                 ],
             ]
         );
