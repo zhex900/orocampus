@@ -80,3 +80,5 @@ php app/console cache:clear --env=dev -vvv
 # Useful commands
 ## Reset user password
     app/console oro:user:update admin --user-password=123456 --env=prod
+## 
+    chown -R www-data:www-data /var/www/ /srv/app-data/
