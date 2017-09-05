@@ -3,15 +3,12 @@
 namespace CampusCRM\EventNameBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager;
 use CampusCRM\EventNameBundle\Entity\EventName;
-use Oro\Bundle\ChannelBundle\Entity\Channel;
 
 class EventNameController extends Controller
 {

@@ -1,10 +1,9 @@
-Addresses: Addresses
-Basic Information: Basic Information
 campuscrm:
     eventname:
       owner.label:                Owner
       entity_label:               Event Name
       system_calendar.label:      System Calendar
+      name.label:                 Event Name
 oro:
     dashboard:
         my_eventnames_activity:
@@ -16,18 +15,12 @@ oro:
 
         menu:
             eventname_tab.label: Event Names
-            account_list.description: List of accounts
-            shortcut_new_account.label: Create new eventname
-            shortcut_new_account.description: Create new eventname instance
-            shortcut_list_accounts.label: Show accounts list
-            shortcut_list_accounts.description: List of accounts
+
         widgets:
-            magento_channel:        Magento Channel
             eventname_information:  Event Name Information
 
         sections:
             general:                General
-            website_activity:       Website Activity
         form:
             choose_eventname:       Choose an eventname...
             select_contacts:        Select contacts
@@ -42,8 +35,6 @@ oro:
         id.label:                   Id
         name.label:                 Event Name
         owner.label:                Owner
-        assigned.label:             Assigned
-        referred_by.label:          Referred By
 
         extend_description.label:   Description
 

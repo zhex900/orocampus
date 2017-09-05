@@ -16,7 +16,7 @@ class EventNameSelectType extends AbstractType
                 'autocomplete_alias' => 'eventnames',
                 'create_form_route' => 'oro_eventname_create',
                 'configs' => [
-                    'placeholder' => 'oro.event_name.form.choose_eventname'
+                    'placeholder' => 'oro.eventname.form.choose_eventname'
                 ],
             ]
         );

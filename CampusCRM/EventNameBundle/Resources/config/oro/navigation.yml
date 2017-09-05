@@ -15,6 +15,6 @@ navigation:
                             eventname_list: ~
     titles:
         oro_eventname_index: ~
-        oro_eventname_view: '%%eventname.name%%'
+        oro_eventname_view: '%eventname.name%'
         oro_eventname_create: 'Create Event Name'
-        oro_eventname_update: '%%eventname.name%% - Edit'
+        oro_eventname_update: '%eventname.name% - Edit'

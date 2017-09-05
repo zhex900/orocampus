@@ -3,10 +3,8 @@
 namespace CampusCRM\EventNameBundle\Form\Handler;
 
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-
 use CampusCRM\EventNameBundle\Entity\EventName;
 
 class EventNameHandler
