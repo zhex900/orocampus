@@ -2,7 +2,7 @@
 
 namespace CampusCRM\CampusContactBundle\Migrations\Data\ORM;
 
-use CampusCRM\EventNameBundle\Entity\EventName;
+use CampusCRM\EventTopicsBundle\Entity\EventTopics;
 use Doctrine\ORM\EntityManager;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadE extends AbstractFixture implements ContainerAwareInterface
+class LoadEventTopics extends AbstractFixture implements ContainerAwareInterface
 {
     const FLUSH_MAX = 50;
 
@@ -57,7 +57,7 @@ class LoadE extends AbstractFixture implements ContainerAwareInterface
             ->get('kernel')
             ->locateResource('@DefaultDataBundle/Migrations/Data/ORM/dictionaries');
 
-        $handle = fopen($dictionaryDir . DIRECTORY_SEPARATOR. "event_names.csv", "r");
+        $handle = fopen($dictionaryDir . DIRECTORY_SEPARATOR. "event_topics.csv", "r");
         if ($handle) {
             $headers = array();
             if (($data = fgetcsv($handle, 1000, ",")) !== false) {
@@ -70,9 +70,9 @@ class LoadE extends AbstractFixture implements ContainerAwareInterface
                 file_put_contents('/tmp/load.log', '$headers:'.print_r($headers,true).PHP_EOL, FILE_APPEND);
                 file_put_contents('/tmp/load.log', 'data:'.print_r($data,true).PHP_EOL, FILE_APPEND);
                 $data = array_combine($headers, array_values($data));
-                $eventname = $this->createEventName($manager,$data);
+                $eventtopic = $this->createEventTopics($manager,$data);
 
-                $this->persist($this->em, $eventname);
+                $this->persist($this->em, $eventtopic);
 
                 $i++;
                 if ($i % self::FLUSH_MAX == 0) {
@@ -87,16 +87,15 @@ class LoadE extends AbstractFixture implements ContainerAwareInterface
     /**
      * @param  array $data
      *
-     * @return EventName
+     * @return EventTopics
      */
-    protected function createEventName(ObjectManager $manager, array $data)
+    protected function createEventTopics(ObjectManager $manager, array $data)
     {
-        $eventname = new EventName();
-        $eventname->setName($data['Name']);
-        $eventname->setOwner($this->admin);
-        $eventname->setOrganization($this->organization);
-        $eventname->setSystemCalendar($data['System']);
-        return $eventname;
+        $eventtopic = new EventTopics();
+        $eventtopic->setName($data['Name']);
+        $eventtopic->setOwner($this->admin);
+        $eventtopic->setOrganization($this->organization);
+        return $eventtopic;
     }
 
     /**
