@@ -15,6 +15,6 @@ navigation:
                             eventtopics_list: ~
     titles:
         oro_eventtopics_index: ~
-        oro_eventtopics_view: '%%eventtopics.name%%'
+        oro_eventtopics_view: '%eventtopics.name%'
         oro_eventtopics_create: 'Create Event Topics'
-        oro_eventtopics_update: '%%eventtopics.name%% - Edit'
+        oro_eventtopics_update: '%eventtopics.name% - Edit'

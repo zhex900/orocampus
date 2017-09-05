@@ -3,10 +3,8 @@
 namespace CampusCRM\EventTopicsBundle\Form\Handler;
 
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-
 use CampusCRM\EventTopicsBundle\Entity\EventTopics;
 
 class EventTopicsHandler

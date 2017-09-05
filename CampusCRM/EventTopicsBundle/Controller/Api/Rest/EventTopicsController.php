@@ -12,10 +12,7 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\SoapBundle\Form\Handler\ApiFormHandler;
 use Oro\Bundle\SoapBundle\Controller\Api\Rest\RestController;
-use Oro\Bundle\ChannelBundle\Provider\Lifetime\AmountProvider;
-use CampusCRM\EventTopicsBundle\Entity\EventTopics;
 
 /**
  * @RouteResource("EventTopics")
@@ -68,6 +65,11 @@ class EventTopicsController extends RestController implements ClassResourceInter
     public function getAction($id)
     {
         return $this->handleGetRequest($id);
+    }
+
+    public function getFormHandler()
+    {
+        return $this->get('event_name.form.handler.eventname.api');
     }
 
     /**
@@ -139,62 +141,5 @@ class EventTopicsController extends RestController implements ClassResourceInter
     public function getForm()
     {
         return $this->get('event_topics.form.eventtopics.api');
-    }
-
-    /**
-     * @return ApiFormHandler
-     */
-    public function getFormHandler()
-    {
-        return $this->get('event_topics.form.handler.eventtopics.api');
-    }
-
-    protected function getPreparedItem($entity, $resultFields = [])
-    {
-        $result = parent::getPreparedItem($entity, $resultFields);
-
-        /** @var AmountProvider $amountProvider */
-        $amountProvider = $this->get('oro_channel.provider.lifetime.amount_provider');
-
-        $result['lifetimeValue'] = $amountProvider->getAccountLifeTimeValue($entity);
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getPreparedItems($entities, $resultFields = [])
-    {
-        $result = [];
-        $ids = array_map(
-            function(eventtopics $eventtopics) {
-                return $eventtopics->getId();
-            },
-            $entities
-        );
-
-        $ap = $this->get('oro_channel.provider.lifetime.amount_provider');
-        $lifetimeValues = $ap->getAccountsLifetimeQueryBuilder($ids)
-            ->getQuery()
-            ->getArrayResult();
-        $lifetimeMap = [];
-        foreach ($lifetimeValues as $value) {
-            $lifetimeMap[$value['accountId']] = (float)$value['lifetimeValue'];
-        }
-
-        foreach ($entities as $entity) {
-            /** @var eventtopics $entity */
-            $entityArray = parent::getPreparedItem($entity, $resultFields);
-            if (array_key_exists($entity->getId(), $lifetimeMap)) {
-                $entityArray['lifetimeValue'] = $lifetimeMap[$entity->getId()];
-            } else {
-                $entityArray['lifetimeValue'] = 0.0;
-            }
-
-            $result[] = $entityArray;
-        }
-
-        return $result;
     }
 }

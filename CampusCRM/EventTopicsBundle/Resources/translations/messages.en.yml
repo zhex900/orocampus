@@ -1,49 +1,11 @@
-Addresses: Addresses
-Basic Information: Basic Information
 campuscrm:
     eventtopics:
       owner.label:                Owner
       entity_label:               Event Topics
-     # system_calendar.label:      System Calendar
 oro:
-    dashboard:
-        my_eventtopics_activity:
-            title:                  Recently accessed eventtopics
-            view_all:               View all
-            description:            This widget displays the list of recently accessed eventtopics
-
     eventtopics:
-
-        menu:
-            eventtopics_tab.label: Event Names
-            account_list.description: List of accounts
-            shortcut_new_account.label: Create new eventtopics
-            shortcut_new_account.description: Create new eventtopics instance
-            shortcut_list_accounts.label: Show accounts list
-            shortcut_list_accounts.description: List of accounts
-        widgets:
-            magento_channel:        Magento Channel
-            eventtopics_information:  Event Name Information
-
-        sections:
-            general:                General
-            website_activity:       Website Activity
-        form:
-            choose_eventtopics:       Choose an eventtopics...
-            select_contacts:        Select contacts
-        controller:
-            eventtopics.saved.message:  "Event Name saved"
-        #
-        # CampusCRM\EventTopicsBundle/Entity/EventTopics
-        #
-        entity_label:               Event Name
-        entity_plural_label:        Event Names
-        entity_description:         Event Name
-        id.label:                   Id
-        name.label:                 Event Name
+        entity_label:               Event Topic
+        entity_plural_label:        Event Topics
+        entity_description:         Event Topics
+        name.label:                 Event Topics
         owner.label:                Owner
-        assigned.label:             Assigned
-        referred_by.label:          Referred By
-
-        extend_description.label:   Description
-

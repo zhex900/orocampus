@@ -42,7 +42,10 @@ class ExtendEventTopicsEntity implements Migration, ExtendExtensionAwareInterfac
             ['title'], // column names are used to show a title of owning side entity
             ['title'], // column names are used to show detailed info about owning side entity
             ['title'], // Column names are used to show owning side entity in a grid
-            ['extend' => ['owner' => ExtendScope::OWNER_CUSTOM]]
+            [
+                'entity' => ['label' => 'What did you cover during this time?'],
+                'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
+            ]
         );
         /** End of generate table eventname **/
     }
