@@ -3,8 +3,8 @@
 namespace CampusCRM\CampusActivityBundle\Autocomplete;
 
 use Oro\Bundle\ActivityBundle\Event\SearchAliasesEvent;
-
 use Oro\Bundle\ActivityBundle\Autocomplete\ContextSearchHandler as BaseSearchHandler;
+
 /**
  * This is specified handler that search targets entities for specified activity class.
  *

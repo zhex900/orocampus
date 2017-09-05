@@ -2,18 +2,16 @@
 
 namespace CampusCRM\CampusActivityBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Validator\ConstraintViolation;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-
 use Oro\Bundle\FormBundle\Model\AutocompleteRequest;
 use CampusCRM\CampusActivityBundle\Autocomplete\ContextSearchHandler;
 use Oro\Bundle\ActivityBundle\Controller\AutocompleteController as BaseController;
+
 /**
  * @Route("/activities")
  */

@@ -8,7 +8,6 @@
 
 namespace CampusCRM\CampusActivityBundle\Manager;
 
-
 class Context
 {
     public function filter($class, $targetEntityClasses)
