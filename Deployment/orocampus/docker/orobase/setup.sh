@@ -55,5 +55,11 @@ apt-get install -qqy nodejs || exit 1
 easy_install supervisor || exit 1
 easy_install supervisor-stdout || exit 1
 
+# Install certbot
+apt-get install software-properties-common -y
+add-apt-repository ppa:certbot/certbot -y
+apt-get update
+apt-get install certbot -y
+
 apt-get -qq clean
 rm -rf /var/lib/apt/lists/*
