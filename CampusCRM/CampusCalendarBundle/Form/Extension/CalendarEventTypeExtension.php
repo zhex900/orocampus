@@ -79,15 +79,6 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                     ->setParameter('1', $this->isSystemCalendar())
                     ->orderBy('e.name', 'ASC');
             },))
-            ->add('oro_eventtopics',
-                'entity',
-                array(
-                    'class' => 'CampusCRM\EventTopicsBundle\Entity\EventTopics',
-                    'label' => 'oro.calendar.calendarevent.oro_eventtopics.lable',
-                    'required' => false,
-                    'mapped' => false
-                    )
-                )
             ->add(
                 'title',
                 'hidden',
