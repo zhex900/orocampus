@@ -20,7 +20,17 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $defNewService = $container->getDefinition('oro_calendar.calendar_event.update_child_manager');
-        $defNewService ->setClass('CampusCRM\CampusCalendarBundle\Manager\CalendarEvent\UpdateChildManager');
+        $container
+            ->getDefinition('oro_calendar.calendar_event.update_child_manager')
+            ->setClass('CampusCRM\CampusCalendarBundle\Manager\CalendarEvent\UpdateChildManager');
+
+        $container
+            ->getDefinition('oro_calendar.attendee_relation_manager')
+            ->setClass('CampusCRM\CampusCalendarBundle\Manager\AttendeeRelationManager');
+
+        $container
+            ->getDefinition('oro_calendar.autocomplete.attendee_search_handler')
+            ->setClass('CampusCRM\CampusCalendarBundle\Autocomplete\AttendeeSearchHandler');
+
     }
 }

@@ -2,8 +2,8 @@
 
 namespace CampusCRM\CampusCalendarBundle\Form\Handler;
 
-use CampusCRM\CampusCalendarBundle\Manager\AttendeeRelationManager;
-use CampusCRM\CampusCalendarBundle\Manager\CalendarEventManager;
+use Oro\Bundle\CalendarBundle\Manager\AttendeeRelationManager;
+//use CampusCRM\CampusCalendarBundle\Manager\CalendarEventManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\CalendarBundle\Form\Handler\CalendarEventHandler as BaseHandler;

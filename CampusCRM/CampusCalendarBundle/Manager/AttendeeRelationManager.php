@@ -117,7 +117,6 @@ class AttendeeRelationManager extends BaseManager
 
     protected function clearContextUserContact($contexts)
     {
-
         $new_contexts = [];
         if ($contexts != null) {
             foreach ($contexts as $context) {

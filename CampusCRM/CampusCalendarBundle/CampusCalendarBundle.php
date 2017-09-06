@@ -6,7 +6,6 @@
  * Time: 10:11 PM
  */
 
-// src/CampusCRM/CampusCalendarBundle/CampusCalendarBundle.php
 namespace CampusCRM\CampusCalendarBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -25,7 +24,6 @@ class CampusCalendarBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-
         $container->addCompilerPass(new OverrideServiceCompilerPass());
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CampusCRM\CampusCalendarBundle\Form\Handler;
 
-use CampusCRM\CampusCalendarBundle\Manager\AttendeeRelationManager;
+use Oro\Bundle\CalendarBundle\Manager\AttendeeRelationManager;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\CalendarBundle\Form\Handler\CalendarEventApiHandler as BaseHandler;
 

@@ -12,8 +12,8 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
-use CampusCRM\CampusCalendarBundle\Manager\AttendeeRelationManager;
-use CampusCRM\CampusCalendarBundle\Manager\AttendeeManager;
+use Oro\Bundle\CalendarBundle\Manager\AttendeeRelationManager;
+use Oro\Bundle\CalendarBundle\Manager\AttendeeManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 //use Oro\Bundle\CalendarBundle\Manager\AttendeeManager;
