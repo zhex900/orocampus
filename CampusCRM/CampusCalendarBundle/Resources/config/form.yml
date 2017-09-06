@@ -1,13 +1,10 @@
 services:
-    campus_calendar.attendees_select.form.type:
-        class: CampusCRM\CampusCalendarBundle\Form\Type\CalendarEventAttendeesSelectType
+    campus_calendar.attendees_select.form.extension.type:
+        class: 'CampusCRM\CampusCalendarBundle\Form\Extension\CalendarEventAttendeesSelectTypeExtension'
         arguments:
-            - '@oro_calendar.attendees_select.transformer'
-            - '@oro_calendar.attendee_manager'
-            - '@oro_calendar.attendee_relation_manager'
             - '@security.token_storage'
         tags:
-            - { name: form.type, alias: campus_calendar_event_attendees_select }
+            - { name: form.type_extension, alias: oro_calendar_event_attendees_select }
 
     campus_calendar.calendar_event.form.handler:
         class: CampusCRM\CampusCalendarBundle\Form\Handler\CalendarEventHandler
