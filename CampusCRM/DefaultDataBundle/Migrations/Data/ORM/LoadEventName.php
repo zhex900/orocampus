@@ -1,6 +1,6 @@
 <?php
 
-namespace CampusCRM\CampusContactBundle\Migrations\Data\ORM;
+namespace CampusCRM\DefaultDataBundle\Migrations\Data\ORM;
 
 use CampusCRM\EventNameBundle\Entity\EventName;
 use Doctrine\ORM\EntityManager;
