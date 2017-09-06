@@ -94,26 +94,6 @@
             }
         ]
     }] %}
-{#
-form_row(form.namePrefix),
-form_row(form.middleName),
-form_row(form.nameSuffix),
-{% set additionalData = [] %}
-    {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
-        {% set additionalData = additionalData|merge([form_row(child)]) %}
-    {% endfor %}
-    {% if additionalData is not empty %}
-        {% set dataBlocks = dataBlocks|merge([{
-            'title': 'Additional'|trans,
-            'subblocks': [{
-                'title': '',
-                'useSpan': false,
-                'data' : additionalData
-            }]
-        }] ) %}
-    {% endif %}
-#}
-
 
     {% if form.change_password is defined %}
         {% set dataBlocks = dataBlocks|merge( [{

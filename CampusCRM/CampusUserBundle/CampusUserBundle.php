@@ -9,11 +9,22 @@
 namespace CampusCRM\CampusUserBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use CampusCRM\CampusUserBundle\DependencyInjection\Compiler\OverrideServiceCompilerPass;
 
 class CampusUserBundle extends Bundle
 {
     public function getParent()
     {
         return 'OroUserBundle';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+        $container->addCompilerPass(new OverrideServiceCompilerPass());
     }
 }

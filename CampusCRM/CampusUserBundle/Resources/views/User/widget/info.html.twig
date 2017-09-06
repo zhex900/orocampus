@@ -70,10 +70,6 @@
                 {{ ui.renderHtmlProperty('oro.user.roles.label'|trans, roles|join('\n')|escape|nl2br) }}
             {% endif %}
 
-            {% if resource_granted('oro_user_group_view') %}
-                {{ ui.renderHtmlProperty('oro.user.groups.label'|trans, entity.groups|join('<br />')) }}
-            {% endif %}
-
             {% if resource_granted('oro_business_unit_view') %}
                 {{ ui.renderHtmlProperty('oro.user.business_units.label'|trans, entity.businessUnits|join('<br />')) }}
             {% endif %}
