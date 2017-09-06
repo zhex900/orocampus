@@ -11,7 +11,7 @@ oro:
           eventtopics_information:  Event Topics Information
         controller:
                     eventname.saved.message:  "Event topic saved"
-        form.choose_label:          Select a topic
+        form.choose_label:          Topic
         entity_label:               Event Topic
         entity_plural_label:        Event Topics
         entity_description:         Event Topics
