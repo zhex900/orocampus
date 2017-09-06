@@ -10,8 +10,6 @@
 
 {% block navButtons %}
     {% if editable %}
-        {# Button for add context on the activity list item view page #}
-        {{ AC.addContextButton(entity) }}
         {{ UI.editButton({
             'path' : path('oro_system_calendar_event_update', { id: entity.id }),
             'entity_label': 'oro.calendar.calendarevent.entity_label'|trans
