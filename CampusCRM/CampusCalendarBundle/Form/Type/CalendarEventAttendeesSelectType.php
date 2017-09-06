@@ -16,8 +16,6 @@ use Oro\Bundle\CalendarBundle\Manager\AttendeeRelationManager;
 use Oro\Bundle\CalendarBundle\Manager\AttendeeManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-//use Oro\Bundle\CalendarBundle\Manager\AttendeeManager;
-
 class CalendarEventAttendeesSelectType extends AbstractType
 {
 

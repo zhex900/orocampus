@@ -6,11 +6,11 @@
  * Time: 10:47 PM
  */
 
-namespace CampusCRM\CampusCalendarBundle\Provider;
+namespace CampusCRM\CampusCalendarBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
 
-class AcademicCalendar
+class AcademicCalendarManager
 {
 
     /** @var EntityManager */

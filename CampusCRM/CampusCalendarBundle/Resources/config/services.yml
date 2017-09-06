@@ -15,7 +15,7 @@ services:
             - { name: twig.extension }
 
       academic_calendar:
-        class:  CampusCRM\CampusCalendarBundle\Provider\AcademicCalendar
+        class:  CampusCRM\CampusCalendarBundle\Manager\AcademicCalendarManager
         arguments:
                   - '@doctrine.orm.entity_manager'
 
