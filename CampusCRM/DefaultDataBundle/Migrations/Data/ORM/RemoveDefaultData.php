@@ -2,11 +2,7 @@
 
 namespace CampusCRM\DefaultDataBundle\Migrations\Data\ORM;
 
-use CampusCRM\EventTopicsBundle\Entity\EventTopics;
 use Doctrine\ORM\EntityManager;
-use Oro\Bundle\ConfigBundle\Config\ConfigManager;
-use Oro\Bundle\OrganizationBundle\Entity\Organization;
-use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -48,7 +44,6 @@ class RemoveDefaultData extends AbstractFixture implements ContainerAwareInterfa
             }
         }
     }
-
 
     /**
      * Remove entities
