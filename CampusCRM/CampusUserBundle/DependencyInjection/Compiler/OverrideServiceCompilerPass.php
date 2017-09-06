@@ -19,7 +19,8 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $defNewService = $container->getDefinition('oro_user.manager');
-        $defNewService->setClass('CampusCRM\CampusUserBundle\Entity\UserManager');
+        $container
+            ->getDefinition('oro_user.manager')
+            ->setClass('CampusCRM\CampusUserBundle\Entity\UserManager');
     }
 }
