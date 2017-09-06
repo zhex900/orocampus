@@ -66,27 +66,38 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
         $builder
             ->remove('title')
             ->remove('attendees')
+            ->remove('notifyAttendees')
             ->remove('oro_eventname');
 
         if (!$this->isSystemCalendar()){
             $builder->remove('oro_eventtopics');
         }
-
+        $builder->add(
+            'oro_eventname',
+            'genemu_jqueryselect2_entity',
+            [
+                'label'         => 'oro.calendar.calendarevent.oro_eventname.label',
+                'class'         => 'CampusCRM\EventNameBundle\Entity\EventName',
+                'property'      => 'name',
+                'query_builder' => function (EntityRepository $repository) {
+                    $qb = $repository->createQueryBuilder('e');
+                    return $qb
+                           ->where($qb->expr()->neq('e.system_calendar', '?1'))
+                           ->setParameter('1', $this->isSystemCalendar())
+                           ->orderBy('e.name', 'ASC');
+                },
+                'configs'       => [
+                    'allowClear'  => true,
+                   // 'placeholder' => 'oro.notification.form.choose_event',
+                ],
+                'attr' => [
+                    'autocomplete' => 'on'
+                ],
+                'empty_value'   => '',
+                'required'      => true
+            ]
+        );
         $builder
-            ->add(
-                'oro_eventname',
-                'entity',
-                array(
-                    'class' => 'CampusCRM\EventNameBundle\Entity\EventName',
-                    'label' => 'oro.calendar.calendarevent.oro_eventname.label',
-                    'query_builder' => function(EntityRepository $repository) {
-                          $qb = $repository->createQueryBuilder('e');
-                          return $qb
-                              ->where($qb->expr()->neq('e.system_calendar', '?1'))
-                              ->setParameter('1', $this->isSystemCalendar())
-                              ->orderBy('e.name', 'ASC');},
-                    )
-            )
             ->add(
                 'title',
                 'hidden',
@@ -97,7 +108,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
             )
             ->add(
                 'attendees',
-                'campus_calendar_event_attendees_select',
+                'oro_calendar_event_attendees_select',
                 [
                     'required' => false,
                     'label' => 'oro.calendar.calendarevent.attendees.label',
