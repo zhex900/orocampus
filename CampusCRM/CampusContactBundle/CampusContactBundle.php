@@ -6,7 +6,6 @@
  * Time: 10:11 PM
  */
 
-// src/CampusCRM/CampusContactBundle/CampusContactBundle.php
 namespace CampusCRM\CampusContactBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
