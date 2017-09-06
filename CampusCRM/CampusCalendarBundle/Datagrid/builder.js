@@ -4,9 +4,7 @@
 
 define(function(require) {
     'use strict';
-
     var mediator = require('oroui/js/mediator');
-
     return {
         init: function(deferred, options) {
 
@@ -21,5 +19,3 @@ define(function(require) {
         }
     };
 });
-
-///Users/jake/Code/orocrm-dev/www/vendor/oro/platform/src/Oro/Bundle/DataGridBundle/Resources/config/requirejs.yml

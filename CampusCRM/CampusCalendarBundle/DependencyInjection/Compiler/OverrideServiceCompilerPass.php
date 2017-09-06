@@ -13,7 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class OverrideServiceCompilerPass implements CompilerPassInterface
 {
-
     /**
      * Overwrite project specific services
      * @param ContainerBuilder $container
@@ -31,6 +30,5 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         $container
             ->getDefinition('oro_calendar.autocomplete.attendee_search_handler')
             ->setClass('CampusCRM\CampusCalendarBundle\Autocomplete\AttendeeSearchHandler');
-
     }
 }
