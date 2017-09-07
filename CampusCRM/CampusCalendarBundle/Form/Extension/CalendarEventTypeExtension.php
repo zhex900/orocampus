@@ -33,7 +33,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
     {
         $resolver->setDefaults(
             [
-                'validation_groups' => ['calendar_event_validation', 'event_name_validation'],
+                'validation_groups' => ['calendar_event_validation', 'event_name_validation', 'start_validation'],
             ]
         );
     }
@@ -74,7 +74,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
         }
         $builder->add(
             'oro_eventname',
-            'genemu_jqueryselect2_entity',
+            'genemu_jqueryselect2_translatable_entity',
             [
                 'label'         => 'oro.calendar.calendarevent.oro_eventname.label',
                 'class'         => 'CampusCRM\EventNameBundle\Entity\EventName',
