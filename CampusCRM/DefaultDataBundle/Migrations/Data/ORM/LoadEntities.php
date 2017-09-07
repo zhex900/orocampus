@@ -63,10 +63,7 @@ class LoadEntities extends AbstractFixture implements ContainerAwareInterface
         $this->LoadEntities($dictionaryDir,'system_calendars.csv',[$this,'createSystemCalendar']);
         $this->LoadEntities($dictionaryDir,'event_names.csv',[$this,'createEventName']);
         $this->LoadEntities($dictionaryDir,'event_topics.csv',[$this,'createEventTopics']);
-
-        // $this->LoadEntities($dictionaryDir,'calendar_events.csv',[$this,'createCalendarEvents']);
-
-
+        $this->LoadEntities($dictionaryDir,'calendar_events.csv',[$this,'createCalendarEvents']);
     }
 
     /**
@@ -85,14 +82,20 @@ class LoadEntities extends AbstractFixture implements ContainerAwareInterface
             ->em
             ->getRepository('EventNameBundle:EventName')
             ->findBy(['name'=>$data['Name']]);
-        if (isset($calendar) &&  isset($event_name)) {
+        if (sizeof($calendar) != 0 && sizeof($event_name) !=0 ) {
             $event = new CalendarEvent();
             $event->setAllDay(true);
-            $event->setOroEventname($event_name);
+            $event->setOroEventname($event_name[0]);
             $event->setTitle($data['Name']);
-            $event->setStart($data['Start']);
-            $event->setEnd($data['End']);
-            $event->setSystemCalendar($calendar);
+            $event->setStart(
+                \DateTime::createFromFormat(
+                    'd/m/Y H:i:s',
+                    $data['Start'].' '.'00:00:00'));
+            $event->setEnd(
+                \DateTime::createFromFormat(
+                    'd/m/Y H:i:s',
+                    $data['End'].' '.'00:00:00'));
+            $event->setSystemCalendar($calendar[0]);
         }
         return $event;
     }
@@ -178,8 +181,6 @@ class LoadEntities extends AbstractFixture implements ContainerAwareInterface
      */
     protected function LoadEntities($dictionaryDir, $data_file, $callback)
     {
-        file_put_contents('/tmp/log.log','LoadEntities: '.PHP_EOL,FILE_APPEND);
-
         $handle = fopen($dictionaryDir . DIRECTORY_SEPARATOR. $data_file, "r");
         if ($handle) {
             $headers = array();
@@ -190,7 +191,6 @@ class LoadEntities extends AbstractFixture implements ContainerAwareInterface
             $i = 0;
             while (($data = fgetcsv($handle, 1000, ",")) !== false) {
                 $data = array_combine($headers, array_values($data));
-                file_put_contents('/tmp/log.log','data: '. print_r($data,true).PHP_EOL,FILE_APPEND);
                 $object = $callback($data);
                 $this->persist($this->em, $object);
                 $i++;
