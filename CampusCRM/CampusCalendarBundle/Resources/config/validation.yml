@@ -1,5 +1,9 @@
 Oro\Bundle\CalendarBundle\Entity\CalendarEvent:
     properties:
+        end:
+              - DateTime:     ~
+              - NotBlank:     ~
+              - CampusCRM\CampusCalendarBundle\Validator\Constraints\AcademicCalendarEventEnd: { groups: [end_validation] }
         start:
               - DateTime:     ~
               - NotBlank:     ~
