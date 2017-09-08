@@ -71,17 +71,21 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
         $calendar_event = $event->getData();
 
         if ($calendar_event->getCalendar() instanceof Calendar) {
-            $sem = $this
-                ->container
-                ->get('academic_calendar')
-                ->getSemester($calendar_event->getStart());
-            $calendar_event->setSemester($sem);
-
-            $calendar_event
-                ->setTeachingWeek($this
+            try {
+                $sem = $this
                     ->container
                     ->get('academic_calendar')
-                    ->getTeachingWeek($calendar_event->getStart()), substr($sem, 4));
+                    ->getSemester($calendar_event->getStart());
+                $calendar_event->setSemester($sem);
+
+                $calendar_event
+                    ->setTeachingWeek($this
+                        ->container
+                        ->get('academic_calendar')
+                        ->getTeachingWeek($calendar_event->getStart()), substr($sem, 4));
+            } catch (\Exception $e) {
+                $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
+            }
         }
     }
 

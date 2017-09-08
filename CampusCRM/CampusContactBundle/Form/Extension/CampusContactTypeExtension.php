@@ -40,7 +40,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     {
         $builder->addEventListener(
             FormEvents::SUBMIT,
-            function(FormEvent $event) {
+            function (FormEvent $event) {
                 /** @var Contact $contact */
                 $contact = $event->getData();
                 $this->defaultFirstContactDate($contact);
@@ -70,12 +70,15 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     {
         // if the semester contacted is empty set the value from first contacted date
         if ($contact->getSemesterContacted() == null) {
-
-            $contact->setSemesterContacted(
-                $this->container
-                    ->get('academic_calendar')
-                    ->getSemester($contact->getFirstContactDate())
-            );
+            try {
+                $contact->setSemesterContacted(
+                    $this->container
+                        ->get('academic_calendar')
+                        ->getSemester($contact->getFirstContactDate())
+                );
+            } catch (\Exception $e) {
+                $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
+            }
         }
     }
 }

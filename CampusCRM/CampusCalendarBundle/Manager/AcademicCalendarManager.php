@@ -39,18 +39,17 @@ class AcademicCalendarManager
     {
         $this->em = $em;
         $this->now = new \DateTime('now');
-        $this->semester_dates = $this->getSemesterDates();
-        $this->recess_dates = $this->getRecessDates();
     }
 
     /**
      * {@inheritdoc}
      * This is assuming semester dates are within the same year.
+     * @param \Datetime $date
      **/
-    private function getSemesterDates()
+    private function getSemesterDates(\Datetime $date)
     {
 
-        return $this->searchSystemCalendar(self::SEMESTER, $this->now->format("Y"));
+        return $this->searchSystemCalendar(self::SEMESTER, $date->format("Y"));
 
     }
 
@@ -66,11 +65,12 @@ class AcademicCalendarManager
      * array(2) { [0]=> object(DateTime)#2360 (3) { ["date"]=> string(26) "2017-09-25 00:00:00.000000" ["timezone_type"]=> int(3) ["timezone"]=> string(3) "UTC" }
      *            [1]=> object(DateTime)#2356 (3) { ["date"]=> string(26) "2017-10-01 00:00:00.000000" ["timezone_type"]=> int(3) ["timezone"]=> string(3) "UTC" }
      * } } } }
+     * @param \Datetime $date
      **/
-    private function getRecessDates()
+    private function getRecessDates(\Datetime $date)
     {
 
-        return $this->searchSystemCalendar(self::RECESS, $this->now->format("Y"));
+        return $this->searchSystemCalendar(self::RECESS, $date->format("Y"));
 
     }
 
@@ -109,7 +109,6 @@ class AcademicCalendarManager
                 = array($start->setTime(0, 0, 0),
                 $end->setTime(0, 0, 0));
         }
-
             if (empty($array)) {
                 throw new \Exception($key . ' period cannot be find in ' . $year . ' System Calendar!');
             }
@@ -142,8 +141,10 @@ class AcademicCalendarManager
 
         // is the date fall within any semesters dates, if yes which semester
         $semester = null;
+        file_put_contents('/tmp/log.log', '$semester '.$semester.PHP_EOL, FILE_APPEND);
 
         // what if no semester dates are available ?
+        $this->semester_dates = $this->getSemesterDates($date);
         $semesters = array_keys($this->semester_dates[$university]);
 
         if (empty($semesters)) {
@@ -178,6 +179,8 @@ class AcademicCalendarManager
     {
         file_put_contents('/tmp/weeks.log', 'date ' . $date->format('Y-m-d') . PHP_EOL, FILE_APPEND);
 
+        $this->semester_dates = $this->getSemesterDates($date);
+        $this->recess_dates = $this->getRecessDates($date);
         $date->setTime(0, 0, 0);
 
         if ($sem == null) {
