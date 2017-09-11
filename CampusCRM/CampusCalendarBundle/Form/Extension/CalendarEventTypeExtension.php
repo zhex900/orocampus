@@ -80,7 +80,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
         }
         $builder->add(
             'oro_eventname',
-            'genemu_jqueryselect2_translatable_entity',
+            'genemu_jqueryselect2_entity',
             [
                 'label'         => 'oro.calendar.calendarevent.oro_eventname.label',
                 'class'         => 'CampusCRM\EventNameBundle\Entity\EventName',
@@ -94,7 +94,7 @@ class CalendarEventTypeExtension extends AbstractTypeExtension
                 },
                 'configs'       => [
                     'allowClear'  => true,
-                   // 'placeholder' => 'oro.notification.form.choose_event',
+                    'placeholder' => 'oro.notification.form.choose_event',
                 ],
                 'attr' => [
                     'autocomplete' => 'on'
