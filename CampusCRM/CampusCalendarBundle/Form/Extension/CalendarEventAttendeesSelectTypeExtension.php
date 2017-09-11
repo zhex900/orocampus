@@ -48,7 +48,6 @@ class CalendarEventAttendeesSelectTypeExtension extends AbstractTypeExtension
         if ($calendarEvent->getId() !== null) {
             return;
         }
-        file_put_contents('/tmp/log.log','build view'.PHP_EOL, FILE_APPEND);
         // add owner as default attendee when it is not system calendar
         if ($calendarEvent->getSystemCalendar() == null) {
             /** @var User $owner */
