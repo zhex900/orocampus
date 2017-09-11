@@ -55,23 +55,7 @@ class CalendarEventApiTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->remove('notifyAttendees')
-            ->remove('attendees')
-            ->add(
-                $builder->create(
-                    'attendees',
-                    'oro_collection',
-                    [
-                        'property_path' => 'attendees',
-                        'type' => 'oro_calendar_event_attendees_api',
-                        'error_bubbling' => false,
-                        'options' => [
-                            'required' => false,
-                            'label'    => 'oro.calendar.calendarevent.attendees.label',
-                        ],
-                    ]
-                )
-            );
+            ->remove('notifyAttendees');
 
         $builder->addEventSubscriber(new CalendarEventApiTypeSubscriber($this->container));
     }
