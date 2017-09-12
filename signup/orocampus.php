@@ -18,10 +18,10 @@ define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
-define("APIKEY", "10a8c562829409f64174386c8400deb30223436fa");
+define("APIKEY", "10a8c562829409f64174386c8400deb30223436f");
 define("LOGIN", "system");
 define("LOGIN_ID", "12");
-define("NUMBEROFTRY",3);
+define("NUMBEROFTRY",5);
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;

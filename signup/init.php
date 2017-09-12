@@ -25,6 +25,7 @@ if (isset($_POST['reload'])) {
     // Write over data.json if $result is success
     if (isset($result)) {
         file_put_contents('./data/data.json', json_encode($result));
+        header("Location: login.php");
     }else{
         $api->getLogger()->info('Reload details failed');
         header("Location: error.html");
