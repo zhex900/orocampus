@@ -13,23 +13,22 @@ if (isset($_POST['reload'])) {
     /** @var orocampus $api */
     $api = new orocampus(URL,
         LOGIN,
-        APIKEY,
-        '',
-        '');
+        APIKEY,$_SESSION,$_REQUEST);
 
-    $result = get($api, SOURCE);
-    $result = array_merge($result, get($api, COUNTRIES));
-    $result = array_merge($result, get($api, DEGREES));
-    $result = array_merge($result, get($api, INSTITUTIONS));
-    $result = array_merge($result, get($api, LEVELOFSTUDY));
+    $result = $api->get(SOURCE);
 
-    $api->getLogger()->info('Reload dropdown values:',$result);
-    // TODO
+    $result = array_merge($result, $api->get(COUNTRIES));
+    $result = array_merge($result, $api->get(DEGREES));
+    $result = array_merge($result, $api->get(INSTITUTIONS));
+    $result = array_merge($result, $api->get(LEVELOFSTUDY));
+
     // Write over data.json if $result is success
-    file_put_contents('./data/data.json', json_encode($result));
-
-    // redirect to the selected form.
-    header("Location: login.php");
+    if (isset($result)) {
+        file_put_contents('./data/data.json', json_encode($result));
+    }else{
+        $api->getLogger()->info('Reload details failed');
+        header("Location: error.html");
+    }
 }
 
 if (isset($_POST['login'])) {
@@ -40,35 +39,4 @@ if (isset($_POST['login'])) {
 
     // redirect to the selected form.
     header("Location: forms/" . $formType);
-}
-
-/**
- * @param orocampus $api
- * @param $source
- * @return null
- */
-function get($api, $source)
-{
-    $result = $api->curl_req($source);
-    // rewrite if the result is not null
-    if ($result != null) {
-        //append to the data file
-        return transform($source, $result);
-        // TODO
-        // give success notification
-    } else {
-        // TODO
-        // give failed notification
-    }
-}
-
-function transform($source, $result)
-{
-    $array = null;
-    if (!empty($result)) {
-        foreach ($result['data'] as $item) {
-            $array[$source][$item['attributes']['name']] = $item['id'];
-        }
-    }
-    return $array;
 }

@@ -18,9 +18,10 @@ define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
-define("APIKEY", "10a8c562829409f64174386c8400deb30223436f");
+define("APIKEY", "10a8c562829409f64174386c8400deb30223436fa");
 define("LOGIN", "system");
 define("LOGIN_ID", "12");
+define("NUMBEROFTRY",3);
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -46,6 +47,37 @@ class orocampus
         $this->logger =  new Logger('logger');
         $this->logger->pushHandler(new StreamHandler(__DIR__.'/log/signup.log', Logger::DEBUG));
         $this->logger->pushHandler(new FirePHPHandler());
+    }
+
+
+    /**
+     * @param $source
+     * @return null
+     */
+    public function get($source)
+    {
+        $result = $this->curl_req($source);
+        // rewrite if the result is not null
+        if ($result != null) {
+            //append to the data file
+            return $this->transform($source, $result);
+            // TODO
+            // give success notification
+        } else {
+            // TODO
+            // give failed notification
+        }
+    }
+
+    protected function transform($source, $result)
+    {
+        $array = null;
+        if (!empty($result)) {
+            foreach ($result['data'] as $item) {
+                $array[$source][$item['attributes']['name']] = $item['id'];
+            }
+        }
+        return $array;
     }
 
     public function getLogger(){
@@ -273,6 +305,7 @@ class orocampus
             ->set(CURLOPT_RETURNTRANSFER, true)
             ->set(CURLOPT_HEADER,false)
             ->set(CURLOPT_VERBOSE,true)
+            ->set(CURLINFO_HEADER_OUT,true)
             ->set(CURLOPT_USERAGENT,'curl/7.54.0')
             ->set(CURLOPT_HTTPHEADER, $this->getHeader());
 
@@ -281,10 +314,14 @@ class orocampus
                 ->set(CURLOPT_POSTFIELDS, json_encode($data))
                 ->set(CURLOPT_SAFE_UPLOAD, true);
         }
-
-        $response = $request->send();
-        $feed = json_decode($response->getContent(), true);
-
+        $try=0;
+        $feed=null;
+        while(!isset($feed) && $try < NUMBEROFTRY) {
+            $response = $request->send();
+            $feed = json_decode($response->getContent(), true);
+            $try++;
+            $this->getLogger()->info('Try: '.$try . ', Connect to server, querying ' .$path . ' response:'.(isset($feed) ? 'success' : 'fail'));
+        }
         return $feed;
     }
 
@@ -300,7 +337,7 @@ class orocampus
         $wsseHeader[] = sprintf(
             'X-WSSE: UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"', $this->_username, $digest, $nonce, $created
         );
-        // var_dump($wsseHeader);
+
         return $wsseHeader;
     }
 }
