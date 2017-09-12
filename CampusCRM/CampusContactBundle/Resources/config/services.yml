@@ -1,4 +1,11 @@
 services:
+    campus_contact.validator.contactinfocheck:
+        class: 'CampusCRM\CampusContactBundle\Validator\Constraints\ContactInfoCheckValidator'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: validator.constraint_validator, alias: campus_contact.validator.contactinfocheck }
+
     campus_contact.subscriber.contact_listener:
         class: 'CampusCRM\CampusContactBundle\EventListener\ContactListener'
         arguments:

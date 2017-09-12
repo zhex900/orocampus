@@ -1,0 +1,3 @@
+Oro\Bundle\ContactBundle\Entity\Contact:
+    constraints:
+        - CampusCRM\CampusContactBundle\Validator\Constraints\ContactInfoCheck: { groups: [contact_info_check] }

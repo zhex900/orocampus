@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CampusContactTypeExtension extends AbstractTypeExtension
 {
@@ -19,7 +19,7 @@ class CampusContactTypeExtension extends AbstractTypeExtension
     private $container;
 
     /**
-     * @param Container $container
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -33,11 +33,35 @@ class CampusContactTypeExtension extends AbstractTypeExtension
         }
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            [
+                'data_class'           => 'Oro\Bundle\ContactBundle\Entity\Contact',
+                'cascade_validation'   => true,
+                'validation_groups'    =>
+                    [
+                        'contact_info_check'
+                    ]
+            ]
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder
+            ->remove('gender')
+            ->remove('lastName')
+            ->remove('firstName');
+
+        $builder
+            ->add('firstName', 'text', array('required' => true, 'label' => 'oro.contact.first_name.label'))
+            ->add('lastName', 'text', array('required' => true, 'label' => 'oro.contact.last_name.label'))
+            ->add('gender', 'oro_gender', array('required' => true, 'label' => 'oro.contact.gender.label'));
+
         $builder->addEventListener(
             FormEvents::SUBMIT,
             function (FormEvent $event) {

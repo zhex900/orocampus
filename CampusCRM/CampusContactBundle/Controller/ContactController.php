@@ -26,8 +26,6 @@ class ContactController extends BaseController
         if (!$this->getRequest()->get('_wid')) {
             return $this->redirect($this->get('router')->generate('oro_contact_view', ['id' => $contact->getId(), 'block'=>$block]));
         }
-
-        // file_put_contents('/tmp/url.log','$request: '. $request.PHP_EOL,FILE_APPEND);
         return array(
             'entity'  => $contact,
             'block' => $block
