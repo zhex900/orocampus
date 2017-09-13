@@ -413,7 +413,7 @@ if (isset($_SESSION['form'])):
     </body>
 
     <footer>
-        <p id="user_logged_in"><?php echo $_SESSION['form'] ?></p>
+        <p id="user_logged_in"><?php echo $_SESSION['form']. ' - '.$_SESSION['event'].' '.$_SESSION['eventCache'][$_SESSION['event']]?></p>
         <p id="logout"><a href="../logout.php">Logout</a></p>
     </footer>
     </html>

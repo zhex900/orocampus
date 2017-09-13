@@ -27,6 +27,10 @@ switch ($_SESSION['form']) {
             if (isset($contact_id)){
                 $api->getLogger()->info('New contact '. $contact_id);
                 $api->addAddress($contact_id);
+                if ($_SESSION['event']!=-1){
+                    $api->getLogger()->info('Add contact as attendee to event: '. $_SESSION['eventCache'][$_SESSION['event']]);
+                    $api->addAttendee($_SESSION['event'],$contact_id);
+                }
                 $_SESSION['response_msg_title'] = $NEWCONTACT_RESPONSE_TITLE;
                 $_SESSION['response_msg'] = $NEWCONTACT_RESPONSE;
                 // add contact to selected event

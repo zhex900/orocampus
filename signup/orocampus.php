@@ -20,7 +20,6 @@ define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
 define("APIKEY", "0943f85d1e957014a8c815ce953b5b9ab2258d30");
 define("LOGIN", "admin");
-define("LOGIN_ID", "12");
 define("NUMBEROFTRY",5);
 define("EVENTS","rest/latest/calendarevents.json");
 
@@ -48,6 +47,37 @@ class orocampus
         $this->logger =  new Logger('logger');
         $this->logger->pushHandler(new StreamHandler(__DIR__.'/log/signup.log', Logger::DEBUG));
         $this->logger->pushHandler(new FirePHPHandler());
+    }
+
+    /**
+     * Find the user id by the username. Return null if error.
+     *
+     * @param string $username
+     * @return int|null
+     */
+    function getUserIdbyUsername($username){
+        $response = $this->curl_req('users?filter[username]='.$username.'&page[number]=1&page[size]=10&sort=id');
+        var_dump(print_r($response,true));
+        if (isset($response['data'][0]['id'])){
+            return $response['data'][0]['id'];
+        }
+        return null;
+    }
+
+    /**
+     * Add a contact to an event. If it is successful, attendee id is returned
+     * otherwise null.
+     *
+     * @param $calendarEventId
+     * @param $contactId
+     * @return int|null
+     */
+    function addAttendee($calendarEventId, $contactId){
+        $response = $this->curl_req('rest/latest/calendarevents/'.$calendarEventId.'/attendee/'.$contactId,['PUT']);
+        if (isset($response['attendee_id'])){
+            return $response['attendee_id'];
+        }
+        return null;
     }
 
     /*
@@ -233,7 +263,7 @@ class orocampus
                     'owner' => [
                         'data' => [
                             'type' => 'users',
-                            'id' => LOGIN_ID
+                            'id' => $_SESSION['owner']
                         ]
                     ],
                     'contact_source' => [
@@ -323,6 +353,7 @@ class orocampus
     public function createContact($contact)
     {
         $result = $this->curl_req(CONTACT, $contact);
+        $this->getLogger()->info('Create contact result:', $result);
 
         if (isset($result['data']['id'])) {
             return $result['data']['id'];

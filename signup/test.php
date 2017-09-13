@@ -9,16 +9,16 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 // zurmo url
 define("ERROR_LOG", "/tmp/error.log");
-define("URL", "https://orocampus.tk/app.php/api/");
+define("URL", "http://localhost/app_dev.php/api/");
 define("CONTACT_SEARCH", "");
 define("ADDRESS", "contactaddresses");
 define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
-define("APIKEY", "10a8c562829409f64174386c8400deb30223436f");
-define("events","system");
-define("LOGIN","system");
+define("APIKEY", "0943f85d1e957014a8c815ce953b5b9ab2258d30");
+define("EVENTS","rest/latest/calendarevents.json");
+define("LOGIN","admin");
 //
 // starting a session to enable session variables to be stored
 //session_start();
@@ -70,7 +70,7 @@ $new_contact =
                 'owner' => [
                     'data' => [
                         'type' => 'users',
-                        'id'=> '12'
+                        'id'=> '1'
                     ]
                 ]
             ],
@@ -136,9 +136,9 @@ $new_address =
  * return if successful return created contact id otherwise return null
  */
 function createContact($contact){
-    $api = new ApiRest(URL,LOGIN,APIKEY);
+    $api = new ApiRestTest(URL,LOGIN,APIKEY);
     $result = $api->curl_req(CONTACT, $contact);
-
+    var_dump(print_r($result,true));
     if (isset($result['data']['id'])){
         return $result['data']['id'];
     }else{
@@ -161,9 +161,100 @@ function addAddress($contact_id){
 }
 //$id = createContact($new_contact);
 //var_dump($id);
+/*
+ * Returns today's events not including system calendar events
+ * @return array
+ */
+function getTodayEvent(){
 
-$result = $api->curl_req(CONTACT_TEST); //, $new_address) ;
-var_dump($result);
+    $api = new ApiRestTest(URL,LOGIN,APIKEY);
+
+    // get a list of user calendars
+    $calendars = $api->curl_req('rest/latest/calendars/all.json');
+
+    // set today's date in RFC 3339 format. Timezone is UTC.
+    $start=date('Y-m-d', strtotime('-1 day')).'T14:00:01-00:00';
+    $end=date('Y-m-d').'T13:59:59-00:00';
+    $result=[];
+
+    foreach ($calendars as $calendar) {
+        $event_query = '?calendar=' . $calendar['calendar_id'] . '&start=' . $start . '&end=' . $end;
+        $events = $api->curl_req(EVENTS . $event_query);
+        // filter out all the system calendar events
+        $events = array_filter($events, function ($item) {
+            if (isset($item['calendarAlias']) && $item['calendarAlias'] === 'public') {
+                return false;
+            }
+            return true;
+        });
+
+        // reformat result
+        $records=[];
+        foreach ($events as $event) {
+            if (isset($event['id'])) {
+                $start = new DateTime($event['start']);
+                $start = $start->setTimezone(new DateTimeZone('Australia/Sydney'))->format('D d/y/Y h:i A');
+                $key = $event['title'] . ', ' . $start . ', '.$calendar['calendar_owner_name'] ;
+                $value = $event['id'];
+                $records[] = [$key => $value];
+            }
+        }
+        $result = array_flatten(array_merge($result, $records));
+    }
+    return array('events'=>$result);
+}/**
+ * Convert a multi-dimensional array into a single-dimensional array.
+ * @author Sean Cannon, LitmusBox.com | seanc@litmusbox.com
+ * @param  array $array The multi-dimensional array.
+ * @return array
+ */
+function array_flatten($array)
+{
+    if (!is_array($array)) {
+        return null;
+    }
+    $result = array();
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            $result = array_merge($result, array_flatten($value));
+        } else {
+            $result[$key] = $value;
+        }
+    }
+    return $result;
+}
+
+/**
+ * Add a contact to an event. If it is successful, attendee id is returned
+ * otherwise null.
+ *
+ * @param $calendarEventId
+ * @param $contactId
+ * @return int|null
+ */
+function addAttendee($calendarEventId, $contactId){
+    $api = new ApiRestTest(URL,LOGIN,APIKEY);
+
+    $response = $api->curl_req('rest/latest/calendarevents/'.$calendarEventId.'/attendee/'.$contactId,['PUT']);
+    if (isset($response['attendee_id'])){
+        return $response['attendee_id'];
+    }
+    return null;
+}
+
+function getUserbyUsername($username){
+
+    $api = new ApiRestTest(URL,LOGIN,APIKEY);
+    $response = $api->curl_req('users?filter[username]='.$username.'&page[number]=1&page[size]=10&sort=id');
+    var_dump(print_r($response,true));
+    if (isset($response['data'][0]['id'])){
+        return $response['data'][0]['id'];
+    }
+    return null;
+}
+
+$result = getUserbyUsername('admin');
+var_dump(print_r($result,true));
 
 class ApiRestTest
 {
@@ -218,6 +309,10 @@ class ApiRestTest
             $request->getOptions()
                 ->set(CURLOPT_POSTFIELDS, json_encode($data))
                 ->set(CURLOPT_SAFE_UPLOAD, true);
+        }
+        if (isset($data[0]) && $data[0]=='PUT'){
+            $request->getOptions()
+                ->set(CURLOPT_CUSTOMREQUEST, "PUT");
         }
 
         $response = $request->send();

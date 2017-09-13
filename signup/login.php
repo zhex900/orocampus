@@ -45,11 +45,12 @@ session_start();
                     die("File not accessible.");
                 }
                 $contents = file_get_contents($file);
-                $_SESSION['eventCache'] = json_decode($contents, true);
+                $events = json_decode($contents, true);
+                $_SESSION['eventCache'] = array_flip($events);
 
-                echo json_encode($_SESSION['eventCache']);
+                echo json_encode($events);
                 ?>;
-            mySelect2(json, '#events');
+            mySelect2(json, '#event');
         });
     </script>
 
@@ -92,9 +93,9 @@ session_start();
                     </section>
                     <!-- Source selection section -->
                     <section>
-                        <label for="events">
+                        <label for="event">
                             Events:
-                            <select class="events" id="events" name="events">
+                            <select class="event" id="event" name="event">
                             </select>
                         </label>
                     </section>
