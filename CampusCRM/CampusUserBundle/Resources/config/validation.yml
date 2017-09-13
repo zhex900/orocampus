@@ -1,7 +1,8 @@
 Oro\Bundle\UserBundle\Entity\User:
     properties:
         gender:
-            - NotBlank: ~
+            - NotBlank:
+                groups: [user_contact_link]
         contact:
             - NotBlank: { groups: [user_contact_link] }
             - CampusCRM\CampusUserBundle\Validator\Constraints\UserContactLink: { groups: [user_contact_link] }
