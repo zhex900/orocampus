@@ -19,12 +19,12 @@ use Oro\Bundle\CalendarBundle\Controller\Api\Rest\CalendarController as BaseCont
 class CalendarController extends BaseController
 {
     /**
-     * Get Calendar of All the Users
+     * Get All the Calendars of the Enabled Users
      *
      * @Get("/calendars/all")
      *
      * @ApiDoc(
-     *      description="Get calendar of all the users",
+     *      description="Get all the calendars of the enabled users",
      *      resource=true
      * )
      * @AclAncestor("oro_calendar_view")
@@ -38,10 +38,12 @@ class CalendarController extends BaseController
         $result=null;
         foreach ($calendars as $calendar){
             /** @var Calendar $calendar **/
-            $result[]=[
-                'id'=>$calendar->getId(),
-                'owner_name'=>$calendar->getOwner()->getFirstName(). ' '.$calendar->getOwner()->getLastName(),
-                'owner_id'=>$calendar->getId()];
+            if ($calendar->getOwner()->isEnabled()) {
+                $result[] = [
+                    'id' => $calendar->getId(),
+                    'owner_name' => $calendar->getOwner()->getFirstName() . ' ' . $calendar->getOwner()->getLastName(),
+                    'owner_id' => $calendar->getId()];
+            }
         }
         return new Response(json_encode($result), Codes::HTTP_OK);
     }
