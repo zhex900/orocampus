@@ -72,7 +72,7 @@ class CalendarEventController extends BaseController
             $em->persist($event);
             $em->flush();
 
-            $view = $this->view('attendee id: ' . $attendee->getId(), Codes::HTTP_OK);
+            $view = $this->view(['attendee_id' => $attendee->getId()], Codes::HTTP_OK);
 
         } catch (ForbiddenException $forbiddenEx) {
             $view = $this->view(['reason' => $forbiddenEx->getReason()], Codes::HTTP_FORBIDDEN);
