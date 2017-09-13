@@ -88,7 +88,7 @@ class orocampus
             }
             $result = array_merge($result, $records);
         }
-        return $this->array_flatten($result);
+        return array_merge(["No event selected"=>"-1"],$this->array_flatten($result));
     }
 
     /**
@@ -377,6 +377,10 @@ class orocampus
             $request->getOptions()
                 ->set(CURLOPT_POSTFIELDS, json_encode($data))
                 ->set(CURLOPT_SAFE_UPLOAD, true);
+        }
+        if (isset($data[0]) && $data[0]=='PUT'){
+            $request->getOptions()
+                ->set(CURLOPT_CUSTOMREQUEST, "PUT");
         }
         $try=0;
         $feed=null;
