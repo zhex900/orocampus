@@ -37,8 +37,19 @@ session_start();
                 echo json_encode($_SESSION['dataCache']);
                 ?>;
             mySelect2(json.contactsourcesources, '#source_of_contact');
-           // mySelect2(json.events, '#events');
+             json =
+                <?php
+                //load drop-down values
+                $file = './data/events.json';
+                if (!is_file($file) || !is_readable($file)) {
+                    die("File not accessible.");
+                }
+                $contents = file_get_contents($file);
+                $_SESSION['eventCache'] = json_decode($contents, true);
 
+                echo json_encode($_SESSION['eventCache']);
+                ?>;
+            mySelect2(json, '#events');
         });
     </script>
 
@@ -79,7 +90,14 @@ session_start();
                             </select>
                         </label>
                     </section>
-
+                    <!-- Source selection section -->
+                    <section>
+                        <label for="events">
+                            Events:
+                            <select class="events" id="events" name="events">
+                            </select>
+                        </label>
+                    </section>
                 </div><!-- end .form-section section -->
             </div><!-- end .form-enclose section -->
 
@@ -92,8 +110,10 @@ session_start();
                     <input type="Submit" name="login" class="button blue" value="Login">
                     <input type="Submit" name="reload" class="button" value="Reload details">
                 </section>
+                <section>
+                    <input type="Submit" name="reload-events" class="button" value="Reload today's event(s)">
+                </section>
             </div><!-- end .form-buttons section -->
-
         </form>
     </div><!-- end .golden-forms section -->
 </div><!-- end .gforms section -->

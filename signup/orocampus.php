@@ -9,7 +9,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 session_start();
 
-define("URL", "https://orocampus.tk/app.php/api/");
+define("URL", "http://localhost/app_dev.php/api/");
 define("DEGREES", 'degreessources');
 define("INSTITUTIONS", 'institutionssources');
 define("LEVELOFSTUDY", 'levelofstudysources');
@@ -18,10 +18,11 @@ define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
-define("APIKEY", "10a8c562829409f64174386c8400deb30223436f");
-define("LOGIN", "system");
+define("APIKEY", "0943f85d1e957014a8c815ce953b5b9ab2258d30");
+define("LOGIN", "admin");
 define("LOGIN_ID", "12");
 define("NUMBEROFTRY",5);
+define("EVENTS","rest/latest/calendarevents.json");
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -49,6 +50,69 @@ class orocampus
         $this->logger->pushHandler(new FirePHPHandler());
     }
 
+    /*
+     * Returns today's events not including system calendar events
+     * @return array
+     */
+    public function getTodayEvent(){
+
+        // get a list of user calendars
+        $calendars = $this->curl_req('rest/latest/calendars/all.json');
+
+        // set today's date in RFC 3339 format. Timezone is UTC.
+        $start=date('Y-m-d', strtotime('-1 day')).'T14:00:01-00:00';
+        $end=date('Y-m-d').'T13:59:59-00:00';
+        $result=[];
+
+        foreach ($calendars as $calendar){
+            $event_query = '?calendar='.$calendar['calendar_id'].'&start='.$start.'&end='.$end;
+            $events = $this->curl_req(EVENTS.$event_query);
+            // filter out all the system calendar events
+            $events = array_filter($events, function ($item) {
+                if (isset($item['calendarAlias']) && $item['calendarAlias'] === 'public') {
+                    return false;
+                }
+                return true;
+            });
+
+            // reformat result
+            $records=[];
+            foreach ($events as $event) {
+                if (isset($event['id'])) {
+                    $start = new DateTime($event['start']);
+                    $start = $start->setTimezone(new DateTimeZone('Australia/Sydney'))->format('D d/y/Y h:i A');
+                    $key = $event['title'] . ', ' . $start . ', '.$calendar['calendar_owner_name'] ;
+                    $value = $event['id'];
+                    $records[] = [$key => $value];
+                }
+            }
+            $result = array_merge($result, $records);
+        }
+        return $this->array_flatten($result);
+    }
+
+    /**
+     * Convert a multi-dimensional array into a single-dimensional array.
+     * Source: https://gist.github.com/SeanCannon/6585889
+     * @author Sean Cannon, LitmusBox.com | seanc@litmusbox.com
+     * @param  array $array The multi-dimensional array.
+     * @return array
+     */
+    protected function array_flatten($array)
+    {
+        if (!is_array($array)) {
+            return null;
+        }
+        $result = array();
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result = array_merge($result, $this->array_flatten($value));
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
 
     /**
      * @param $source
