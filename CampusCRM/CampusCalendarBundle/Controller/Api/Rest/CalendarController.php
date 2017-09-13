@@ -40,9 +40,9 @@ class CalendarController extends BaseController
             /** @var Calendar $calendar **/
             if ($calendar->getOwner()->isEnabled()) {
                 $result[] = [
-                    'id' => $calendar->getId(),
-                    'owner_name' => $calendar->getOwner()->getFirstName() . ' ' . $calendar->getOwner()->getLastName(),
-                    'owner_id' => $calendar->getId()];
+                    'calendar_id' => $calendar->getId(),
+                    'calendar_owner_name' => $calendar->getOwner()->getFirstName() . ' ' . $calendar->getOwner()->getLastName(),
+                    'calendar_owner_id' => $calendar->getId()];
             }
         }
         return new Response(json_encode($result), Codes::HTTP_OK);
