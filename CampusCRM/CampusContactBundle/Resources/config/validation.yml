@@ -17,16 +17,3 @@ Oro\Bundle\ContactBundle\Entity\Contact:
         church_kid:
             - NotBlank:
                 groups: [contact_info_check]
-        addresses:
-            - Valid: ~
-            - Oro\Bundle\FormBundle\Validator\Constraints\ContainsPrimary:
-                message: oro.contact.validators.addresses.contains_primary
-            - Oro\Bundle\AddressBundle\Validator\Constraints\UniqueAddressTypes: ~
-        emails:
-            - Valid: ~
-            - Oro\Bundle\FormBundle\Validator\Constraints\ContainsPrimary:
-                message: oro.contact.validators.emails.contains_primary
-        phones:
-            - Valid: ~
-            - Oro\Bundle\FormBundle\Validator\Constraints\ContainsPrimary:
-                message: oro.contact.validators.phones.contains_primary
