@@ -14,6 +14,6 @@ Oro\Bundle\ContactBundle\Entity\Contact:
         contact_source:
             - NotBlank:
                 groups: [contact_info_check]
-        church_kid:
-            - NotBlank:
-                groups: [contact_info_check]
+#        church_kid:
+#            - NotBlank:
+#                groups: [contact_info_check]

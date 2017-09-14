@@ -37,6 +37,9 @@ class ContactInfoCheckValidator extends ConstraintValidator
             ));
         }
 
+        if (!$this->compulsoryFields($value)) {
+            return;
+        }
         if (!$this->validateEmailorPhone($value)) {
             return;
         }
@@ -49,9 +52,32 @@ class ContactInfoCheckValidator extends ConstraintValidator
     }
 
     /*
+     * return false if compulsory fields are not completed. Otherwise true.
+     * @param Contact $contact
+     * @return bool
+     */
+    private function compulsoryFields(Contact $contact)
+    {
+        if ($contact->getIntStudent() === null) {
+            $this->context->addViolation(
+                'International student cannot be blank.'
+            );
+            return false;
+        }
+        if ($contact->getChurchKid() === null) {
+            $this->context->addViolation(
+                'Church kid cannot be blank.'
+            );
+            return false;
+        }
+        return true;
+    }
+
+    /*
     * @param Contact $contact
     */
-    private function validateEmailorPhone(Contact $contact){
+    private function validateEmailorPhone(Contact $contact)
+    {
         if ($contact->getEmails()->count() > 0 ||
             $contact->getPhones()->count() > 0) {
             return true;
@@ -65,7 +91,8 @@ class ContactInfoCheckValidator extends ConstraintValidator
     /*
      * @param Contact $contact
      */
-    private function validateUniqueEmail(Contact $contact){
+    private function validateUniqueEmail(Contact $contact)
+    {
 
         $emails = $contact->getEmails();
         $id = $contact->getId();
@@ -75,7 +102,7 @@ class ContactInfoCheckValidator extends ConstraintValidator
             $result = $this->em->getRepository('OroContactBundle:ContactEmail')
                 ->findOneBy(array('email' => (string)$email));
 
-            if ($result!==null) {
+            if ($result !== null) {
                 if ((isset($id) && $id != $result->getOwner()->getId()) || (!isset($id))) {
                     $message = 'This email ' . $email . ' is already used by ' . $result->getOwner()->getFirstName() . ' ' . $result->getOwner()->getLastName() . ' ' . $result->getOwner()->getSemesterContacted();
                     $this->context->addViolation($message);
@@ -89,7 +116,8 @@ class ContactInfoCheckValidator extends ConstraintValidator
     /*
      * @param Contact $contact
      */
-    private function validateUniquePhone(Contact $contact){
+    private function validateUniquePhone(Contact $contact)
+    {
 
         $phones = $contact->getPhones();
         $id = $contact->getId();
@@ -99,7 +127,7 @@ class ContactInfoCheckValidator extends ConstraintValidator
             $result = $this->em->getRepository('OroContactBundle:ContactPhone')
                 ->findOneBy(array('phone' => (string)$phone));
 
-            if ($result!==null) {
+            if ($result !== null) {
                 if ((isset($id) && $id != $result->getOwner()->getId()) || (!isset($id))) {
                     $message = 'This phone number ' . $phone . ' is already used by ' . $result->getOwner()->getFirstName() . ' ' . $result->getOwner()->getLastName() . ' ' . $result->getOwner()->getSemesterContacted();
                     $this->context->addViolation($message);
