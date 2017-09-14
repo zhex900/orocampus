@@ -159,10 +159,6 @@ workflows:
                 allowed_transitions:
                     - reopen
         attributes:
-            assigned_to:
-                type: entity
-                options:
-                    class: Oro\Bundle\UserBundle\Entity\User
             owner:
                 type: entity
                 options:
@@ -180,10 +176,6 @@ workflows:
                 transition_definition: assign_def
                 form_options:
                     attribute_fields:
-                        assigned_to:
-                            form_type: oro_user_select
-                            options:
-                                required: false
                         owner:
                             form_type: oro_user_select
                             options:
@@ -194,7 +186,7 @@ workflows:
                                 required: true
                     attribute_default_values:
                         owner: $contact.owner
-                        auto_allocate: true
+                        auto_allocate: false
             reopen:
                 step_to: followup
                 frontend_options:
@@ -221,28 +213,20 @@ workflows:
                 transition_definition: close_def
         transition_definitions:
              assign_def:
-                # Either auto allocate have value or assigned have value.
-                # Both cannot have value. One have to be null.
                 conditions:
-                # ($assignedTo not empty AND $auto_allocate is false) OR
-                # ($assignedTo is empty AND $auto_allocate is true)
+                # $owner is empty AND $auto_allocate is true OR $owner have value AND $auto_allocate is false
                   '@or':
                       - '@and':
-                          message: You must select either Assigned to or Auto allocate. But you cannot select both.
+                          message: You must select either Owner to or Auto allocate. But you cannot select both.
                           parameters:
-                            - '@not_empty': [$assigned_to]
+                            - '@not_empty': [$owner]
                             - '@equal': [$auto_allocate,false]
                       - '@and':
                           parameters:
-                            - '@empty': [$assigned_to]
-                            - '@equal': [$auto_allocate,true]
-                      - '@and':
-                          parameters:
-                            - '@empty': [$assigned_to]
                             - '@empty': [$owner]
+                            - '@equal': [$auto_allocate,true]
                 actions:
                   - '@auto_allocate_workflow':
-                      assigned_to: $assigned_to
                       owner: $owner
                       entity_class: $.entity
                       auto_allocate: $auto_allocate

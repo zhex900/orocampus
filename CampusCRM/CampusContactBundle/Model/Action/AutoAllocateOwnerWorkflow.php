@@ -42,31 +42,24 @@ class AutoAllocateOwnerWorkflow extends AbstractAction
         $entity = $this->contextAccessor->getValue($context, $this->options['entity_class']);
         /* @var User $owner*/
         $owner = $this->contextAccessor->getValue($context, $this->options['owner']);
-        /* @var User $assignto*/
-        $assignto = $this->contextAccessor->getValue($context, $this->options['assigned_to']);
         $auto_allocate = $this->contextAccessor->getValue($context, $this->options['auto_allocate']);
         if ($auto_allocate) {
             file_put_contents('/tmp/tag.log', 'Auto Allocate' . PHP_EOL, FILE_APPEND);
-            $array = $this
+            $owner = $this
                 ->container
                 ->get('oro_contact.auto_owner_allocator')
                 ->allocateUser($entity);
             $entity->setAutoAllocate(1);
-            $owner = $array[0];
-            $assignto = $array[1];
             $msg = 'Auto allocation. ';
-        } elseif ($owner != null && $assignto != null) {
+        } elseif ($owner != null) {
             $entity->setOwner($owner);
-            $entity->setAssignedTo($assignto);
             $entity->setAutoAllocate(0);
             $msg = 'Manual allocation. ';
         }
 
-        if ($owner != null && $assignto != null) {
+        if ($owner != null) {
             $this->container->get('session')->getFlashBag()->add('info', $msg .
-                'Owner: ' . $owner->getFirstName() . ' ' . $owner->getLastName() .
-                '. Assigned to: ' . $assignto->getFirstName() . ' ' . $assignto->getLastName()
-            );
+                'Owner: ' . $owner->getFirstName() . ' ' . $owner->getLastName());
         }
     }
 
@@ -77,9 +70,6 @@ class AutoAllocateOwnerWorkflow extends AbstractAction
     {
         if (empty($options['owner'])) {
             throw new InvalidParameterException('Owner parameter is required');
-        }
-        if (empty($options['assigned_to'])) {
-            throw new InvalidParameterException('Assigned_to parameter is required');
         }
         if (empty($options['entity_class'])) {
             throw new InvalidParameterException('Entity class parameter is required');
