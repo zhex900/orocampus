@@ -1,0 +1,4 @@
+campus_call_bundle:
+    resource:     "@!OroCallBundle/Controller"
+    type:         annotation
+    prefix:       /call

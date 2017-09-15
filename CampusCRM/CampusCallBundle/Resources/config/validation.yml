@@ -1,0 +1,11 @@
+Oro\Bundle\CallBundle\Entity\Call:
+    properties:
+      subject:
+          - NotBlank:
+              groups: [call_validation]
+      call_type:
+          - NotBlank:
+              groups: [call_validation]
+      related_contact:
+          - NotBlank:
+              groups: [call_validation]

@@ -1,0 +1,10 @@
+oro:
+    call:
+        entity_label:          Communication
+        entity_plural_label:   Communications
+        call_type:
+            label: Type
+campus:
+    call:
+        contact:
+            label: Contact
