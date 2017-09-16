@@ -55,6 +55,19 @@ class WorkflowManager extends BaseManager
     public function isUnassignedStep(Contact $contact) {
         return preg_match('/unassigned/', $this->getCurrentWorkFlowItem($contact, 'followup')->getCurrentStep()->getName());
     }
+
+    /*
+     * Returns true if the contact is currently at the workflow step
+     * @param Contact $contact
+     * @param string $workflow
+     * @param string $step
+     * @return bool
+     */
+    public function isCurrentlyAtStep(Contact $contact, $workflow, $step) {
+        $result = preg_match('/'.$step.'/', $this->getCurrentWorkFlowItem($contact, $workflow)->getCurrentStep()->getName());
+        return $result == 1;
+    }
+
     /**
      * find the current step name of follow up workflow
      * @param Contact $contact

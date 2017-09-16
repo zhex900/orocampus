@@ -128,7 +128,7 @@ workflows:
         entity: Oro\Bundle\ContactBundle\Entity\Contact
         is_system: true
         entity_attribute: contact
-        force_autostart: false
+        force_autostart: true
         steps_display_ordered: false
         defaults:
             active: true
@@ -140,25 +140,53 @@ workflows:
                 order: 10
                 allowed_transitions:
                     - assign
-                    - close
             assigned:
                 order: 20
                 allowed_transitions:
-                    - followup
-            followup:
+                    - contacted
+            contacted:
                 order: 30
                 allowed_transitions:
-                    - open
-                    - close
-            open:
+                    - followup
+                    - drop
+            followup:
+                order: 35
+                allowed_transitions:
+                    - stable
+                    - drop
+                    - rollover
+                    - transfer
+            stable:
                 order: 40
                 allowed_transitions:
-                    - close
+                    - followup
+                    - rollover
+                    - transfer
             closed:
                 order: 50
                 allowed_transitions:
                     - reopen
+            transfer:
+                is_final: true
+                order: 60
         attributes:
+            church_kid:
+                type:       bool
+            # call log attributes
+            call_subject:
+                type:       string
+            call_comments:
+                type:       string
+            contact:
+                type:       entity
+                options:
+                    class: Oro\Bundle\ContactBundle\Entity\Contact
+            call_date:
+                type:       object
+                options:
+                    class: Oro\Bundle\FormBundle\Form\Type\OroDateTimeType
+            call_direction:
+                type:       string
             owner:
                 type: entity
                 options:
@@ -187,30 +215,48 @@ workflows:
                     attribute_default_values:
                         owner: $contact.owner
                         auto_allocate: false
-            reopen:
-                step_to: followup
+            rollover:
+                is_hidden: true
+                step_to: assigned
                 frontend_options:
                     icon: 'fa-thumbs-up'
                     class: 'btn-warning'
+                transition_definition: rollover_def
+            reopen:
+                step_to: followup
+                frontend_options:
+                    icon: 'fa-sign-in'
+                    class: 'btn-success'
                 transition_definition: reopen_def
+            contacted:
+                is_hidden: true
+                step_to: contacted
+                transition_definition: contacted_def
             followup:
+                is_hidden: true
                 step_to: followup
                 frontend_options:
                     icon: 'fa-search-plus'
                     class: 'btn-primary'
                 transition_definition: followup_def
-            open:
-                step_to: open
-                transition_definition: open_def
+            stable:
+                step_to: stable
+                transition_definition: stable_def
                 frontend_options:
                     icon: 'fa-thumbs-up'
                     class: 'btn-success'
-            close:
+            drop:
                 step_to: closed
                 frontend_options:
                     icon: 'fa-times'
                     class: 'btn-danger'
                 transition_definition: close_def
+            transfer:
+                step_to: transfer
+                frontend_options:
+                    icon: 'fa-times'
+                    class: 'btn-danger'
+                transition_definition: transfer_def
         transition_definitions:
              assign_def:
                 conditions:
@@ -232,5 +278,11 @@ workflows:
                       auto_allocate: $auto_allocate
              reopen_def: ~
              followup_def: ~
-             open_def: ~
+             stable_def: ~
              close_def: ~
+             contacted_def:
+                # Not contacted yet.
+                preconditions:
+                    @equal: [$request.church_kid, false]
+             rollover_def: ~
+             transfer_def: ~

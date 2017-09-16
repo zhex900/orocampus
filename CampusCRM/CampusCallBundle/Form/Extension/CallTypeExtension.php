@@ -4,7 +4,7 @@ namespace CampusCRM\CampusCallBundle\Form\Extension;
 
 use CampusCRM\CampusCallBundle\Form\EventListener\CallTypeSubscriber;
 use Doctrine\ORM\EntityManager;
-use Oro\Bundle\ActivityBundle\Manager\ActivityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -14,12 +14,16 @@ class CallTypeExtension extends AbstractTypeExtension
     /** @var EntityManager */
     protected $em;
 
+    /** @var ContainerInterface $container */
+    protected $container;
+
     /**
-     * @param EntityManager $em
+     * @param ContainerInterface $container
      */
-    public function __construct(EntityManager $em)
+    public function __construct(ContainerInterface $container)
     {
-        $this->em = $em;
+        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->container = $container;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -69,6 +73,6 @@ class CallTypeExtension extends AbstractTypeExtension
                 )
             );
 
-        $builder->addEventSubscriber(new CallTypeSubscriber($this->em));
+        $builder->addEventSubscriber(new CallTypeSubscriber($this->em,$this->container));
     }
 }
