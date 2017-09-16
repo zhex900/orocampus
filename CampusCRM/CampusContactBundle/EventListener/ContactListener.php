@@ -57,11 +57,11 @@ class ContactListener extends BaseListener
         if ($entity instanceof Contact) {
             file_put_contents('/tmp/tag.log', 'preUpdate: ' . print_r(array_keys($args->getEntityChangeSet()), true) . PHP_EOL, FILE_APPEND);
 
-            if ($args->hasChangedField('assignedTo')
-                && $args->getOldValue('assignedTo') == null
-                && $args->getNewValue('assignedTo') != null
+            if ($args->hasChangedField('owner')
+                && $args->getOldValue('owner') == null
+                && $args->getNewValue('owner') != null
             ) {
-                file_put_contents('/tmp/tag.log', '$assignedTo: null. transit' . PHP_EOL, FILE_APPEND);
+                file_put_contents('/tmp/tag.log', 'owner: null. transit' . PHP_EOL, FILE_APPEND);
                 $this->transit = true;
             }
         }
