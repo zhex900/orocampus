@@ -31,8 +31,13 @@ if (isset($_SESSION['form'])):
         <script src="../js/address-autocomplete.js"></script>
         <script src="../js/mySelect2.js"></script>
         <script type="text/javascript">
-            $(function() {
-                $("#datepicker").datepicker( {changeMonth: true, changeYear: true, dateFormat : 'dd/mm/yy', yearRange: "-40:-5"});
+            $(function () {
+                $("#datepicker").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: 'dd/mm/yy',
+                    yearRange: "-40:-5"
+                });
 
                 var json = <?php echo json_encode($_SESSION['dataCache']); ?>;
                 mySelect2(json.levelofstudysources, '#degree');
@@ -278,18 +283,17 @@ if (isset($_SESSION['form'])):
                         <section>
                             <div class="row">
                                 <div class="col6 first">
-                                    <label for="degree" class="lbl-text">Degree Type:<span id="required">*</span>
-                                        <select class="degree" id="degree" name="degree">
-                                        </select>
-                                    </label>
+                                    <label for="degree" class="lbl-text">Degree Type:<span
+                                                id="required">*</span></label>
+                                    <select class="degree" id="degree" name="degree">
+                                    </select>
                                 </div>
                                 <!-- end .col6 section -->
 
                                 <div class="col6 last colspacer-two">
-                                    <label for="course" class="lbl-text">Course:<span id="required">*</span>
+                                    <label for="course" class="lbl-text">Course:<span id="required">*</span></label>
                                         <select class="course" id="course" name="course">
                                         </select>
-                                    </label>
                                 </div>
                                 <!-- end .col6 section -->
                             </div>
@@ -300,10 +304,9 @@ if (isset($_SESSION['form'])):
                         <section>
                             <div class="row">
                                 <div class="col6 first">
-                                    <label for="uni" class="lbl-text">University:<span id="required">*</span>
+                                    <label for="uni" class="lbl-text">University:<span id="required">*</span></label>
                                         <select class="uni" id="uni" name="uni">
                                         </select>
-                                    </label>
                                 </div>
                                 <!-- end .col6 section -->
 
@@ -414,7 +417,7 @@ if (isset($_SESSION['form'])):
     </body>
 
     <footer>
-        <p id="user_logged_in"><?php echo $_SESSION['form']. ' - '.$_SESSION['event'].' '.$_SESSION['eventCache'][$_SESSION['event']]?></p>
+        <p id="user_logged_in"><?php echo $_SESSION['form'] . ' - ' . $_SESSION['event'] . ' ' . $_SESSION['eventCache'][$_SESSION['event']] ?></p>
         <p id="logout"><a href="../logout.php">Logout</a></p>
     </footer>
     </html>
