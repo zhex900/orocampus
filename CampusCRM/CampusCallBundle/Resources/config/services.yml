@@ -3,7 +3,5 @@ services:
         class: 'CampusCRM\CampusCallBundle\Form\Extension\CallTypeExtension'
         public: true
         autowire: true
-        arguments:
-              - '@doctrine.orm.entity_manager'
         tags:
             - { name: form.type_extension, alias: oro_call_form }
