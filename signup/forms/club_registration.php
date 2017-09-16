@@ -235,12 +235,11 @@ if (isset($_SESSION['form'])):
                         </section>
                         <section>
 
-                            <label for="countryorigin" class="lbl-text">Country of origin:<span id="required">*</span>
-                                <select class="countryorigin" id="countryorigin" name="countryorigin">
-                                </select>
-                            </label>
-
-
+                            <label for="countryorigin" class="lbl-text">Country of origin:<span
+                                        id="required">*</span></label>
+                            <select class="countryorigin" id="countryorigin" name="countryorigin">
+                                <option value="" disabled selected hidden>Select your country</option>
+                            </select>
                             <!-- end .row section-->
                         </section>
                         <!--  Enter address section -->
@@ -286,14 +285,16 @@ if (isset($_SESSION['form'])):
                                     <label for="degree" class="lbl-text">Degree Type:<span
                                                 id="required">*</span></label>
                                     <select class="degree" id="degree" name="degree">
+                                        <option value="" disabled selected hidden>Select your degree</option>
                                     </select>
                                 </div>
                                 <!-- end .col6 section -->
 
                                 <div class="col6 last colspacer-two">
                                     <label for="course" class="lbl-text">Course:<span id="required">*</span></label>
-                                        <select class="course" id="course" name="course">
-                                        </select>
+                                    <select class="course" id="course" name="course">
+                                        <option value="" disabled selected hidden>Select your course</option>
+                                    </select>
                                 </div>
                                 <!-- end .col6 section -->
                             </div>
@@ -305,8 +306,9 @@ if (isset($_SESSION['form'])):
                             <div class="row">
                                 <div class="col6 first">
                                     <label for="uni" class="lbl-text">University:<span id="required">*</span></label>
-                                        <select class="uni" id="uni" name="uni">
-                                        </select>
+                                    <select class="uni" id="uni" name="uni">
+                                        <option value="" disabled selected hidden>Select your university</option>
+                                    </select>
                                 </div>
                                 <!-- end .col6 section -->
 
