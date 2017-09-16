@@ -47,6 +47,8 @@
 
 Good to go!
 
+# Update
+
 # Workarounds
 
 ## Mobile version login rendering problem

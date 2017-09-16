@@ -235,16 +235,11 @@ workflows:
             followup:
                 is_hidden: true
                 step_to: followup
-                frontend_options:
-                    icon: 'fa-search-plus'
-                    class: 'btn-primary'
                 transition_definition: followup_def
             stable:
+                is_hidden: true
                 step_to: stable
                 transition_definition: stable_def
-                frontend_options:
-                    icon: 'fa-thumbs-up'
-                    class: 'btn-success'
             drop:
                 step_to: closed
                 frontend_options:

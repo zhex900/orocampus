@@ -26,7 +26,7 @@ oro:
                     label: 'Edit Feedback'
 
         contact_followup:
-            label: 'Follow-up'
+            label: 'Status'
             step:
                 unassigned:
                     label: Unassigned
@@ -36,13 +36,15 @@ oro:
                     label: Started
                 followup:
                     label: Follow-up
-                open:
-                    label: Open
+                stable:
+                    label: Stable
+                contacted:
+                    label: Contacted
                 closed:
                     label: Closed
+                transfer:
+                    label: Transfer
             attribute:
-                assigned_to:
-                    label: 'Assigned to'
                 owner:
                     label: 'Owner'
                 auto_allocate:
@@ -50,6 +52,10 @@ oro:
                 #contact_status:
                 #    label: 'Close reason'
             transition:
+                transfer:
+                    label: Transfer
+                contacted:
+                    label: Contacted
                 assign:
                     label: Assign
                 reopen:
@@ -58,9 +64,11 @@ oro:
                 followup:
                     label: 'Follow-up'
                     warning_message: ''
-                open:
-                    label: Open
+                stable:
+                    label: Stable
                     warning_message: ''
-                close:
-                    label: Closed
+                rollover:
+                    label: Rollover
+                drop:
+                    label: Drop
                     warning_message: ''
