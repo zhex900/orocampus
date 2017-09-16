@@ -23,19 +23,18 @@
     {% endif %}
     {% set formFields = formFields|merge([
     form_row(form.subject),
+    form_row(form.contexts),
     form_row(form.related_contact),
     form_row(form.call_type),
     form_row(form.callDateTime),
     form_row(form.notes),
     form_row(form.duration)
+
     ]) %}
 
     <div class="hide">
         {{ form_row(form.callStatus) }}
     </div>
-
-    {# render non-extra fields as part of the main section #}
-    {% set formFields = formFields|merge([form_rest(form)]) %}
 
     {% set dataBlocks = [{
     'title': title,

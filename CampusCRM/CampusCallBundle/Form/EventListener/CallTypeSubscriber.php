@@ -3,15 +3,10 @@
 namespace CampusCRM\CampusCallBundle\Form\EventListener;
 
 use Doctrine\ORM\EntityManager;
-use Oro\Bundle\ActivityBundle\Manager\ActivityManager;
-use Oro\Bundle\CallBundle\Entity\Call;
-use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\ContactBundle\Entity\ContactPhone;
-use Oro\Bundle\ContactBundle\OroContactBundle;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 
 class CallTypeSubscriber implements EventSubscriberInterface
 {

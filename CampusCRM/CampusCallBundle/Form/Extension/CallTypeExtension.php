@@ -48,7 +48,7 @@ class CallTypeExtension extends AbstractTypeExtension
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {/*
+    {
         $builder
             ->remove('direction')
             ->remove('call_type')
@@ -69,6 +69,6 @@ class CallTypeExtension extends AbstractTypeExtension
                 )
             );
 
-        $builder->addEventSubscriber(new CallTypeSubscriber($this->em));*/
+        $builder->addEventSubscriber(new CallTypeSubscriber($this->em));
     }
 }
