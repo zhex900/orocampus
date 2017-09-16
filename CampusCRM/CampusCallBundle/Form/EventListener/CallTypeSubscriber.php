@@ -37,6 +37,7 @@ class CallTypeSubscriber implements EventSubscriberInterface
     {
         $data = $event->getData();
         $contact = $this->em->getRepository('OroContactBundle:Contact')->find($data['related_contact']);
+        $contact->setAcContactCount(1);
         /** @var ContactPhone $phone */
         $phone = $contact->getPrimaryPhone();
         if (isset($phone)) {
