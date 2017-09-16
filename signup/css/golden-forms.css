@@ -786,7 +786,7 @@ Options | radio and checkbox
     left: 4px;
     width: 7px;
     height: 3px;
-    border: solid #999;
+    border: solid #444;
     border-width: 0 0 3px 3px;
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
