@@ -63,7 +63,7 @@ html, body{
 .golden-forms select optgroup option{ font-size:1em; padding:3px; }
 .golden-forms select optgroup option{ padding:3px 8px; }
 .golden-forms input[placeholder],
-.golden-forms textarea[placeholder] { color:#999; }
+.golden-forms textarea[placeholder] { color:#444; }
 .golden-forms input::-webkit-input-placeholder{ opacity:0.7; }
 .golden-forms input:focus::-webkit-input-placeholder{ opacity: 0.4; -webkit-transition:opacity .3s}
 .golden-forms input:-ms-input-placeholder{ opacity:0.7; }
