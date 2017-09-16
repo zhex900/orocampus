@@ -2221,8 +2221,8 @@
                 return b = null != a.attr("id") ? a.attr("id") : null != a.attr("name") ? a.attr("name") + "-" + c.generateChars(2) : c.generateChars(4), b = b.replace(/(:|\.|\[|\]|,)/g, ""), b = "select2-" + b
             }, e.prototype._placeContainer = function (a) {
                 a.insertAfter(this.$element);
-                var b = this._resolveWidth(this.$element, this.options.get("width"));
-                null != b && a.css("width", b)
+                // var b = this._resolveWidth(this.$element, this.options.get("width"));
+                null != b && a.css("width", "100%")
             }, e.prototype._resolveWidth = function (a, b) {
                 var c = /^width:(([-+]?([0-9]*\.)?[0-9]+)(px|em|ex|%|in|cm|mm|pt|pc))/i;
                 if ("resolve" == b) {
