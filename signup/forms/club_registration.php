@@ -21,6 +21,7 @@ if (isset($_SESSION['form'])):
         <link rel="stylesheet" href="../css/jquery-ui-1.11.0.css">
         <script src="../js/jquery-1.12.4.min.js"></script>
         <script src="../js/jquery-ui-1.12.1.min.js"></script>
+        <!--<script src="../js/select2-4.0.3.min.js"></script>-->
         <script src="../js/select2-4.0.3.min.js"></script>
 
         <!-- Automatically completes the address as the user is typing it -->
