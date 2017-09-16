@@ -61,27 +61,10 @@ class CallTypeSubscriber implements EventSubscriberInterface
             ]
         );
         $event->setData($data);
-        $this->transitWorkflowToContacted($contact);
-    }
-
-    /*
-     * If contact is at workflow (contact_followup) step (assigned)
-     * transit to step (contacted)
-     * @param Contact $contact
-     */
-    private function transitWorkflowToContacted(Contact $contact)
-    {
-        // When follow-up workflow step is unassigned.
-        if ($this->container
+        // if the contact is at assigned step, transit to contacted.
+        $this
+            ->container
             ->get('campus_contact.workflow.manager')
-            ->isCurrentlyAtStep($contact,'contact_followup','assigned')
-        ) {
-
-            //move workflow step to assigned.
-            $this->container
-                ->get('campus_contact.workflow.manager')
-                ->transitTo($contact, 'contact_followup', 'contacted');
-            file_put_contents('/tmp/call.log', 'set to contacted: ' . $contact->getFirstName() . ' ' . $contact->getLastName() . PHP_EOL, FILE_APPEND);
-        }
+            ->transitFromTo($contact,'contact_followup', 'assigned','contacted');
     }
 }

@@ -52,7 +52,8 @@ class WorkflowManager extends BaseManager
         $this->container = $container;
     }
 
-    public function isUnassignedStep(Contact $contact) {
+    public function isUnassignedStep(Contact $contact)
+    {
         return preg_match('/unassigned/', $this->getCurrentWorkFlowItem($contact, 'followup')->getCurrentStep()->getName());
     }
 
@@ -63,8 +64,9 @@ class WorkflowManager extends BaseManager
      * @param string $step
      * @return bool
      */
-    public function isCurrentlyAtStep(Contact $contact, $workflow, $step) {
-        $result = preg_match('/'.$step.'/', $this->getCurrentWorkFlowItem($contact, $workflow)->getCurrentStep()->getName());
+    public function isCurrentlyAtStep(Contact $contact, $workflow, $step)
+    {
+        $result = preg_match('/' . $step . '/', $this->getCurrentWorkFlowItem($contact, $workflow)->getCurrentStep()->getName());
         return $result == 1;
     }
 
@@ -97,10 +99,29 @@ class WorkflowManager extends BaseManager
      * @param string|Transition $transition
      */
 
-    public function transitTo(Contact $contact, $workflow, $transition) {
+    public function transitTo(Contact $contact, $workflow, $transition)
+    {
         file_put_contents('/tmp/tag.log', $contact->getFirstName() . ' ' . $contact->getLastName() . ' transit to ' . $transition . PHP_EOL, FILE_APPEND);
 
         $workflowItem = $this->getCurrentWorkFlowItem($contact, $workflow);
         $this->transit($workflowItem, $transition);
+    }
+
+    /*
+     * Transit workflow from one step to another
+     *
+     * @param Contact $contact
+     * @param string $workflow
+     * @param string|Transition $from
+     * @param string|Transition $to
+     */
+
+    public function transitFromTo(Contact $contact, $workflow, $from, $to)
+    {
+        if ($this->isCurrentlyAtStep($contact,$workflow,$from))
+        {
+            $this->transitTo($contact, $workflow, $to);
+            file_put_contents('/tmp/call.log', 'set to '. $to . $contact->getFirstName() . ' ' . $contact->getLastName() . PHP_EOL, FILE_APPEND);
+        }
     }
 }
