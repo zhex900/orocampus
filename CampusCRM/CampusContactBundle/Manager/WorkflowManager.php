@@ -66,8 +66,14 @@ class WorkflowManager extends BaseManager
      */
     public function isCurrentlyAtStep(Contact $contact, $workflow, $step)
     {
-        $result = preg_match('/' . $step . '/', $this->getCurrentWorkFlowItem($contact, $workflow)->getCurrentStep()->getName());
-        return $result == 1;
+        /** @var WorkflowItem $workflowitem */
+        $workflowitem = $this->getCurrentWorkFlowItem($contact, $workflow);
+        if (isset($workflowitem)) {
+            $result = preg_match('/' . $step . '/',$workflowitem->getCurrentStep()->getName());
+            file_put_contents('/tmp/tag.log', 'current step:' . $step . $result . PHP_EOL, FILE_APPEND);
+            return $result == 1;
+        }
+        return false;
     }
 
     /**
@@ -101,8 +107,6 @@ class WorkflowManager extends BaseManager
 
     public function transitTo(Contact $contact, $workflow, $transition)
     {
-        file_put_contents('/tmp/tag.log', $contact->getFirstName() . ' ' . $contact->getLastName() . ' transit to ' . $transition . PHP_EOL, FILE_APPEND);
-
         $workflowItem = $this->getCurrentWorkFlowItem($contact, $workflow);
         $this->transit($workflowItem, $transition);
     }
@@ -120,8 +124,9 @@ class WorkflowManager extends BaseManager
     {
         if ($this->isCurrentlyAtStep($contact,$workflow,$from))
         {
-            $this->transitTo($contact, $workflow, $to);
-            file_put_contents('/tmp/call.log', 'set to '. $to . $contact->getFirstName() . ' ' . $contact->getLastName() . PHP_EOL, FILE_APPEND);
+            /** @var WorkflowItem $workflowitem */
+            $workflowitem = $this->getCurrentWorkFlowItem($contact, $workflow);
+            $this->transit($workflowitem, $to);
         }
     }
 }

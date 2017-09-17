@@ -40,7 +40,9 @@ class ContactListener extends BaseListener
 
         if ($this->transit) {
             if ($entity instanceof Contact) {
-                $this->transitToAssigned($entity);
+                $this->container
+                    ->get('campus_contact.workflow.manager')
+                    ->transitFromTo($entity,'contact_followup','unassigned','assign');
             }
         }
     }
@@ -57,34 +59,11 @@ class ContactListener extends BaseListener
         if ($entity instanceof Contact) {
             file_put_contents('/tmp/tag.log', 'preUpdate: ' . print_r(array_keys($args->getEntityChangeSet()), true) . PHP_EOL, FILE_APPEND);
 
-            if ($args->hasChangedField('owner')
-                && $args->getOldValue('owner') == null
-                && $args->getNewValue('owner') != null
-            ) {
+            if ($args->hasChangedField('owner'))
+            {
                 file_put_contents('/tmp/tag.log', 'owner: null. transit' . PHP_EOL, FILE_APPEND);
                 $this->transit = true;
             }
-        }
-    }
-
-    /**
-     * @param Contact $contact
-     */
-    private function transitToAssigned(Contact $contact)
-    {
-        file_put_contents('/tmp/tag.log', 'transitToAssigned: ' . $contact->getFirstName() . ' ' . $contact->getLastName() . PHP_EOL, FILE_APPEND);
-
-        // When follow-up workflow step is unassigned.
-        if ($current_step = $this->container
-            ->get('campus_contact.workflow.manager')
-            ->isUnassignedStep($contact)
-        ) {
-
-            //move workflow step to assigned.
-            $this->container
-                ->get('campus_contact.workflow.manager')
-                ->transitTo($contact, 'followup', 'assign');
-            file_put_contents('/tmp/tag.log', 'set to assigned: ' . $contact->getFirstName() . ' ' . $contact->getLastName() . PHP_EOL, FILE_APPEND);
         }
     }
 }

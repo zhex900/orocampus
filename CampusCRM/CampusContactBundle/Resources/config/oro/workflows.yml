@@ -254,18 +254,18 @@ workflows:
                 transition_definition: transfer_def
         transition_definitions:
              assign_def:
-                conditions:
+#                conditions:
                 # $owner is empty AND $auto_allocate is true OR $owner have value AND $auto_allocate is false
-                  '@or':
-                      - '@and':
-                          message: You must select either Owner to or Auto allocate. But you cannot select both.
-                          parameters:
-                            - '@not_empty': [$owner]
-                            - '@equal': [$auto_allocate,false]
-                      - '@and':
-                          parameters:
-                            - '@empty': [$owner]
-                            - '@equal': [$auto_allocate,true]
+#                  '@or':
+#                      - '@and':
+#                          message: You must select either Owner to or Auto allocate. But you cannot select both.
+#                          parameters:
+#                            - '@not_empty': [$owner]
+#                            - '@equal': [$auto_allocate,false]
+#                      - '@and':
+#                          parameters:
+#                            - '@empty': [$owner]
+#                            - '@equal': [$auto_allocate,true]
                 actions:
                   - '@auto_allocate_workflow':
                       owner: $owner
