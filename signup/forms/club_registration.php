@@ -57,7 +57,8 @@ if (isset($_SESSION['form'])):
             <form name="inputForm" action="../register.php" method="post">
 
                 <div class="form-title">
-                    <img src="../images/CSAC4.jpg" alt="Christian Students at Curtin">
+                    <!-- todo get rid off inline css -->
+                    <img src="../images/CSAC4.png" alt="Christian Students at Curtin" style="width: 100%">
                     <!--  <h2>CSAC Registration</h2>-->
                 </div>
                 <!-- end .form-title section -->
