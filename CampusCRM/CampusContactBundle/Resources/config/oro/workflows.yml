@@ -197,24 +197,24 @@ workflows:
         transitions:
             assign:
                 step_to:  assigned
-                is_unavailable_hidden: true
+                is_hidden: true
                 frontend_options:
                     icon: 'fa-sign-in'
                     class: 'btn-success'
                 transition_definition: assign_def
-                form_options:
-                    attribute_fields:
-                        owner:
-                            form_type: oro_user_select
-                            options:
-                                required: false
-                        auto_allocate:
-                            form_type: checkbox
-                            options:
-                                required: true
-                    attribute_default_values:
-                        owner: $contact.owner
-                        auto_allocate: false
+ #               form_options:
+ #                   attribute_fields:
+ #                       owner:
+ #                           form_type: oro_user_select
+ ##                           options:
+  #                              required: false
+  #                      auto_allocate:
+  #                          form_type: checkbox
+  #                          options:
+  #                              required: true
+  #                  attribute_default_values:
+  #                      owner: $contact.owner
+  #                      auto_allocate: false
             rollover:
                 is_hidden: true
                 step_to: assigned

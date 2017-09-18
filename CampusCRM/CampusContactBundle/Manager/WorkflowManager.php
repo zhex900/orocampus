@@ -69,7 +69,7 @@ class WorkflowManager extends BaseManager
         /** @var WorkflowItem $workflowitem */
         $workflowitem = $this->getCurrentWorkFlowItem($contact, $workflow);
         if (isset($workflowitem)) {
-            $result = preg_match('/' . $step . '/',$workflowitem->getCurrentStep()->getName());
+            $result = preg_match('/' . $step . '/', $workflowitem->getCurrentStep()->getName());
             file_put_contents('/tmp/tag.log', 'current step:' . $step . $result . PHP_EOL, FILE_APPEND);
             return $result == 1;
         }
@@ -122,11 +122,35 @@ class WorkflowManager extends BaseManager
 
     public function transitFromTo(Contact $contact, $workflow, $from, $to)
     {
-        if ($this->isCurrentlyAtStep($contact,$workflow,$from))
-        {
+        if ($this->isCurrentlyAtStep($contact, $workflow, $from)) {
             /** @var WorkflowItem $workflowitem */
             $workflowitem = $this->getCurrentWorkFlowItem($contact, $workflow);
             $this->transit($workflowitem, $to);
+        }
+    }
+
+    /*
+     * @param Contact $contact
+     * @param string $workflow
+     */
+    public function autoTransit(Contact $contact, $workflow)
+    {
+        /** @var WorkflowItem $workflowitem */
+        $workflowitem = $this->getCurrentWorkFlowItem($contact, $workflow);
+
+        if (!isset($workflowitem)) {
+            return null;
+        }
+
+        $current_step = $workflowitem->getCurrentStep()->getName();
+        file_put_contents('/tmp/tag.log', 'current step: ->' . $current_step. PHP_EOL, FILE_APPEND);
+
+        switch ($current_step) {
+            case 'unassigned';
+                file_put_contents('/tmp/tag.log', 'current step: 2 ->' . $current_step. PHP_EOL, FILE_APPEND);
+
+            case 'assigned';
+
         }
     }
 }

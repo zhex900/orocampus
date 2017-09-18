@@ -118,11 +118,21 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
                 $contact->setAcContactCount($contact->getAcContactCount()+1);
                 $contact->setAcLastContactDate($calendar_event->getStart());
 
-                // if the $attendee is at contacted step, transit to follow-up.
+                //Transit to follow-up.
+                $this
+                    ->container
+                    ->get('campus_contact.workflow.manager')
+                    ->transitFromTo($contact,'contact_followup', 'assigned','contacted');
+
                 $this
                     ->container
                     ->get('campus_contact.workflow.manager')
                     ->transitFromTo($contact,'contact_followup', 'contacted','followup');
+
+                $this
+                    ->container
+                    ->get('campus_contact.workflow.manager')
+                    ->transitFromTo($contact,'contact_followup', 'closed','reopen');
             }
         }
         foreach ($removeContacts as $removeContact) {

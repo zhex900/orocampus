@@ -40,9 +40,10 @@ class ContactListener extends BaseListener
 
         if ($this->transit) {
             if ($entity instanceof Contact) {
+
                 $this->container
                     ->get('campus_contact.workflow.manager')
-                    ->transitFromTo($entity,'contact_followup','unassigned','assign');
+                    ->transitFromTo($entity, 'contact_followup', 'unassigned', 'assign');
             }
         }
     }
@@ -57,10 +58,7 @@ class ContactListener extends BaseListener
         $entity = $args->getEntity();
 
         if ($entity instanceof Contact) {
-            file_put_contents('/tmp/tag.log', 'preUpdate: ' . print_r(array_keys($args->getEntityChangeSet()), true) . PHP_EOL, FILE_APPEND);
-
-            if ($args->hasChangedField('owner'))
-            {
+            if ($args->hasChangedField('owner')) {
                 file_put_contents('/tmp/tag.log', 'owner: null. transit' . PHP_EOL, FILE_APPEND);
                 $this->transit = true;
             }
