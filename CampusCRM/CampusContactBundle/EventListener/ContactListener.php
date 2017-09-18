@@ -3,8 +3,10 @@
 namespace CampusCRM\CampusContactBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Oro\Bundle\ContactBundle\EventListener\ContactListener as BaseListener;
+use Oro\Bundle\ContactBundle\OroContactBundle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Oro\Bundle\ContactBundle\Entity\Contact;
@@ -62,6 +64,24 @@ class ContactListener extends BaseListener
                 file_put_contents('/tmp/tag.log', 'owner: null. transit' . PHP_EOL, FILE_APPEND);
                 $this->transit = true;
             }
+        }
+    }
+
+    /**
+     * Run when Doctrine ORM metadata is loaded.
+     *
+     * @param LoadClassMetadataEventArgs $eventArgs
+     */
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    {
+        /**
+         * @var \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+         */
+        $classMetadata = $eventArgs->getClassMetadata();
+
+        if (get_class(new contact()) === $classMetadata->getName()) {
+            // Do whatever you want...
+            $classMetadata->customRepositoryClassName = 'CampusCRM\CampusContactBundle\Entity\Repository\ContactRepository';
         }
     }
 }
