@@ -8,10 +8,8 @@
 
 namespace CampusCRM\CampusContactBundle\Command;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\Expr\Join;
 use Oro\Bundle\ContactBundle\Entity\Contact;
-use Oro\Bundle\ContactBundle\OroContactBundle;
+use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,11 +22,12 @@ class TransitionAssignCommand extends ContainerAwareCommand implements CronComma
     const COMMAND_NAME   = 'oro:cron:contact:transition_assign';
 
     /**
+     * Run every minute
      * {@inheritdoc}
      */
     public function getDefaultDefinition()
     {
-        return '01 00 * * *';
+        return '* * * * *';
     }
 
     /**
@@ -49,43 +48,40 @@ class TransitionAssignCommand extends ContainerAwareCommand implements CronComma
             ->setDescription('Fire assign transition');
     }
 
-    /**
+    /*
+     * Transitions: Unassigned to Assigned
+     * Condition:   Owner role is Full-timer
+     *
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Fire assign transition!'.get_class(new contact()));
+        $output->writeln('Auto transition: from unassigned to assigned');
 
-        /** @var EntityManager $em */
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        /** @var Contact[] $result */
-        $result = $em->createQueryBuilder()
-            ->select('c')
-            ->from('OroWorkflowBundle:WorkflowItem', 'wi')
-            ->innerJoin('OroContactBundle:Contact','c', 'WITH','c.id = wi.entityId')
-            ->innerJoin('wi.currentStep','step', Join::WITH, 'step.name = :step')
-            ->innerJoin('wi.definition', 'workflowDefinition', Join::WITH, 'workflowDefinition.name = :workflow')
-            ->setParameter('workflow', 'contact_followup')
-            ->setParameter('step','unassigned')
-            ->getQuery()
-            ->execute();
+        // Get a list of all the contacts that are at unassigned step
+        /** @var Contact[] $contacts */
+        $contacts = $this
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('OroContactBundle:Contact')
+            ->findByWorkflowStep('contact_followup','unassigned');
 
-        foreach ($result as $contact){
-            $output->writeln( $contact->getFirstName(). ' '. $contact->getLastName());
-        }
-
-        $result = $em->getRepository('OroContactBundle:Contact')->findByWorkflowStep('contact_followup','unassigned');
-        foreach ($result as $contact){
-            $output->writeln( $contact->getFirstName(). ' '. $contact->getLastName());
+        foreach ($contacts as $contact){
+            $output->writeln( 'Check '.$contact->getFirstName(). ' '. $contact->getLastName());
+            // Transit if the owner is a Full-timer
+            if ($contact->getOwner() instanceof User && $contact->getOwner()->getRole('FULL_TIMER')!=null){
+                $output->writeln('Transit '.$contact->getFirstName(). ' '. $contact->getLastName(). ' to assigned');
+                $this
+                    ->getContainer()
+                    ->get('campus_contact.workflow.manager')
+                    ->transitFromTo($contact,'contact_followup','unassigned','assign');
+            }
         }
 
         // var_dump((print_r($result,true)));
        // $calendarDateManager->handleCalendarDates(true);
 
-        /*
-         * Transitions: Unassigned to Assigned
-         * Condition:   Owner role is Full-timer
-         */
+
 
         /*
          * Transitions: Followup to Stable
