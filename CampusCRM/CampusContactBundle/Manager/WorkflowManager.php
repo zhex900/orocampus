@@ -8,6 +8,7 @@
 
 namespace CampusCRM\CampusContactBundle\Manager;
 
+use Monolog\Logger;
 use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\WorkflowBundle\Model\WorkflowData;
 use Oro\Bundle\WorkflowBundle\Model\WorkflowEntityConnector;
@@ -26,6 +27,9 @@ class WorkflowManager extends BaseManager
 
     /** @var String */
     protected $current_semester;
+
+    /** @var Logger $logger */
+    protected $logger;
 
     /**
      * @param WorkflowRegistry $workflowRegistry
@@ -50,6 +54,7 @@ class WorkflowManager extends BaseManager
             $startedWorkflowsBag);
 
         $this->container = $container;
+        $this->logger = $container->get('logger');
     }
 
     public function isUnassignedStep(Contact $contact)
@@ -68,11 +73,13 @@ class WorkflowManager extends BaseManager
     {
         /** @var WorkflowItem $workflowitem */
         $workflowitem = $this->getCurrentWorkFlowItem($contact, $workflow);
+
         if (isset($workflowitem)) {
-            $result = preg_match('/' . $step . '/', $workflowitem->getCurrentStep()->getName());
-            file_put_contents('/tmp/tag.log', 'current step:' . $step . $result . PHP_EOL, FILE_APPEND);
-            return $result == 1;
+            $current_step = $workflowitem->getCurrentStep()->getName();
+            $this->logger->debug('WorkflowManager->isCurrentlyAtStep: $current_step: '.$current_step. ' compare with '. $step);
+            return $current_step === $step;
         }
+
         return false;
     }
 

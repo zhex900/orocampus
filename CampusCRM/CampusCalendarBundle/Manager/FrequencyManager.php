@@ -3,9 +3,11 @@
 namespace CampusCRM\CampusCalendarBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
+use Monolog\Logger;
 use Oro\Bundle\CalendarBundle\Entity\CalendarEvent;
 use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\CalendarBundle\Entity\Attendee;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FrequencyManager
 {
@@ -22,12 +24,16 @@ class FrequencyManager
     /** @var EntityManager */
     protected $em;
 
+    /** @var Logger $logger */
+    protected $logger;
+
     /**
-     * @param EntityManager $em
+     * @param ContainerInterface $container
      */
-    public function __construct(EntityManager $em)
+    public function __construct(ContainerInterface $container)
     {
-        $this->em = $em;
+        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->logger = $container->get('logger');
     }
 
     /**
@@ -41,7 +47,7 @@ class FrequencyManager
         /** @var CalendarEvent $calendar_event */
         $calendar_event = $attendee->getCalendarEvent();
         // Get all the same events that the contact have attended this semester
-        $reset_events = $this->getAttendedEvents($contact, $calendar_event);
+        $reset_events = $this->findAttendedEvents($contact, $calendar_event, null);
 
         // Get all events that after the current event date.
         // Add the current event to the head of the array.
@@ -59,28 +65,27 @@ class FrequencyManager
 
         } elseif ($add == 'DELETE') {
             // remove the $current_event.
-            $reset_events = array_filter($reset_events, function($val) use ($calendar_event) {
+            $reset_events = array_filter($reset_events, function ($val) use ($calendar_event) {
                 return ($calendar_event->getId() != $val['event_id']);
             });
         }
 
         file_put_contents('/tmp/event.log', PHP_EOL . '----- Events: ' . PHP_EOL, FILE_APPEND);
-        $this->printEvents($reset_events);
 
         // Find the event with the same event id and replace old event date with current event date.
         $reset_events = array_map(
-            function($v) use($calendar_event) {
+            function ($v) use ($calendar_event) {
                 if ($v['event_id'] == $calendar_event->getId()) {
-                                    $v['date'] = $calendar_event->getStart()->format(self::DATE_FORMAT);
+                    $v['date'] = $calendar_event->getStart()->format(self::DATE_FORMAT);
                 }
                 return $v;
-                },
+            },
             $reset_events
         );
 
         // Sort the events according to event date.
         usort($reset_events,
-            function($a, $b) {
+            function ($a, $b) {
                 $t1 = strtotime($a['date']);
                 $t2 = strtotime($b['date']);
                 return $t1 - $t2;
@@ -90,9 +95,8 @@ class FrequencyManager
         file_put_contents('/tmp/event.log', 'Attendee: ' . $attendee->getDisplayName() . PHP_EOL, FILE_APPEND);
         file_put_contents('/tmp/event.log', 'Current Event: ' . $calendar_event->getStart()->format(self::DATE_FORMAT) . ' id: ' . $calendar_event->getId(), FILE_APPEND);
         file_put_contents('/tmp/event.log', PHP_EOL . 'Attended Events: ' . PHP_EOL, FILE_APPEND);
-        $this->printEvents($reset_events);
+
         file_put_contents('/tmp/event.log', PHP_EOL . 'Reset_events: ' . PHP_EOL, FILE_APPEND);
-        $this->printEvents($reset_events);
         file_put_contents('/tmp/event.log', PHP_EOL . '' . PHP_EOL, FILE_APPEND);
 
         $count = 0;
@@ -126,7 +130,8 @@ class FrequencyManager
      * @param string $freq
      * @param integer $count
      */
-    private function commitChange(Attendee $attendee, $freq, $count) {
+    private function commitChange(Attendee $attendee, $freq, $count)
+    {
 
         $attendee->setFrequency($freq);
         $attendee->setAttendanceCount($count);
@@ -139,12 +144,13 @@ class FrequencyManager
     }
 
     /*
-     * Returns an array of events that a contact have attended.
-     * @param Contact $contact
-     * @param CalendarEvent $calendar_event
-     * @return array
-     */
-    protected function getAttendedEvents($contact, $calendar_event)
+   * Returns an array of all the events that a contact have attended in a semester.
+   * @param Contact $contact
+   * @param CalendarEvent $calendar_event
+   * @param string $semester
+   * @return array
+   */
+    public function findAttendedEvents(Contact $contact, CalendarEvent $calendar_event = null, $semester = null)
     {
         /*
         * This raw SQL query returns a list of events that a
@@ -165,31 +171,41 @@ class FrequencyManager
                 FROM oro_calendar_event_attendee AS a 
                   INNER JOIN oro_calendar_event AS e ON e.id = a.calendar_event_id
                 WHERE a.contact_id= :id 
-                AND e.semester= :sem
-                AND e.title= :title
+                AND e.semester= :sem ' . (!isset($semester) ? 'AND e.title= :title' : '') . '
                 ORDER BY date ASC
                 ';
 
         $stmt = $this->em->getConnection()->prepare($sql);
-        $stmt->execute(array(
+        $param = array(
             'id' => $contact->getId(),
-            'sem' => $calendar_event->getSemester(),
-            'title' => $calendar_event->getTitle()));
+            'sem' => $semester);
+
+        if (!isset($semester)) {
+            $param = array_merge($param, array('title' => $calendar_event->getTitle()));
+        }
+
+        $stmt->execute($param);
 
         return $stmt->fetchAll();
     }
 
-    /**
-     * @param \DateTime $event_date
-     * @param string $event_teaching_week
-     * Events is an array of the same events that the contact have attended this semester
-     * @param array $events
+    /*
+     * This is a wrapper function for findAttendanceFrequencyCore
+     * It filter out events not within with the 5 week date range.
      *
-     * @return string
+     * @param \DateTime $event_date
+     * @param string $event_teaching_week Teaching week of the event date
+     * @param array $search_events Events
+     * @param int $algorithm 0 for algorithm 1. 1 for algorithm 2.
+     *
+     * @return string 'Regular' or 'Irregular'
      */
-    public function findAttendanceFrequency($event_date, $event_teaching_week, $events)
+    public function findAttendanceFrequency(
+        \DateTime $event_date,
+        $event_teaching_week,
+        $events, $algorithm = 1)
     {
-
+        // set look back date range
         $end = $event_date;
         // find the date that is 5 weeks ago.
         $begin = clone $event_date;
@@ -197,53 +213,125 @@ class FrequencyManager
 
         // get the dates only
         $events = array_column($events, 'date');
-        file_put_contents('/tmp/freq.log', 'Current Event: ' .
-            $event_date->format(self::DATE_FORMAT) .
-            ' Begin: ' . $begin->format(self::DATE_FORMAT) .
-            PHP_EOL, FILE_APPEND);
 
-        file_put_contents('/tmp/freq.log', 'Events ' .
-            print_r($events, true) .
-            PHP_EOL, FILE_APPEND);
+        $this->logger->debug('FrequencyManager: Date range (' .
+            $begin->format(self::DATE_FORMAT) .
+            ',' . $event_date->format(self::DATE_FORMAT) . '). Events: ', $events);
 
-        $DATE_FORMAT = self::DATE_FORMAT;
         // find all the events that is from the last 5 weeks until the event date
-        $search_events = array_filter($events, function($val) use ($begin, $end, $DATE_FORMAT) {
+        $DATE_FORMAT = self::DATE_FORMAT;
+        $search_events = array_filter($events, function ($val) use ($begin, $end, $DATE_FORMAT) {
             return \DateTime::createFromFormat($DATE_FORMAT, $val) >= $begin &&
                 \DateTime::createFromFormat($DATE_FORMAT, $val) <= $end;
         });
 
-        file_put_contents('/tmp/freq.log', '$search_events ' .
-            print_r($search_events, true) .
-            PHP_EOL, FILE_APPEND);
-
-        // no previous events found.
+        // no previous events found return irregular
         if (count($search_events) == 0) {
             return self::IRREGULAR;
         }
+        return $this->findAttendanceFrequencyCore($event_date, $event_teaching_week, $search_events, $algorithm);
+    }
+
+    /**
+     * In the past 5 weeks, determine whether a person have attended events regularly or irregularly
+     * This is a complex algorithm.
+     *
+     * Regularity is calculated by counting the number of attendances
+     * in the past 5 weeks. This counter is called frequency. An attendance is counted only when
+     * there is a 5 day gap since the last attendance. For example, event on 1 Sep and 2 Sep will
+     * have a frequency count of 1. Event on 1 Sep and 6 Sep will have a frequency count 2.
+     *
+     * Algorithm 1:
+     * This is to calculate the regularly of the same event name.
+     * $event_date is the date of the event.
+     * $events is an array of dates of the same event.
+     * For example, event appointment is on 1 Sep 2017. Determine
+     * whether John is regular to event appointment.
+     *
+     * Algorithm 2:
+     * This is to calculate whether a person is regularly attending meetings/events.
+     * Algorithm 1 is looking at the same event.
+     * Algorithm 2 is looking at any events.
+     * $event_date is today's date
+     * $events is all the events a contact have attended this semester
+     *
+     * @param \DateTime $event_date
+     * @param string $event_teaching_week Teaching week of the event date
+     * @param array $search_events Events
+     * @param int $algorithm 0 for algorithm 1. 1 for algorithm 2.
+     *
+     * @return string 'Regular' or 'Irregular'
+     */
+    protected function findAttendanceFrequencyCore(\DateTime $event_date,
+                                                   $event_teaching_week,
+                                                   $search_events, $algorithm = 1)
+    {
         $events_compare = $search_events;
-        //remove the first event
+        /*
+         * This algorithm transforms the event dates into two arrays.
+         * Like this:
+         * Events = [ A, B, C, D]
+         *      Array 1     Array 2
+         * $search_events  $events_compare
+         *      A             B
+         *      B             C
+         *      C             D
+         * Find out the date difference the elements in both arrays.
+         * Calculate the date difference between A and B, B and C, C and D.
+         * If the the date difference is greater and equals to the gap
+         * date (5 days) increment the frequency counter
+         *
+         */
+
+        // Both algorithms need to remove the first event in array 2 $events_compare
         array_shift($events_compare);
-        //push the current_event to the array.
-        $events_compare[] = $event_date->format(self::DATE_FORMAT);
-        $minimum_days = $this->getMinimumDays($event_teaching_week);
+        if ($algorithm) {
+            /*
+             * Algorithm 1:
+             * $event_date is a new event. So this event does not exist in the events array.
+             * Events ($events) array is a list of past events with the same event name.
+             * The new event ($event_date) need to be pushed to the back of the array.
+             * First element needs to be removed. See the example below.
+             *
+             * $event_date = E
+             * Events = [ A, B, C, D]
+             *      Array 1     Array 2
+             * $search_events  $events_compare
+             *      A             B
+             *      B             C
+             *      C             D
+             *      D             E
+             */
+            $events_compare[] = $event_date->format(self::DATE_FORMAT);
+        } else {
+            /*
+             * Algorithm 2:
+             * $event_date is not an event date. It is today's date. Therefore,
+             * the frequency calculation only need to look at the events dates.
+             * Events = [ A, B, C, D]
+             *      Array 1     Array 2
+             * $search_events  $events_compare
+             *      A             B
+             *      B             C
+             *      C             D
+             */
+            array_pop($search_events);
+        }
 
-        file_put_contents('/tmp/freq.log', '$events_compare ' .
-            print_r($events_compare, true) .
-            PHP_EOL, FILE_APPEND);
-
+        $this->logger->debug('FrequencyManager: Compare events: ', array_combine($events_compare, $search_events));
+        $DATE_FORMAT = self::DATE_FORMAT;
         $freq = array_sum(array_map(
-            function($before, $after) use ($minimum_days, $DATE_FORMAT){
-                /** @var \DateTime $date_before */
-                $date_before = \DateTime::createFromFormat($DATE_FORMAT, $before);
-                /** @var \DateTime $date_after */
-                $date_after = \DateTime::createFromFormat($DATE_FORMAT, $after);
-                $diff = \date_diff($date_before, $date_after)->days;
-                return $diff >= $minimum_days;
-            },
-            $events_compare, $search_events)) + 1;
+                function ($before, $after) use ($DATE_FORMAT) {
+                    /** @var \DateTime $date_before */
+                    $date_before = \DateTime::createFromFormat($DATE_FORMAT, $before);
+                    /** @var \DateTime $date_after */
+                    $date_after = \DateTime::createFromFormat($DATE_FORMAT, $after);
+                    $diff = \date_diff($date_before, $date_after)->days;
+                    return $diff >= self::GAP;
+                },
+                $events_compare, $search_events)) + 1;
 
-        file_put_contents('/tmp/freq.log', 'FREQ: ' . $freq . PHP_EOL, FILE_APPEND);
+        $this->logger->debug('FrequencyManager: Freq count: ' . $freq);
 
         if ($freq >= $this->getMinimumDays($event_teaching_week)) {
             return self::REGULAR;
@@ -265,12 +353,15 @@ class FrequencyManager
         return $minimum_days;
     }
 
-    private function printEvents($events)
+    public function today()
     {
-        foreach ($events as $event) {
+        $today = new \DateTime();
+        $today->setTimezone(new \DateTimeZone('UTC'));
+        return $today;
+    }
 
-            file_put_contents('/tmp/event.log', 'Event: ' . $event['date'] . ' id: ' . $event['event_id'] . PHP_EOL, FILE_APPEND);
-
-        }
+    public function getRegular()
+    {
+        return self::REGULAR;
     }
 }

@@ -22,4 +22,4 @@ services:
       frequency_manager:
         class:  CampusCRM\CampusCalendarBundle\Manager\FrequencyManager
         arguments:
-                  - '@doctrine.orm.entity_manager'
+                  - '@service_container'
