@@ -45,12 +45,14 @@ oro:
                 transfer:
                     label: Transfer
             attribute:
+                closed_date:
+                    label: 'Closed date'
                 owner:
                     label: 'Owner'
                 auto_allocate:
                     label: 'Auto allocate'
-                #contact_status:
-                #    label: 'Close reason'
+                closed_reason:
+                    label: 'Close reason'
             transition:
                 keep_followup:
                     label: Keep

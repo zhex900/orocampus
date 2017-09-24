@@ -1,5 +1,6 @@
 oro:
     contact:
+            closeddata.label:             Closed Data
             autoallocate:
                 mass_action.success:      Auto-allocate completed successfully on %count% contacts.
                 mass_action.failure:      Mass auto-allocate failed.

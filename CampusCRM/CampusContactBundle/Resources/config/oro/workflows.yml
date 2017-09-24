@@ -188,10 +188,12 @@ workflows:
                 type:       entity
                 options:
                     class: Oro\Bundle\ContactBundle\Entity\Contact
-            call_date:
+            closed_reason:
+                type:       string
+            closed_date:
                 type:       object
                 options:
-                    class: Oro\Bundle\FormBundle\Form\Type\OroDateTimeType
+                    class: Oro\Bundle\FormBundle\Form\Type\OroDateType
             call_direction:
                 type:       string
             owner:
@@ -253,6 +255,42 @@ workflows:
                 frontend_options:
                     icon: 'fa-times'
                     class: 'btn-danger'
+                form_options:
+                    attribute_fields:
+#                        close_reason_name:
+#                            form_type: choice
+#                            options:
+#                                required: true
+#                                empty_value: false
+#                                choices:
+#                                    outsold: 'Outsold'
+#                                    cancelled: 'Cancelled'
+#                                constraints:
+#                                    - NotBlank: ~
+                        closed_reason:
+                            form_type: oro_enum_choice
+                            options:
+                                enum_code: closed_reason_source
+                                expanded: true
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
+                        closed_date:
+                            form_type: oro_date
+                            options:
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
+#                    form_init:
+#                        - '@assign_value':
+#                            conditions:
+#                                '@not_empty': $close_reason
+#                            parameters: [$close_reason_name, $close_reason.name]
+#                        - '@create_date':
+#                            conditions:
+#                                '@empty': $closed_date
+#                            parameters:
+#                                attribute: $closed_date
                 transition_definition: close_def
             keep_followup:
                 step_to: followup
@@ -307,6 +345,10 @@ workflows:
              followup_def: ~
              stable_def: ~
              close_def: ~
+#                actions:
+#                  - '@assign_value':
+#                      attribute: $.closed_date
+#                      value: $closed_date
              contacted_def:
                 # Not contacted yet.
                 preconditions:
