@@ -45,6 +45,8 @@ oro:
                 transfer:
                     label: Transfer
             attribute:
+                last_review:
+                    label:  'Review date'
                 closed_date:
                     label: 'Closed date'
                 owner:

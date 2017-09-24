@@ -177,6 +177,10 @@ workflows:
                 is_final: true
                 order: 60
         attributes:
+            last_review:
+                type:       object
+                options:
+                    class: Oro\Bundle\FormBundle\Form\Type\OroDateType
             church_kid:
                 type:       bool
             # call log attributes
@@ -281,7 +285,8 @@ workflows:
                                 required: true
                                 constraints:
                                     - NotBlank: ~
-#                    form_init:
+      #              form_init:
+      #                - '@assign_value': [$closed_date, $contact.closedDate]
 #                        - '@assign_value':
 #                            conditions:
 #                                '@not_empty': $close_reason
@@ -297,30 +302,70 @@ workflows:
                 frontend_options:
                     icon: 'fa-sign-in'
                     class: 'btn-success'
+                form_options:
+                    attribute_fields:
+                        last_review:
+                            form_type: oro_date
+                            options:
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
                 transition_definition: keep_def
             keep_contacted:
                 step_to: contacted
                 frontend_options:
                     icon: 'fa-sign-in'
                     class: 'btn-success'
+                form_options:
+                    attribute_fields:
+                        last_review:
+                            form_type: oro_date
+                            options:
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
                 transition_definition: keep_def
             keep_assigned:
                 step_to: assigned
                 frontend_options:
                     icon: 'fa-sign-in'
                     class: 'btn-success'
+                form_options:
+                    attribute_fields:
+                        last_review:
+                            form_type: oro_date
+                            options:
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
                 transition_definition: keep_def
             keep_unassigned:
                 step_to: unassigned
                 frontend_options:
                     icon: 'fa-sign-in'
                     class: 'btn-success'
+                form_options:
+                    attribute_fields:
+                        last_review:
+                            form_type: oro_date
+                            options:
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
                 transition_definition: keep_def
             transfer:
                 step_to: transfer
                 frontend_options:
                     icon: 'fa-times'
                     class: 'btn-danger'
+                form_options:
+                    attribute_fields:
+                        last_review:
+                            form_type: oro_date
+                            options:
+                                required: true
+                                constraints:
+                                    - NotBlank: ~
                 transition_definition: transfer_def
         transition_definitions:
              assign_def:
@@ -344,18 +389,20 @@ workflows:
              reopen_def: ~
              followup_def: ~
              stable_def: ~
-             close_def: ~
-#                actions:
-#                  - '@assign_value':
-#                      attribute: $.closed_date
-#                      value: $closed_date
+             close_def:
+                actions:
+                  - '@assign_value': [$contact.closedDate, $closed_date]
+                  - '@assign_value': [$contact.closedReason, $closed_reaon]
              contacted_def:
                 # Not contacted yet.
                 preconditions:
                     @equal: [$request.church_kid, false]
              rollover_def: ~
              transfer_def: ~
-             keep_def: ~
-                # preconditions:
+             keep_def:
+                actions:
+                  - '@assign_value': [$contact.lastReview, $last_review]
+
+                 # preconditions:
                 # review_request is true
                 # @equal: [$request.review_request, true]

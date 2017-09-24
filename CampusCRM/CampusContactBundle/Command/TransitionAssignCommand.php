@@ -58,9 +58,9 @@ class TransitionAssignCommand extends ContainerAwareCommand implements CronComma
     {
         $output->writeln('Auto transition: from unassigned to assigned');
 
-        $this->getContainer()
-            ->get('campus_contact.workflow.manager')
-            ->transitUnassignedToAssigned();
+      #  $this->getContainer()
+      #      ->get('campus_contact.workflow.manager')
+      #      ->transitUnassignedToAssigned();
 
         return self::STATUS_SUCCESS;
     }

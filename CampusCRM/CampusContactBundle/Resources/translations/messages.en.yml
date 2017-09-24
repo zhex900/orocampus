@@ -1,5 +1,7 @@
 oro:
     contact:
+            closedreason.label:           Closed Reason
+            lastreview.label:             Last Review Date
             closeddata.label:             Closed Data
             autoallocate:
                 mass_action.success:      Auto-allocate completed successfully on %count% contacts.
