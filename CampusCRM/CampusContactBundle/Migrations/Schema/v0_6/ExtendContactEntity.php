@@ -29,18 +29,6 @@ class ExtendContactEntity implements Migration, ExtendExtensionAwareInterface
     {
         $table = $schema->getTable('orocrm_contact');
         $table->addColumn(
-            'closed_date',
-            'date',
-            [
-                'oro_options' => [
-                    'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
-                    'datagrid' => ['is_visible' => DatagridScope::IS_VISIBLE_TRUE],
-                    'merge' => ['display' => true],
-                    'dataaudit' => ['auditable' => false]
-                ]
-            ]
-        );
-        $table->addColumn(
             'review_request',
             'boolean',
             [

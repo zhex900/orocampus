@@ -53,14 +53,17 @@ class TransitionDailyCommand extends ContainerAwareCommand implements CronComman
     {
         $output->writeln('Auto transition');
 
-        /* @var \DateTime $start */
-        $start = $this->getContainer()->get('academic_calendar')->getNextSemesterStartDate();
-        if ($start!=null) {
-            $output->writeln('Next semester start:' . $start->format('Y-m-d'));
-        }
-       $this->getContainer()
+        $this->getContainer()
             ->get('campus_contact.workflow.manager')
             ->runTransitRulesForContactFollowup();
+        $this->getContainer()
+            ->get('campus_contact.review.manager')
+            ->applyReviewRulesForContactFollowUp();
+
+        //
+        // unassigned review
+        // get last review date. (if null, get first date of contact)
+        // calculate review date -  da
 
         return self::STATUS_SUCCESS;
     }

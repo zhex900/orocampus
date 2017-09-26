@@ -182,6 +182,7 @@ class WorkflowManager extends BaseManager
             $transit = 'NO';
             if (call_user_func_array(array(__CLASS__, $callback), array($contact, $from, $to))) {
                 $this->transitFromTo($contact, $workflow, strtolower($from), strtolower($to));
+                $contact->setLastReview($this->today);
                 $transit = 'YES';
             }
             $this->logger->debug('WorkflowManager. Transit ' . $from . ' to ' . $to . ': ' . $transit . ' for contact ' . $contact->getFirstName() . ' ' . $contact->getLastName());
@@ -284,7 +285,7 @@ class WorkflowManager extends BaseManager
 
     public function transitRuleClosedToReopen(Contact $contact)
     {
-        return $this->transitRuleMeetAtLastOnceAfterDate($contact,$contact->getClosedDate());
+        return $this->transitRuleMeetAtLastOnceAfterDate($contact,$contact->getLastReview());
     }
 
     public function transitRuleMeetAtLastOnceAfterDate(Contact $contact, \DateTime $date)

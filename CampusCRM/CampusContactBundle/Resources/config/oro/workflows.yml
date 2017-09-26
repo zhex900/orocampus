@@ -279,7 +279,7 @@ workflows:
                                 required: true
                                 constraints:
                                     - NotBlank: ~
-                        closed_date:
+                        last_review:
                             form_type: oro_date
                             options:
                                 required: true
@@ -391,7 +391,7 @@ workflows:
              stable_def: ~
              close_def:
                 actions:
-                  - '@assign_value': [$contact.closedDate, $closed_date]
+                  - '@assign_value': [$contact.lastReview, $last_review]
                   - '@assign_value': [$contact.closedReason, $closed_reaon]
              contacted_def:
                 # Not contacted yet.
@@ -400,8 +400,12 @@ workflows:
              rollover_def: ~
              transfer_def: ~
              keep_def:
+                preconditions:
+                    '@and':
+                        - '@equal': [$contact.reviewRequest, 1]
                 actions:
                   - '@assign_value': [$contact.lastReview, $last_review]
+                  - '@assign_value': [$contact.reviewRequest, 0]
 
                  # preconditions:
                 # review_request is true

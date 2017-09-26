@@ -1,4 +1,9 @@
 services:
+    campus_contact.review.manager:
+        class: 'CampusCRM\CampusContactBundle\Manager\ReviewManager'
+        arguments:
+            - "@service_container"
+
     campus_contact.validator.contactinfocheck:
         class: 'CampusCRM\CampusContactBundle\Validator\Constraints\ContactInfoCheckValidator'
         arguments:
