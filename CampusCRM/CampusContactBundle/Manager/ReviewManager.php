@@ -8,8 +8,9 @@
 
 namespace CampusCRM\CampusContactBundle\Manager;
 
+use Oro\Bundle\EmailBundle\Mailer\Processor as Mailer;
+use Oro\Bundle\EmailBundle\Form\Model\Email;
 use Oro\Bundle\ContactBundle\Entity\Contact;
-use Oro\Bundle\NotificationBundle\Entity\MassNotification;
 use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,19 +28,28 @@ class ReviewManager
     /* @var ContainerInterface $container */
     protected $container;
 
-    /* @var MassNotification[] $notifications */
-    protected $notifications;
+    /*
+     * <code>
+     * $emails = array (
+     *      'email_address' => array( 'email', 'user' )
+     * )
+     * </code>
+     */
+    protected $emails;
 
-    /* @var User[] $users */
-    protected $users;
+    /* @var User[] $ft_users */
+    protected $ft_users;
+
+    /* @var Mailer */
+    protected $mailer;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->today = new \DateTime();
         $this->today->setTimezone(new \DateTimeZone('UTC'));
-        $this->notifications = [];
-        $this->users = $this->findUserByRole('FULL_TIMER');
+        $this->ft_users = $this->findUserByRole('FULL_TIMER');
+        $this->mailer = $container->get('oro_email.mailer.processor');
     }
 
     public function applyReviewRulesForContactFollowUp(){
@@ -48,7 +58,7 @@ class ReviewManager
         $this->applyReviewRule($followup,'assigned');
         $this->applyReviewRule($followup,'contacted');
         $this->applyReviewRule($followup,'followup');
-        $this->sendNotifications();
+        $this->processEmail();
     }
     /*
     * Helper function to apply review to all contacts at
@@ -82,10 +92,10 @@ class ReviewManager
                 }
                 // add notification
                 if ($at = 'unassigned'){
-                    foreach ($this->users as $user)
-                        $this->addNotification($contact,$at,$user->getEmail());
+                    // notify all FT users
+                    $this->sendEmails($contact,$at,$this->ft_users);
                 }else{
-                    $this->addNotification($contact,$at,$contact->getOwner()->getEmail());
+                    $this->sendEmail($contact,$at,$contact->getOwner());
                 }
                 $review = 'YES';
             }
@@ -97,24 +107,33 @@ class ReviewManager
         return ($contact->getLastReview()==null? $contact->getFirstContactDate():$contact->getLastReview());
     }
 
-    protected function addNotification(Contact $contact, $step, $email)
+    /*
+     * @param Contact $contact
+     *
+     */
+    protected function sendEmail(Contact $contact, $step, User $user)
     {
-        $i = $this->findNotificationByUserEmail($email);
-        if ($i==-1){
-            $notification[] = $this->createNotificationByContact($email);;
-            $i = sizeof($this->notifications)-1;
+        if ($this->emails==null || !array_key_exists($user->getEmail(),$this->emails)){
+            $this->emails[$user->getEmail()] = [$this->createEmail($user->getEmail()), $user];
         }
-        $notification = &$this->notifications[$i];
-        $reminder = $this->getReminderHeader($contact) . ' '. $this->getReminderMsg($contact,$step);
-        if (sizeof($notification->getBody())==0){
-            $notification->setBody($reminder);
-        }
-        $notification->setBody($reminder);
+           /* @var Email $email */
+        $email = $this->emails[$user->getEmail()][0];
+        $reminder = $this->getReminderMsg($contact,$step);
+        $email->setBody($email->getBody().' '.$reminder);
+        $this->emails[$user->getEmail()][0]=$email;
     }
 
-    protected function getReminderHeader(Contact $contact)
+    protected function sendEmails(Contact $contact, $step, $users)
     {
-        return 'Hi '. $contact->getOwner()->getFirstName(). ',
+        foreach ($users as $user)
+        {
+            $this->sendEmail($contact,$step,$user);
+        }
+    }
+
+    protected function getReminderHeader(User $user)
+    {
+        return 'Hi '. $user->getFirstName(). ',
         Please review the following contacts:
         ';
     }
@@ -123,44 +142,31 @@ class ReviewManager
     {
         return $contact->getId() . ', '. $contact->getFirstName(). ', '.
             $contact->getLastName(). ', '. $contact->getSemesterContacted() .
-            ', ' . $contact->getLastReview(). $step;
+            ', ' . $contact->getLastReview()->format('d-m-Y'). ' '.$step;
     }
 
-    protected function createNotificationByContact($email)
+    protected function createEmail($to)
     {
-        $notification = new MassNotification();
-        $notification->setEmail($email);
-        $notification->setSender(self::SENDER);
-        $notification->setSubject(self::SUBJECT);
-        $notification->setProcessedAt($this->today);
-        $notification->setScheduledAt($this->today);
-        $notification->setStatus(1);
-        return $notification;
+        $email = $this->container->get('oro_email.email.model.builder')->createEmailModel();
+        $email->setSubject('orocampus review');
+        $email->setType('Html');
+        $email->setFrom('no-reply@orocampus.tk');
+        $email->setTo([$to]);
+        return $email;
     }
 
-    /*
-     * Return the index number of the notification if the already
-     * exist with given email. return -1 if not find.
-     *
-     * @param string $email
-     * @return int
-     */
-    protected function findNotificationByUserEmail($email){
-        $i = -1;
-        foreach ($this->notifications as $notification){
-            $i++;
-            if ($notification->getEmail()==$email){
-                break;
-            }
-        }
-        return $i;
-    }
-
-    protected function sendNotifications()
+    protected function processEmail()
     {
-        foreach ($this->notifications as $notification){
-            $this->container->get('doctrine.orm.entity_manager')->persist($notification);
-            $this->container->get('doctrine.orm.entity_manager')->flush();
+        foreach ($this->emails as $item){
+            /* @var Email $email */
+            $email = $item[0];
+            /* @var User $user */
+            $user = $item[1];
+            $email->setBody($this->getReminderHeader($user).' '. $email->getBody());
+            $this->mailer->process($email);
+            $this->container->get('logger')
+                ->debug('ReviewManager. Review Send Email to '. $user->getFirstName(). ' msg: '.$email->getBody());
+
         }
     }
 

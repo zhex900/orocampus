@@ -51,19 +51,10 @@ class TransitionDailyCommand extends ContainerAwareCommand implements CronComman
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Auto transition');
 
-        $this->getContainer()
-            ->get('campus_contact.workflow.manager')
-            ->runTransitRulesForContactFollowup();
         $this->getContainer()
             ->get('campus_contact.review.manager')
             ->applyReviewRulesForContactFollowUp();
-
-        //
-        // unassigned review
-        // get last review date. (if null, get first date of contact)
-        // calculate review date -  da
 
         return self::STATUS_SUCCESS;
     }
