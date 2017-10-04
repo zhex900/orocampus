@@ -22,12 +22,12 @@ class TransitionAssignCommand extends ContainerAwareCommand implements CronComma
     const COMMAND_NAME   = 'oro:cron:contact:transition_assign';
 
     /**
-     * Run every minute
+     * Run every 15 minute
      * {@inheritdoc}
      */
     public function getDefaultDefinition()
     {
-        return '* * * * *';
+        return '*/15 * * * *';
     }
 
     /**
@@ -58,9 +58,9 @@ class TransitionAssignCommand extends ContainerAwareCommand implements CronComma
     {
         $output->writeln('Auto transition: from unassigned to assigned');
 
-      #  $this->getContainer()
-      #      ->get('campus_contact.workflow.manager')
-      #      ->transitUnassignedToAssigned();
+        $this->getContainer()
+            ->get('campus_contact.workflow.manager')
+            ->applyTransitRuleFromTo('contact_followup', 'unassigned', 'assign');
 
         return self::STATUS_SUCCESS;
     }

@@ -19,7 +19,7 @@ class ReviewManager
     /*
      * array ( step name => number of days until the next review)
      */
-    const REVIEW_LIMIT = ['unassigned' => 1, 'assigned' => 14, 'contacted' => 14, 'followup'=>28];
+    const REVIEW_LIMIT = ['unassigned' => 1, 'assigned' => 7, 'contacted' => 7, 'followup'=>28];
     const SENDER = 'no-reply@orocampus.tk';
     const SUBJECT = 'Review reminder';
 
@@ -51,6 +51,7 @@ class ReviewManager
         $this->today->setTimezone(new \DateTimeZone('UTC'));
         $this->ft_users = $this->findUserByRole('FULL_TIMER');
         $this->mailer = $container->get('oro_email.mailer.processor');
+        $this->emails=[];
     }
 
     public function applyReviewRulesForContactFollowUp(){
@@ -93,7 +94,7 @@ class ReviewManager
                     $this->container->get('doctrine.orm.entity_manager')->flush($contact);
                 }
                 // send reminder email
-                if ($at = 'unassigned'){
+                if ($at === 'unassigned'){
                     // notify all FT users
                     $this->sendEmails($contact,$at,$this->ft_users);
                 }else{
@@ -141,6 +142,15 @@ class ReviewManager
         ';
     }
 
+    /*
+     * Compose the body of the reminder message
+     * TODO:
+     * Last contact date.
+     * Days since last contact.
+     * Days since last review.
+     * Add HTML tags and CSS.
+     * Review link.
+     */
     protected function getReminderMsg(Contact $contact, $step)
     {
         return $contact->getId() . ', '. $contact->getFirstName(). ', '.
@@ -165,11 +175,12 @@ class ReviewManager
             $email = $item[0];
             /* @var User $user */
             $user = $item[1];
+            // TODO:
+            // Add the number of reviews required.
             $email->setBody($this->getReminderHeader($user).' '. $email->getBody());
             $this->mailer->process($email);
             $this->container->get('logger')
                 ->debug('ReviewManager. Review Send Email to '. $user->getFirstName(). ' msg: '.$email->getBody());
-
         }
     }
 

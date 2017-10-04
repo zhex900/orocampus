@@ -14,18 +14,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 
-class TransitionDailyCommand extends ContainerAwareCommand implements CronCommandInterface
+class TransitionAndReviewCommand extends ContainerAwareCommand implements CronCommandInterface
 {
     const STATUS_SUCCESS = 0;
-    const COMMAND_NAME = 'oro:cron:contact:transition_daily';
+    const COMMAND_NAME = 'oro:cron:contact:transition_review';
 
     /**
-     * Daily at midnight
+     * Daily at 4 am
      * {@inheritdoc}
      */
     public function getDefaultDefinition()
     {
-        return '0 0 * * *';
+        return '0 4 * * *';
     }
 
     /**
@@ -51,7 +51,12 @@ class TransitionDailyCommand extends ContainerAwareCommand implements CronComman
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('Apply transition rules.');
+        $this->getContainer()
+            ->get('campus_contact.workflow.manager')
+            ->runTransitRulesForContactFollowup();
 
+        $output->writeln('Apply review rules.');
         $this->getContainer()
             ->get('campus_contact.review.manager')
             ->applyReviewRulesForContactFollowUp();
