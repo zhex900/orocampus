@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, td, th {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+Hi {{ user }},<p>
+Please review the following contacts by this <a href="https://orocampus.tk">link</a>.<p>
+
+<body>
+
+{% set temp = reviews|first %}
+<table>
+<tr>
+    {% for property_title in temp|keys %}
+        <th>{{ property_title }}</th>
+    {% endfor %}
+</tr>
+{% set i = 1 %}
+{% for item in reviews %}
+        <tr>
+            {% for field in temp|keys %}
+                <td>{{ attribute(item, field) }}</td>
+            {% endfor %}
+        </tr>
+{% endfor %}
+</table>
+</body>
+    Best regards,
+<p>
+    OROCAMPUS
+</html>

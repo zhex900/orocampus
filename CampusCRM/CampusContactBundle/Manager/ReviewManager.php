@@ -32,7 +32,7 @@ class ReviewManager
     /*
      * <code>
      * $emails = array (
-     *      'email_address' => array( 'email', 'user' )
+     *      'email_address' => array( 'email', 'user', array(key=>value) )
      * )
      * </code>
      */
@@ -44,6 +44,9 @@ class ReviewManager
     /* @var Mailer */
     protected $mailer;
 
+    /* @var \Twig_Environment $twig */
+    protected $twig;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -52,6 +55,7 @@ class ReviewManager
         $this->ft_users = $this->findUserByRole('FULL_TIMER');
         $this->mailer = $container->get('oro_email.mailer.processor');
         $this->emails=[];
+        $this->twig = $container->get('twig');
     }
 
     public function applyReviewRulesForContactFollowUp(){
@@ -118,13 +122,9 @@ class ReviewManager
     protected function sendEmail(Contact $contact, $step, User $user)
     {
         if ($this->emails==null || !array_key_exists($user->getEmail(),$this->emails)){
-            $this->emails[$user->getEmail()] = [$this->createEmail($user->getEmail()), $user];
+            $this->emails[$user->getEmail()] = [$this->createEmail($user->getEmail()), $user,[]];
         }
-           /* @var Email $email */
-        $email = $this->emails[$user->getEmail()][0];
-        $reminder = $this->getReminderMsg($contact,$step);
-        $email->setBody($email->getBody().' '.$reminder);
-        $this->emails[$user->getEmail()][0]=$email;
+        $this->emails[$user->getEmail()][2][]=$this->getReminderMsg($contact,$step,sizeof($this->emails[$user->getEmail()][2]));
     }
 
     protected function sendEmails(Contact $contact, $step, $users)
@@ -145,24 +145,30 @@ class ReviewManager
     /*
      * Compose the body of the reminder message
      * TODO:
-     * Last contact date.
-     * Days since last contact.
-     * Days since last review.
-     * Add HTML tags and CSS.
      * Review link.
+     *
+     * @param Contact $contact
+     * @param string $step
+     * @param int $i
+     * @return array. Key is the field name. Value is the field value.
      */
-    protected function getReminderMsg(Contact $contact, $step)
+    protected function getReminderMsg(Contact $contact, $step, $i)
     {
-        return $contact->getId() . ', '. $contact->getFirstName(). ', '.
-            $contact->getLastName(). ', '. $contact->getSemesterContacted() .
-            ', ' . $contact->getLastReview()->format('d-m-Y'). ' '.$step;
+        return [
+            '#'                     => $i+1,
+            'Name'                  => $contact->getFirstName(). ' '. $contact->getLastName(),
+            'Semester contacted'    => $contact->getSemesterContacted(),
+            'Last review'           => $contact->getLastReview()->format('d-m-Y'),
+          //  'last contacted'        => $contact->getAcLastContactDate()->format('d-m-Y'),
+            'Status'                => $step
+            ];
     }
 
     protected function createEmail($to)
     {
         $email = $this->container->get('oro_email.email.model.builder')->createEmailModel();
         $email->setSubject('orocampus review');
-        $email->setType('Html');
+        $email->setType('html');
         $email->setFrom('no-reply@orocampus.tk');
         $email->setTo([$to]);
         return $email;
@@ -177,10 +183,12 @@ class ReviewManager
             $user = $item[1];
             // TODO:
             // Add the number of reviews required.
-            $email->setBody($this->getReminderHeader($user).' '. $email->getBody());
+            $email->setBody($this->twig
+                ->loadTemplate('@CampusContact/review_email.twig')
+                ->render(['user' => $user->getFirstName(), 'reviews' => $item[2]]));
             $this->mailer->process($email);
             $this->container->get('logger')
-                ->debug('ReviewManager. Review Send Email to '. $user->getFirstName(). ' msg: '.$email->getBody());
+                ->debug('ReviewManager. Review Send Email to '. $user->getFirstName(). ' s '.sizeof($item[2]));
         }
     }
 
