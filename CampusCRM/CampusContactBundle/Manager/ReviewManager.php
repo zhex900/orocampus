@@ -16,8 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ReviewManager
 {
-    // key : step name
-    // value: number of days until the next review
+    /*
+     * array ( step name => number of days until the next review)
+     */
     const REVIEW_LIMIT = ['unassigned' => 1, 'assigned' => 14, 'contacted' => 14, 'followup'=>28];
     const SENDER = 'no-reply@orocampus.tk';
     const SUBJECT = 'Review reminder';
@@ -64,6 +65,7 @@ class ReviewManager
     * Helper function to apply review to all contacts at
     * given step.
     *
+    * @param string $workflow workflow name
     * @param string $at step name
     */
     public function applyReviewRule($workflow, $at)
@@ -90,7 +92,7 @@ class ReviewManager
                     $contact->setReviewRequest(true);
                     $this->container->get('doctrine.orm.entity_manager')->flush($contact);
                 }
-                // add notification
+                // send reminder email
                 if ($at = 'unassigned'){
                     // notify all FT users
                     $this->sendEmails($contact,$at,$this->ft_users);
@@ -109,7 +111,8 @@ class ReviewManager
 
     /*
      * @param Contact $contact
-     *
+     * @param string name of the workflow step
+     * @param User $user. The user whom will receive the email.
      */
     protected function sendEmail(Contact $contact, $step, User $user)
     {
