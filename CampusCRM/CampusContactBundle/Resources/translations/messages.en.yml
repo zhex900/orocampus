@@ -1,8 +1,9 @@
 oro:
     contact:
-            closedreason.label:           Closed Reason
-            lastreview.label:             Last Review Date
-            closeddata.label:             Closed Data
+            closed_reason.label:          Closed Reason
+            last_review.label:            Last Review Date
+            closed_date.label:            Closed Date
+            review_request.label:         Review Request
             autoallocate:
                 mass_action.success:      Auto-allocate completed successfully on %count% contacts.
                 mass_action.failure:      Mass auto-allocate failed.
