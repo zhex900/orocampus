@@ -158,10 +158,20 @@ class ReviewManager
             '#'                     => $i+1,
             'Name'                  => $contact->getFirstName(). ' '. $contact->getLastName(),
             'Semester contacted'    => $contact->getSemesterContacted(),
-            'Last review'           => $contact->getLastReview()->format('d-m-Y'),
-          //  'last contacted'        => $contact->getAcLastContactDate()->format('d-m-Y'),
+           // 'Last review'           => $contact->getLastReview()->format('d-m-Y'),
+            'Last contacted date'   => $this->getLastContactDate($contact),
             'Status'                => $step
             ];
+    }
+
+    protected function getLastContactDate(Contact $contact){
+        if ( $contact->getAcLastContactDate() == null ){
+            return 'N/A';
+        }else{
+            /* @var \DateTime $last */
+            $last = $contact->getAcLastContactDate();
+            return $last->format('d-m-Y'). ', '. $last->diff($this->today)->format("%a"). ' days';
+        }
     }
 
     protected function createEmail($to)
