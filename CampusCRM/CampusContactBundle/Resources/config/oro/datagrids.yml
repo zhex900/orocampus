@@ -15,16 +15,8 @@ datagrids:
                     - c.lastName
                     - c.createdAt
                     - c.updatedAt
-                    - c.fax
-                    - c.skype
-                    - c.twitter
-                    - c.facebook
-                    - c.googlePlus
-                    - c.linkedIn
                     - c.birthday
                     - c.gender
-                    - picture.originalFilename as pictureFilename
-                    - contactSource.name as source
                     - email.email
                     - email.id as emailId
                     - phone.phone
@@ -34,9 +26,8 @@ datagrids:
                     - address.postalCode as addressPostalCode
                     - address.city as addressCity
                     - address.street as addressStreet
+                    - CONCAT_WS(' ', c.firstName, c.lastName) as fullName
                     - CONCAT_WS(' ', o.firstName, o.lastName) as ownerName
-                    - CONCAT_WS(' ', assignedTo.firstName, assignedTo.lastName) as assignedName
-                    - CONCAT_WS(' ', reportsTo.firstName, reportsTo.lastName) as reportsName
                 from:
                     - { table: %oro_contact.entity.class%, alias: c }
                 join:
@@ -44,22 +35,23 @@ datagrids:
                         - { join: c.addresses, alias: address, conditionType: WITH, condition: 'address.primary = true' }
                         - { join: c.emails, alias: email, conditionType: WITH, condition: 'email.primary = true' }
                         - { join: c.phones, alias: phone, conditionType: WITH, condition: 'phone.primary = true' }
-                        - { join: c.source, alias: contactSource }
                         - { join: address.country, alias: country }
                         - { join: address.region, alias: region }
                         - { join: c.owner, alias: o }
-                        - { join: c.assignedTo, alias: assignedTo }
-                        - { join: c.reportsTo, alias: reportsTo }
-                        - { join: c.picture, alias: picture }
             hints:
                 - HINT_TRANSLATABLE
         inline_editing:
             enable: true
         columns:
+            fullName:
+                label:      oro.contact.gridview.fullname.label
+                renderable: true
             firstName:
                 label:         oro.contact.first_name.label
+                renderable: false
             lastName:
                 label:         oro.contact.last_name.label
+                renderable: false
             birthday:
                 label:         oro.contact.birthday.label
                 frontend_type: date
@@ -106,32 +98,6 @@ datagrids:
                             className: Oro_Bundle_ContactBundle_Entity_ContactPhone
                         route_parameters_rename_map:
                             phoneId: id
-            fax:
-                label:         oro.contact.fax.label
-                frontend_type: phone
-                renderable:    false
-            skype:
-                label:         oro.contact.skype.label
-                frontend_type: string
-                renderable:    false
-            twitter:
-                label:         oro.contact.twitter.label
-                frontend_type: string
-                renderable:    false
-            facebook:
-                label:         oro.contact.facebook.label
-                frontend_type: string
-                renderable:    false
-            linkedIn:
-                label:         oro.contact.linked_in.label
-                frontend_type: string
-                renderable:    false
-            googlePlus:
-                label:         oro.contact.google_plus.label
-                frontend_type: string
-                renderable:    false
-            source:
-                label:         oro.contact.source.label
             countryName:
                 label:         oro.contact.contactaddress.country.label
             regionLabel:
@@ -150,9 +116,6 @@ datagrids:
             updatedAt:
                 label:         oro.ui.updated_at
                 frontend_type: datetime
-            pictureFilename:
-                label:         oro.contact.picture.label
-                renderable:    false
             ownerName:
                 inline_editing:
                     enable: true
@@ -166,22 +129,6 @@ datagrids:
                 label:      oro.contact.owner.label
                 renderable: false
                 frontend_type: relation
-            assignedName:
-                inline_editing:
-                    enable: true
-                    editor:
-                        view: oroform/js/app/views/editor/related-id-relation-editor-view
-                        view_options:
-                            value_field_name: assignedTo
-                    autocomplete_api_accessor:
-                        class: orouser/js/tools/acl-users-search-api-accessor
-                        permission_check_entity_name: Oro_Bundle_ContactBundle_Entity_Contact
-                label:         oro.contact.assigned_to.label
-                renderable: false
-                frontend_type: relation
-            reportsName:
-                label:         oro.contact.reports_to.label
-                renderable: false
         properties:
             id: ~
             emailId: ~
@@ -200,6 +147,8 @@ datagrids:
                 params:     [ id ]
         sorters:
             columns:
+                fullName:
+                    data_name: fullName
                 firstName:
                     data_name: c.firstName
                 lastName:
@@ -212,20 +161,6 @@ datagrids:
                     data_name: email.email
                 phone:
                     data_name: phone.phone
-                fax:
-                    data_name: c.fax
-                skype:
-                    data_name: c.skype
-                twitter:
-                    data_name: c.twitter
-                facebook:
-                    data_name: c.facebook
-                linkedIn:
-                    data_name: c.linkedIn
-                googlePlus:
-                    data_name: c.googlePlus
-                source:
-                    data_name: contactSource.label
                 countryName:
                     data_name: country.name
                 regionLabel:
@@ -240,17 +175,11 @@ datagrids:
                     data_name: c.createdAt
                 updatedAt:
                     data_name: c.updatedAt
-                pictureFilename:
-                    data_name: pictureFilename
                 ownerName:
                     data_name: ownerName
-                assignedName:
-                    data_name: assignedName
-                reportsName:
-                    data_name: reportsName
             default:
-                lastName:  %oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC
-                firstName: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC
+                createdAt:  %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC
+               # firstName: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC
         filters:
             columns:
                 firstName:
@@ -278,39 +207,6 @@ datagrids:
                     type: string
                     data_name: phone.phone
                     enabled: false
-                fax:
-                    type: string
-                    data_name: c.fax
-                    enabled: false
-                skype:
-                    type: string
-                    data_name: c.skype
-                    enabled: false
-                twitter:
-                    type: string
-                    data_name: c.twitter
-                    enabled: false
-                facebook:
-                    type: string
-                    data_name: c.facebook
-                    enabled: false
-                linkedIn:
-                    type: string
-                    data_name: c.linkedIn
-                    enabled: false
-                googlePlus:
-                    type: string
-                    data_name: c.googlePlus
-                    enabled: false
-                source:
-                    type: entity
-                    data_name: contactSource.name
-                    enabled: false
-                    options:
-                        field_options:
-                            class: OroContactBundle:Source
-                            property: label
-                            translatable_options: false
                 countryName:
                     type: choice
                     data_name: address.country
@@ -343,34 +239,14 @@ datagrids:
                     type:      datetime
                     data_name: c.updatedAt
                     enabled: false
-                pictureFilename:
-                    type:      string
-                    data_name: pictureFilename
-                    enabled: false
                 owner:
+                    enabled: false
                     type: choice-tree
                     label: oro.user.owner.label
                     data_name: c.owner
                     autocomplete_alias: users
                     renderedPropertyName: 'fullName'
                     className: 'Oro\Bundle\UserBundle\Entity\User'
-                assignedName:
-                    type: choice-tree
-                    data_name: c.assignedTo
-                    autocomplete_alias: users
-                    renderedPropertyName: 'fullName'
-                    className: 'Oro\Bundle\UserBundle\Entity\User'
-                    enabled: true
-                reportsName:
-                    type: string
-                    data_name: reportsName
-                    enabled: false
-                businessUnitId:
-                    label: oro.business_unit.label
-                    type: choice-business-unit
-                    data_name: c.owner
-                    className: 'Oro\Bundle\OrganizationBundle\Entity\BusinessUnit'
-                    enabled: false
                 duplicate:
                     type: duplicate
                     data_name: email.email
@@ -418,7 +294,7 @@ datagrids:
        # views_list: '@oro_contact.contacts_view_list'
 
     # contacts main grid show on oro_contact_index route
-    all-contacts-grid:
+    base-contacts-grid:
         extends: campus-contacts-grid
         columns:
             firstName:
@@ -471,33 +347,6 @@ datagrids:
                             className: Oro_Bundle_ContactBundle_Entity_ContactPhone
                         route_parameters_rename_map:
                             phoneId: id
-            fax:
-                label:         oro.contact.fax.label
-                frontend_type: phone
-                renderable:    false
-            skype:
-                label:         oro.contact.skype.label
-                frontend_type: string
-                renderable:    false
-            twitter:
-                label:         oro.contact.twitter.label
-                frontend_type: string
-                renderable:    false
-            facebook:
-                label:         oro.contact.facebook.label
-                frontend_type: string
-                renderable:    false
-            linkedIn:
-                label:         oro.contact.linked_in.label
-                frontend_type: string
-                renderable:    false
-            googlePlus:
-                label:         oro.contact.google_plus.label
-                frontend_type: string
-                renderable:    false
-            source:
-                label:         oro.contact.source.label
-                renderable:    false
             countryName:
                 label:         oro.contact.contactaddress.country.label
                 renderable:    false
@@ -521,15 +370,6 @@ datagrids:
                 label:         oro.ui.updated_at
                 frontend_type: datetime
                 renderable:    false
-            pictureFilename:
-                label:         oro.contact.picture.label
-                renderable:    false
-            assignedName:
-                label:         oro.contact.assigned_to.label
-                renderable: true
-            reportsName:
-                label:         oro.contact.reports_to.label
-                renderable: false
             user:
                 renderable: false
             country_of_birth:
@@ -564,7 +404,7 @@ datagrids:
                 renderable: false
             int_student:
                 label: 'Int'
-                renderable: true
+                renderable: false
             institutions:
                 label: 'Institution'
                 renderable: false
@@ -575,16 +415,28 @@ datagrids:
             ethnicity:
                 renderable: false
             church_kid:
-                renderable: true
+                renderable: false
             contact_source:
                 label:  'Source'
-                renderable: true
+                renderable: false
             semester_contacted:
                 label:  'Semester'
                 renderable: true
             ownerName:
-                label:         oro.contact.owner.label
-                renderable: true
+                label:      oro.contact.owner.label
+                renderable: false
+            auto_allocate:
+                renderable: false
+            closed_date:
+                 frontend_type: date
+                 renderable: false
+            last_review:
+                frontend_type: date
+                renderable: false
+            closed_reason:
+                renderable: false
+            review_request:
+                renderable: false
         filters:
             columns:
                 semester_contacted:
@@ -596,4 +448,53 @@ datagrids:
                     data_name: contact_source
                     enum_code: contact_source_source
                     enabled: true
-        views_list: '@oro_contact.contact_grid_view_list'
+       # views_list: '@oro_contact.contact_grid_view_list'
+
+    all-contacts-grid:
+        extends: base-contacts-grid
+        columns:
+            ownerName:
+                renderable: true
+
+    review-contacts-grid:
+        extends: base-contacts-grid
+        columns:
+            timesContacted:
+                renderable: true
+            lastContactedDate:
+                renderable: true
+            daysSinceLastContact:
+                renderable: true
+            email:
+                renderable: false
+            ownerName:
+                renderable: false
+        filters:
+            default:
+                review_request:
+                    value: '1'
+                owner:
+                    value: CONCAT_WS('',@oro_security.token_accessor->getUserId)
+            columns:
+                owner:
+                    enabled: true
+                    type: choice-tree
+                    label: oro.user.owner.label
+                    data_name: c.owner
+                    autocomplete_alias: users
+                    renderedPropertyName: 'fullName'
+                    className: 'Oro\Bundle\UserBundle\Entity\User'
+                review_request:
+                    type: boolean
+                    data_name: review_request
+                    enabled: true
+                semester_contacted:
+                    type: string
+                    data_name: semester_contacted
+                    enabled: true
+                contact_source:
+                    type: enum
+                    data_name: contact_source
+                    enum_code: contact_source_source
+                    enabled: true
+       # views_list: '@oro_contact.contact_grid_view_list'

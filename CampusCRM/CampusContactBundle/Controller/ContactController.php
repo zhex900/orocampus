@@ -31,4 +31,22 @@ class ContactController extends BaseController
             'block' => $block
         );
     }
+
+    /**
+     * @Route(
+     *      "/review/{_format}",
+     *      name="oro_contact_review",
+     *      requirements={"_format"="html|json"},
+     *      defaults={"_format" = "html"}
+     * )
+     *
+     * @Template
+     * @AclAncestor("oro_contact_view")
+     */
+    public function reviewAction()
+    {
+        return [
+            'entity_class' => $this->container->getParameter('oro_contact.entity.class')
+        ];
+    }
 }

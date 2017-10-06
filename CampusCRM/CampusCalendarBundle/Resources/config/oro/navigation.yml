@@ -21,12 +21,12 @@ navigation:
                 extras:
                     routes: ['/^oro_contact_(?!group\w+|group\w+)\w+$/']
                     description: 'oro.contact.menu.contact_list.description'
-            campus_contact_group_list:
-                label: 'oro.contact.group.entity_plural_label'
-                route: 'oro_contact_group_index'
-                extras:
-                    routes:      ['oro_contact_group_*']
-                    description: 'oro.contact.menu.contact_group_list.description'
+            campus_contact_review_list:
+                label: 'oro.contact.gridview.review_request.label'
+                route: 'oro_contact_review'
+                #extras:
+                #    routes: ['/^oro_contact_(?!group\w+|group\w+)\w+$/']
+                #    description: 'oro.contact.menu.contact_list.description'
             campus_contacts_tab:
                 label: 'Contacts'
                 uri: '#'
@@ -50,7 +50,7 @@ navigation:
                     campus_contacts_tab:
                         children:
                             campus_contact_list: ~
-                            campus_contact_group_list: ~
+                            campus_contact_review_list: ~
 
                     campus_calendar_tab:
                         children:
