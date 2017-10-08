@@ -16,10 +16,10 @@ if (isset($_SESSION['form'])):
         <title> Registration Form | UNSW Christians </title>
         <link rel="stylesheet" type="text/css" href="../css/select2-4.0.3.css">
         <link rel="stylesheet" type="text/css" media="all" href="../css/auto-complete-style.css">
-        <link type="text/css" rel="stylesheet" href="../css/golden-forms.css"/>
-        <link type="text/css" rel="stylesheet" href="../css/font-awesome.min.css"/>
-        <link rel="stylesheet" href="../css/jquery-ui-1.11.0.css">
-        <link rel="stylesheet" href="../css/custom.css">
+        <link rel="stylesheet" type="text/css" href="../css/golden-forms.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.11.0.css">
+        <link rel="stylesheet" type="text/css" href="../css/custom.css">
         <link rel="preload" href="../images/wooden.jpg" as="image">
         <link rel="preload" href="../images/CSAC4.png" as="image">
         <script src="../js/jquery-1.12.4.min.js"></script>
@@ -30,7 +30,6 @@ if (isset($_SESSION['form'])):
         <!-- Automatically completes the address as the user is typing it -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQpSg-uWZkbaydLNvkXcwhNvIA6BfffJQ&libraries=places&callback=initAutocomplete"
                 async defer></script>
-
         <script src="../js/address-autocomplete.js" async defer></script>`
         <script type="text/javascript">
             $(function () {
