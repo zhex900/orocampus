@@ -18,7 +18,7 @@ define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
-define("APIKEY", "0943f85d1e957014a8c815ce953b5b9ab2258d30");
+define("APIKEY", "5f39c657c5f60ccdb04401b0ff4a96735fe0bac3");
 define("LOGIN", "admin");
 define("NUMBEROFTRY",5);
 define("EVENTS","rest/latest/calendarevents.json");
