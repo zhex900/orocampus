@@ -1,0 +1,25 @@
+body  {
+    background-image: url("../images/wooden.jpg");
+}
+
+.banner {
+     width: 100%;
+}
+
+/* golden-forms.css overwrite */
+.golden-forms input[placeholder],
+.golden-forms textarea[placeholder] { color:#444; }
+
+#required {
+    line-height: 0px;
+}
+
+.golden-forms .checkbox:before {
+    border: solid #444;
+    border-width: 0 0 3px 3px;
+}
+
+.golden-forms .radio:before {
+    background: #444;
+    border-radius: 3px;
+}
