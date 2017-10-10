@@ -49,4 +49,22 @@ class ContactController extends BaseController
             'entity_class' => $this->container->getParameter('oro_contact.entity.class')
         ];
     }
+
+    /**
+     * @Route(
+     *      "/assigned/{_format}",
+     *      name="oro_contact_assigned",
+     *      requirements={"_format"="html|json"},
+     *      defaults={"_format" = "html"}
+     * )
+     *
+     * @Template
+     * @AclAncestor("oro_contact_view")
+     */
+    public function assignedAction()
+    {
+        return [
+            'entity_class' => $this->container->getParameter('oro_contact.entity.class')
+        ];
+    }
 }
