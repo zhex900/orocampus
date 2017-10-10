@@ -61,7 +61,6 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
     private function setTitle(FormEvent $event) {
         /** @var CalendarEvent $calendar_event */
         $calendar_event = $event->getData();
-
         $event->getData()->setTitle($calendar_event->getOroEventname());
     }
 
@@ -72,17 +71,18 @@ class CalendarEventTypeSubscriber implements EventSubscriberInterface
 
         if ($calendar_event->getCalendar() instanceof Calendar) {
             try {
+                $start = clone $calendar_event->getStart();
                 $sem = $this
                     ->container
                     ->get('academic_calendar')
-                    ->getSemester($calendar_event->getStart());
+                    ->getSemester($start);
                 $calendar_event->setSemester($sem);
 
                 $calendar_event
                     ->setTeachingWeek($this
                         ->container
                         ->get('academic_calendar')
-                        ->getTeachingWeek($calendar_event->getStart()), substr($sem, 4));
+                        ->getTeachingWeek($start), substr($sem, 4));
             } catch (\Exception $e) {
                 $this->container->get('session')->getFlashBag()->add('error', $e->getMessage());
             }
