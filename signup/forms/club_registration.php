@@ -16,20 +16,21 @@ if (isset($_SESSION['form'])):
         <title> Registration Form | UNSW Christians </title>
         <link rel="stylesheet" type="text/css" href="../css/select2-4.0.3.css">
         <link rel="stylesheet" type="text/css" media="all" href="../css/auto-complete-style.css">
-        <link type="text/css" rel="stylesheet" href="../css/golden-forms.css"/>
-        <link type="text/css" rel="stylesheet" href="../css/font-awesome.min.css"/>
-        <link rel="stylesheet" href="../css/jquery-ui-1.11.0.css">
+        <link rel="stylesheet" type="text/css" href="../css/golden-forms.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.11.0.css">
+        <link rel="stylesheet" type="text/css" href="../css/custom.css">
+        <link rel="preload" href="../images/wooden.jpg" as="image">
+        <link rel="preload" href="../images/CSAC4.png" as="image">
         <script src="../js/jquery-1.12.4.min.js"></script>
         <script src="../js/jquery-ui-1.12.1.min.js"></script>
         <!--<script src="../js/select2-4.0.3.min.js"></script>-->
         <script src="../js/select2-4.0.3.js"></script>
-
+        <script src="../js/mySelect2.js"></script>
         <!-- Automatically completes the address as the user is typing it -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQpSg-uWZkbaydLNvkXcwhNvIA6BfffJQ&libraries=places&callback=initAutocomplete"
                 async defer></script>
-
-        <script src="../js/address-autocomplete.js"></script>
-        <script src="../js/mySelect2.js"></script>
+        <script src="../js/address-autocomplete.js" async defer></script>`
         <script type="text/javascript">
             $(function () {
                 $("#datepicker").datepicker({
@@ -49,16 +50,13 @@ if (isset($_SESSION['form'])):
 
     </head>
 
-    <body class="bg-wooden" onload="geolocate(); initialize();">
-
     <div class="gforms">
 
         <div class="golden-forms wrapper">
             <form name="inputForm" action="../register.php" method="post">
 
                 <div class="form-title">
-                    <!-- todo get rid off inline css -->
-                    <img src="../images/CSAC4.png" alt="Christian Students at Curtin" style="width: 100%">
+                    <img class="banner"  src="../images/CSAC4.png" alt="Christian Students at Curtin">
                     <!--  <h2>CSAC Registration</h2>-->
                 </div>
                 <!-- end .form-title section -->
