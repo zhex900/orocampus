@@ -41,28 +41,20 @@ cp -r orocampus/CampusCRM/ src/
 ``` bash
 php app/console cache:clear --env=dev -vvv
 ```
-5. Load new database schema
-``` bash
-php app/console oro:migration:load --show-queries --force
-```
-6. Load fixtures or default data
-``` bash
-php app/console oro:migration:data:load
-```
-7. Rebuild assets
+5. Rebuild assets
 ``` bash
 php app/console oro:platform:update --force
 ```
-8. Load workflows
+6. Load workflows
 ``` bash
 php app/console oro:workflow:definitions:load --workflows contact_followup
 php app/console oro:workflow:definitions:load --workflows contact_feedback
 ```
-9. Load translations
+7. Load translations
 ``` bash
 php app/console oro:translation:load
 ```
-10. Clear the cache again
+8. Clear the cache again
 ``` bash
 rm -rf app/cache/*
 php app/console cache:clear --env=dev -vvv
@@ -82,3 +74,12 @@ php app/console cache:clear --env=dev -vvv
     app/console oro:user:update admin --user-password=123456 --env=prod
 ## 
     chown -R www-data:www-data /var/www/ /srv/app-data/
+    
+    5. Load new database schema
+    ``` bash
+    php app/console oro:migration:load --show-queries --force
+    ```
+    6. Load fixtures or default data
+    ``` bash
+    php app/console oro:migration:data:load
+    ```
