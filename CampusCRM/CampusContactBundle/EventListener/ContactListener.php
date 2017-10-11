@@ -6,7 +6,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Oro\Bundle\ContactBundle\EventListener\ContactListener as BaseListener;
-use Oro\Bundle\ContactBundle\OroContactBundle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Oro\Bundle\ContactBundle\Entity\Contact;
@@ -24,6 +23,7 @@ class ContactListener extends BaseListener
 
     /**
      * @param TokenStorageInterface $tokenStorage
+     * @param ContainerInterface $container
      */
     public function __construct(TokenStorageInterface $tokenStorage, ContainerInterface $container)
     {
