@@ -183,6 +183,9 @@ datagrids:
                 renderable: false
             closed_reason:
                 renderable: false
+            status:
+                label:      oro.contact.status.label
+                renderable: true
             review_request:
                 renderable: false
             ownerName:
@@ -324,6 +327,10 @@ datagrids:
                     type: string
                     data_name: semester_contacted
                     enabled: true
+                status:
+                    type: string
+                    data_name: status
+                    enabled: true
         actions:
             view:
                 type: navigate
@@ -381,12 +388,14 @@ datagrids:
                 renderable: true
         filters:
             default:
-                workflowStepLabel:
+                status:
                     value: 'Assigned'
                 owner:
                     value: CONCAT_WS('',@oro_security.token_accessor->getUserId)
             columns:
-                workflowStepLabel:
+                status:
+                    type: string
+                    data_name: status
                     enabled: true
                 owner:
                     enabled: true
@@ -396,11 +405,7 @@ datagrids:
                     autocomplete_alias: users
                     renderedPropertyName: 'fullName'
                     className: 'Oro\Bundle\UserBundle\Entity\User'
-                contact_source:
-                    type: enum
-                    data_name: contact_source
-                    enum_code: contact_source_source
-                    enabled: true
+
 
     review-contacts-grid:
         extends: campus-contacts-grid

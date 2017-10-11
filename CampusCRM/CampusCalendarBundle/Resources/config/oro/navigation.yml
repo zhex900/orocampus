@@ -24,9 +24,6 @@ navigation:
             campus_contact_review_list:
                 label: 'oro.contact.gridview.review_request.label'
                 route: 'oro_contact_review'
-                #extras:
-                #    routes: ['/^oro_contact_(?!group\w+|group\w+)\w+$/']
-                #    description: 'oro.contact.menu.contact_list.description'
             campus_contacts_tab:
                 label: 'Contacts'
                 uri: '#'
