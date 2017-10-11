@@ -178,13 +178,14 @@
             {%- if block == 'Campus' -%}
                 {{ ui.renderProperty('oro.contact.church_kid.label'|trans, entity.churchKid ? 'Yes'|trans : 'No'|trans)  }}
                 {{ ui.renderProperty('oro.contact.contact_source.label'|trans, entity.contactSource) }}
-                {{ ui.renderProperty('oro.contact.contact_status.label'|trans, entity.contactStatus) }}
+                {#{{ ui.renderProperty('oro.contact.contact_status.label'|trans, entity.contactStatus) }}#}
                 {{ ui.renderProperty('oro.contact.closed_reason.label'|trans, entity.closedReason) }}
 
+                {{ ui.renderProperty('status', entity.status) }}
                 {{ ui.renderProperty('oro.contact.last_review.label'|trans, entity.lastReview|oro_format_date ) }}
                 {{ ui.renderProperty('oro.contact.first_contact_date.label'|trans, entity.firstContactDate|oro_format_date ) }}
                 {{ ui.renderProperty('oro.contact.semester_contacted.label'|trans, entity.semesterContacted) }}
-                {{ ui.renderHtmlProperty('oro.contact.assigned_to.label'|trans, assignedToData) }}
+                {#{{ ui.renderHtmlProperty('oro.contact.assigned_to.label'|trans, assignedToData) }}#}
                 {{ ui.renderHtmlProperty('oro.contact.linked_user.label'|trans, linkedUser) }}
             {%- endif -%}
 
@@ -202,8 +203,6 @@
                 {{ ui.renderProperty('oro.contact.mhl.label'|trans, entity.mhl? 'Yes'|trans : 'No'|trans) }}
                 {{ ui.renderProperty('oro.contact.christian_courses.label'|trans, entity.christianCourses? 'Yes'|trans : 'No'|trans) }}
             {%- endif -%}
-
-
 
         </div>
     </div>

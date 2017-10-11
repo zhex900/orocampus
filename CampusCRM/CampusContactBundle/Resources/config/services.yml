@@ -17,6 +17,7 @@ services:
             - "@security.token_storage"
             - "@service_container"
         tags:
+            - { name: doctrine.event_listener, event: onFlush }
             - { name: doctrine.event_listener, event: preUpdate }
             - { name: doctrine.event_listener, event: postUpdate  }
             - { name: doctrine.event_listener, event: loadClassMetadata }

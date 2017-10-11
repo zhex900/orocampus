@@ -4,6 +4,7 @@ namespace CampusCRM\CampusContactBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Oro\Bundle\ContactBundle\EventListener\ContactListener as BaseListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,6 +34,24 @@ class ContactListener extends BaseListener
     }
 
     /**
+     * @param OnFlushEventArgs $args
+     */
+    public function onFlush(OnFlushEventArgs $args)
+    {
+        $entityManager = $args->getEntityManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
+
+        $newEntities = $unitOfWork->getScheduledEntityInsertions();
+
+        foreach ($newEntities as $entity) {
+
+            if ($entity instanceof Contact) {
+                $entity->setStatus('Unassigned');
+            }
+        }
+    }
+
+    /**
      *
      * @param LifecycleEventArgs $args
      */
@@ -42,7 +61,6 @@ class ContactListener extends BaseListener
 
         if ($this->transit) {
             if ($entity instanceof Contact) {
-
                 $this->container
                     ->get('campus_contact.workflow.manager')
                     ->transitFromTo($entity, 'contact_followup', 'unassigned', 'assign');

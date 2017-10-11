@@ -177,6 +177,8 @@ workflows:
                 is_final: true
                 order: 60
         attributes:
+            status:
+                type: string
             last_review:
                 type:       object
                 options:
@@ -210,24 +212,24 @@ workflows:
         transitions:
             assign:
                 step_to:  assigned
-                is_hidden: true
+#                is_hidden: true
                 frontend_options:
                     icon: 'fa-sign-in'
                     class: 'btn-success'
                 transition_definition: assign_def
- #               form_options:
- #                   attribute_fields:
- #                       owner:
- #                           form_type: oro_user_select
- ##                           options:
-  #                              required: false
-  #                      auto_allocate:
-  #                          form_type: checkbox
-  #                          options:
-  #                              required: true
-  #                  attribute_default_values:
-  #                      owner: $contact.owner
-  #                      auto_allocate: false
+                form_options:
+                    attribute_fields:
+                        owner:
+                            form_type: oro_user_select
+                            options:
+                                required: false
+                        auto_allocate:
+                            form_type: checkbox
+                            options:
+                                required: true
+                    attribute_default_values:
+                        owner: $contact.owner
+                        auto_allocate: false
             rollover:
                 is_hidden: true
                 step_to: assigned
@@ -261,16 +263,6 @@ workflows:
                     class: 'btn-danger'
                 form_options:
                     attribute_fields:
-#                        close_reason_name:
-#                            form_type: choice
-#                            options:
-#                                required: true
-#                                empty_value: false
-#                                choices:
-#                                    outsold: 'Outsold'
-#                                    cancelled: 'Cancelled'
-#                                constraints:
-#                                    - NotBlank: ~
                         closed_reason:
                             form_type: oro_enum_choice
                             options:
@@ -310,7 +302,7 @@ workflows:
                                 required: true
                                 constraints:
                                     - NotBlank: ~
-                transition_definition: keep_def
+                transition_definition: keep_followup_def
             keep_contacted:
                 step_to: contacted
                 frontend_options:
@@ -324,7 +316,7 @@ workflows:
                                 required: true
                                 constraints:
                                     - NotBlank: ~
-                transition_definition: keep_def
+                transition_definition: keep_contacted_def
             keep_assigned:
                 step_to: assigned
                 frontend_options:
@@ -338,7 +330,7 @@ workflows:
                                 required: true
                                 constraints:
                                     - NotBlank: ~
-                transition_definition: keep_def
+                transition_definition: keep_assigned_def
             keep_unassigned:
                 step_to: unassigned
                 frontend_options:
@@ -352,7 +344,7 @@ workflows:
                                 required: true
                                 constraints:
                                     - NotBlank: ~
-                transition_definition: keep_def
+                transition_definition: keep_unassigned_def
             transfer:
                 step_to: transfer
                 frontend_options:
@@ -382,31 +374,65 @@ workflows:
 #                            - '@empty': [$owner]
 #                            - '@equal': [$auto_allocate,true]
                 actions:
+                  - '@assign_value': [$contact.status, 'Assigned']
                   - '@auto_allocate_workflow':
                       owner: $owner
                       entity_class: $.entity
                       auto_allocate: $auto_allocate
-             reopen_def: ~
-             followup_def: ~
-             stable_def: ~
+             reopen_def:
+                actions:
+                  - '@assign_value': [$contact.status, 'Follow-up']
+             followup_def:
+                actions:
+                  - '@assign_value': [$contact.status, 'Follow-up']
+             stable_def:
+                actions:
+                  - '@assign_value': [$contact.status, 'Stable']
              close_def:
                 actions:
                   - '@assign_value': [$contact.lastReview, $last_review]
-                  - '@assign_value': [$contact.closedReason, $closed_reaon]
+                  - '@assign_value': [$contact.closedReason, $closed_reason]
+                  - '@assign_value': [$contact.status, 'Closed']
              contacted_def:
-                # Not contacted yet.
                 preconditions:
                     @equal: [$request.church_kid, false]
-             rollover_def: ~
-             transfer_def: ~
-             keep_def:
+                actions:
+                  - '@assign_value': [$contact.status, 'Contacted']
+             rollover_def:
+                actions:
+                  - '@assign_value': [$contact.status, 'Assigned']
+             transfer_def:
+                actions:
+                  - '@assign_value': [$contact.status, 'Transfer']
+             keep_followup_def:
                 preconditions:
                     '@and':
                         - '@equal': [$contact.reviewRequest, 1]
                 actions:
                   - '@assign_value': [$contact.lastReview, $last_review]
                   - '@assign_value': [$contact.reviewRequest, 0]
-
-                 # preconditions:
-                # review_request is true
-                # @equal: [$request.review_request, true]
+                  - '@assign_value': [$contact.status, 'Follow-up']
+             keep_unassigned_def:
+                preconditions:
+                    '@and':
+                        - '@equal': [$contact.reviewRequest, 1]
+                actions:
+                  - '@assign_value': [$contact.lastReview, $last_review]
+                  - '@assign_value': [$contact.reviewRequest, 0]
+                  - '@assign_value': [$contact.status, 'Unassigned']
+             keep_contacted_def:
+                preconditions:
+                    '@and':
+                        - '@equal': [$contact.reviewRequest, 1]
+                actions:
+                  - '@assign_value': [$contact.lastReview, $last_review]
+                  - '@assign_value': [$contact.reviewRequest, 0]
+                  - '@assign_value': [$contact.status, 'Contacted']
+             keep_assigned_def:
+                preconditions:
+                    '@and':
+                        - '@equal': [$contact.reviewRequest, 1]
+                actions:
+                  - '@assign_value': [$contact.lastReview, $last_review]
+                  - '@assign_value': [$contact.reviewRequest, 0]
+                  - '@assign_value': [$contact.status, 'Assigned']
