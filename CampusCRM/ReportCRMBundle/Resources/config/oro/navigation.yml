@@ -1,0 +1,15 @@
+navigation:
+    menu_config:
+        items:
+            static_reports_tab:
+                display: false
+                display_children: false
+            accounts_report_tab:
+                display: false
+                display_children: false
+            leads_report_tab:
+                display: false
+                display_children: false
+            opportunities_report_tab:
+                display: false
+                display_children: false
