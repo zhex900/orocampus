@@ -43,6 +43,7 @@ class RemoveDefaultData extends AbstractFixture implements ContainerAwareInterfa
                 $this->em->remove($entity);
             }
         }
+        $this->em->flush();
     }
 
     /**
