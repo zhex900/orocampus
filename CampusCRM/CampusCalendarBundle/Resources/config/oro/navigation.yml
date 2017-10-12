@@ -14,7 +14,11 @@ navigation:
             customers_tab:
                 display: false
                 display_children: false
-
+            followup_tab:
+                label: 'oro.contact.followup_status.label'
+                uri: '#'
+                extras:
+                    skipBreadcrumbs: true
             campus_contact_list:
                 label: 'oro.contact.entity_plural_label'
                 route: 'oro_contact_index'
@@ -24,6 +28,41 @@ navigation:
             campus_contact_review_list:
                 label: 'oro.contact.gridview.review_request.label'
                 route: 'oro_contact_review'
+            campus_contact_followup:
+                label: 'oro.contact.gridview.followup.label'
+                route: 'oro_contact_followup'
+                route_parameters:
+                    step: 'followup'
+            campus_contact_unassigned:
+                label: 'oro.contact.unassigned.label'
+                route: 'oro_contact_followup'
+                route_parameters:
+                    step: 'unassigned'
+            campus_contact_assigned:
+                label: 'oro.contact.assigned.label'
+                route: 'oro_contact_followup'
+                route_parameters:
+                    step: 'assigned'
+            campus_contact_contacted:
+                label: 'oro.contact.contacted.label'
+                route: 'oro_contact_followup'
+                route_parameters:
+                    step: 'contacted'
+            campus_contact_transfer:
+                label: 'oro.contact.transfer.label'
+                route: 'oro_contact_followup'
+                route_parameters:
+                    step: 'transfer'
+            campus_contact_stable:
+                label: 'oro.contact.stable.label'
+                route: 'oro_contact_followup'
+                route_parameters:
+                    step: 'stable'
+            campus_contact_closed:
+                label: 'oro.contact.closed.label'
+                route: 'oro_contact_followup'
+                route_parameters:
+                    step: 'closed'
             campus_contacts_tab:
                 label: 'Contacts'
                 uri: '#'
@@ -46,8 +85,16 @@ navigation:
                     campus_contacts_tab:
                         children:
                             campus_contact_list: ~
+                            followup_tab:
+                              children:
+                                campus_contact_unassigned: ~
+                                campus_contact_assigned: ~
+                                campus_contact_contacted: ~
+                                campus_contact_followup: ~
+                                campus_contact_stable: ~
+                                campus_contact_transfer: ~
+                                campus_contact_closed: ~
                             campus_contact_review_list: ~
-
                     campus_calendar_tab:
                         children:
                             oro_calendar_view_default: ~

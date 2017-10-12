@@ -4,6 +4,13 @@ oro:
             last_review.label:            Last Review Date
             status.label:                 Status
             review_request.label:         Review Request
+            followup_status.label:        Follow-up Status
+            unassigned.label:             Unassigned
+            assigned.label:               Assigned
+            contacted.label:              Contacted
+            stable.label:                 Stable
+            closed.label:                 Closed
+            transfer.label:               Transfer
             autoallocate:
                 mass_action.success:      Auto-allocate completed successfully on %count% contacts.
                 mass_action.failure:      Mass auto-allocate failed.

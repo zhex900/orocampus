@@ -55,7 +55,7 @@ class ContactController extends BaseController
      *
      * @Route(
      *      "/followup/{step}",
-     *      requirements={"step"="unassigned|followup|assigned|contacted|closed|transfer|stable"})
+     *      requirements={"step"="unassigned|followup|assigned|contacted|closed|transfer|stable"},
      *      name="oro_contact_followup",
      *      requirements={"_format"="html|json"},
      *      defaults={"_format" = "html"}

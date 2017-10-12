@@ -73,18 +73,19 @@ class TestCommand extends ContainerAwareCommand implements CronCommandInterface
 //            ->get('oro_entity_config.provider.workflow')
 //            ->getConfig('Oro\Bundle\ContactBundle\Entity\Contact')->set('show_step_in_grid', 0);
 
-        $d = $this->getContainer()
-            ->get('oro_entity_config.provider.workflow')
-            ->getConfig('Oro\Bundle\ContactBundle\Entity\Contact')->get('show_step_in_grid');
+        $report = $this->getContainer()
+            ->get('doctrine.orm.entity_manager')->getRepository('OroReportBundle:Report')->findOneBy(['name'=>'Campaign Performance']);
 
-//        $configManager->flush();
-
-        $a = $this->getContainer()
-            ->get('oro_entity_config.provider.workflow')
-            ->getConfig('Oro\Bundle\ContactBundle\Entity\Contact')->get('show_step_in_grid');
-
-
-        $output->writeln('value: ' . $d . ' after flush ' . $a);
+        if ($report !=null ){
+            $output->writeln('Report find: '. $report->getEntity());
+            $this->getContainer()
+                ->get('doctrine.orm.entity_manager')->remove($report);
+            $this->getContainer()
+                ->get('doctrine.orm.entity_manager')->flush();
+        }
+        else{
+            $output->writeln('Report not find ');
+        }
         return self::STATUS_SUCCESS;
     }
 }

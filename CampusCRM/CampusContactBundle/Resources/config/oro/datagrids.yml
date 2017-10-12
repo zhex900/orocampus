@@ -416,12 +416,33 @@ datagrids:
                 status:
                     value: 'Contacted'
 
+    stable-contacts-grid:
+        extends: followup-contacts-grid
+        filters:
+            default:
+                status:
+                    value: 'Stable'
+
     assigned-contacts-grid:
         extends: followup-contacts-grid
         filters:
             default:
                 status:
                     value: 'Assigned'
+
+    closed-contacts-grid:
+        extends: followup-contacts-grid
+        filters:
+            default:
+                status:
+                    value: 'Closed'
+
+    transfer-contacts-grid:
+        extends: followup-contacts-grid
+        filters:
+            default:
+                status:
+                    value: 'Transfer'
 
     unassigned-contacts-grid:
         extends: campus-contacts-grid
