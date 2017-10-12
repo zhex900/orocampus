@@ -379,7 +379,10 @@ datagrids:
             ownerName:
                 renderable: true
 
-    assigned-contacts-grid:
+    followup-contacts-grid:
+#        source:
+#            bind_parameters:
+#                - step
         extends: campus-contacts-grid
         columns:
             email:
@@ -389,7 +392,7 @@ datagrids:
         filters:
             default:
                 status:
-                    value: 'Assigned'
+                    value: 'Follow-up'
                 owner:
                     value: CONCAT_WS('',@oro_security.token_accessor->getUserId)
             columns:
@@ -406,6 +409,36 @@ datagrids:
                     renderedPropertyName: 'fullName'
                     className: 'Oro\Bundle\UserBundle\Entity\User'
 
+    contacted-contacts-grid:
+        extends: followup-contacts-grid
+        filters:
+            default:
+                status:
+                    value: 'Contacted'
+
+    assigned-contacts-grid:
+        extends: followup-contacts-grid
+        filters:
+            default:
+                status:
+                    value: 'Assigned'
+
+    unassigned-contacts-grid:
+        extends: campus-contacts-grid
+        columns:
+            email:
+                renderable: true
+            ownerName:
+                renderable: true
+        filters:
+            default:
+                status:
+                    value: 'Unassigned'
+            columns:
+                status:
+                    type: string
+                    data_name: status
+                    enabled: true
 
     review-contacts-grid:
         extends: campus-contacts-grid

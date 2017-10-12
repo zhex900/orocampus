@@ -51,20 +51,25 @@ class ContactController extends BaseController
     }
 
     /**
+     * @param string $step
+     *
      * @Route(
-     *      "/assigned/{_format}",
-     *      name="oro_contact_assigned",
+     *      "/followup/{step}",
+     *      requirements={"step"="unassigned|followup|assigned|contacted|closed|transfer|stable"})
+     *      name="oro_contact_followup",
      *      requirements={"_format"="html|json"},
      *      defaults={"_format" = "html"}
      * )
      *
      * @Template
      * @AclAncestor("oro_contact_view")
+     * @return array
      */
-    public function assignedAction()
+    public function followupAction($step)
     {
         return [
-            'entity_class' => $this->container->getParameter('oro_contact.entity.class')
+            'entity_class' => $this->container->getParameter('oro_contact.entity.class'),
+            'step' => $step
         ];
     }
 }

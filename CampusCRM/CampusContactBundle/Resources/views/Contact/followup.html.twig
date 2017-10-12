@@ -1,6 +1,8 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
-{% set gridName = 'assigned-contacts-grid' %}
+
+{% set gridName = step~'-contacts-grid' %}
+
 {% set pageTitle = 'oro.contact.entity_plural_label'|trans %}
 
 {% block navButtons %}
@@ -12,7 +14,7 @@
         importTitle: 'oro.contact.import'|trans,
         dataGridName: gridName
     } %}
-
+{{ step }}
     {% if resource_granted('oro_contact_create') %}
     <div class="btn-group">
         {{ UI.addButton({

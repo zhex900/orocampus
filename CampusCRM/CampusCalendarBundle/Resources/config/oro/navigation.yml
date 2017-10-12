@@ -40,7 +40,6 @@ navigation:
                 extras:
                     position: 50
                     routes: ['oro_calendar_event_*']
-
         tree:
             application_menu:
                 children:
