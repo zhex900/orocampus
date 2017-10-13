@@ -393,6 +393,7 @@ workflows:
                   - '@assign_value': [$contact.lastReview, $last_review]
                   - '@assign_value': [$contact.closedReason, $closed_reason]
                   - '@assign_value': [$contact.status, 'Closed']
+                  - '@assign_value': [$contact.reviewRequest, 0]
              contacted_def:
                 preconditions:
                     @equal: [$request.church_kid, false]
