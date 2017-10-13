@@ -64,7 +64,7 @@ class ResetReviewRequestActionHandler implements MassActionHandlerInterface
         foreach ($entities as $entity) {
             if ($entity instanceof Contact) {
                 $count++;
-                $entity->setReviewRequest(1);
+                $entity->setReviewRequest(0);
             }
         }
 
