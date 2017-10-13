@@ -1,5 +1,10 @@
-#CampusCRM/CampusContactBundle/Resources/config/actions.yml
 services:
+    oro_contact.mass_action.resetreviewrequest:
+        class: CampusCRM\CampusContactBundle\Datagrid\Extension\MassAction\ResetReviewRequestMassAction
+        scope: prototype
+        tags:
+            - { name: oro_datagrid.extension.mass_action.type, type: resetreviewrequest }
+
     oro_contact.mass_action.autoallocate:
         class: CampusCRM\CampusContactBundle\Datagrid\Extension\MassAction\AutoAllocateMassAction
         scope: prototype

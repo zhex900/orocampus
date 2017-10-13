@@ -356,17 +356,6 @@ datagrids:
                 type: merge
                 entity_name: %oro_contact.entity.class%
                 data_identifier: c.id
-            autoallocate:
-                type: autoallocate
-                entity_name: %oro_contact.entity.class%
-                data_identifier: c.id
-                icon: wrench
-                label: oro.contact.gridview.autoallocate.label
-
-                # handler: oro_contact.mass_action.handler.autoallocate
-   #             acl_resource: orocrm_contact_update
-  #              route: orocrm_contact_update
- #               link: update_link
         options:
             entityHint: contacts
             export: true
@@ -460,9 +449,17 @@ datagrids:
                     type: string
                     data_name: status
                     enabled: true
+        mass_actions:
+            autoallocate:
+                type: autoallocate
+                entity_name: %oro_contact.entity.class%
+                data_identifier: c.id
+                icon: wrench
+                label: oro.contact.gridview.autoallocate.label
 
     review-contacts-grid:
         extends: campus-contacts-grid
+        acl_resource: oro_contact_view
         columns:
             timesContacted:
                 renderable: true
@@ -498,4 +495,10 @@ datagrids:
                     data_name: contact_source
                     enum_code: contact_source_source
                     enabled: true
-       # views_list: '@oro_contact.contact_grid_view_list'
+        mass_actions:
+            resetreviewrequest:
+                type: resetreviewrequest
+                entity_name: %oro_contact.entity.class%
+                data_identifier: c.id
+                icon: minus
+                label: oro.contact.resetreviewrequest.label

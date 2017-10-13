@@ -1,5 +1,9 @@
 oro:
     contact:
+            resetreviewrequest.label:   Reset Review Request
+            resetreviewrequest:
+                mass_action.success:      Rest review request completed successfully on %count% contacts.
+                mass_action.failure:      Mass rest review request failed.
             closed_reason.label:          Closed Reason
             last_review.label:            Last Review Date
             status.label:                 Status

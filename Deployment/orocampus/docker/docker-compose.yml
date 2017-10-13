@@ -8,12 +8,12 @@ orocrm:
     - APP_DB_USER=orocrm
     - APP_HOSTNAME=orocampus.tk
     - APP_IS_INSTALLED=true
-    - APP_MAILER_ENCRYPTION=ssl
-    - APP_MAILER_HOST=smtp.zoho.com
-    - APP_MAILER_PASSWORD=fheman123
-    - APP_MAILER_PORT=465
+    - APP_MAILER_ENCRYPTION=tls
+    - APP_MAILER_HOST=smtp.mailgun.org
+    - APP_MAILER_PASSWORD=rtY5GXS3YzM8sRF7
+    - APP_MAILER_PORT=587
     - APP_MAILER_TRANSPORT=smtp
-    - APP_MAILER_USER=admin@unswchristians.com
+    - APP_MAILER_USER=postmaster@orocampus.tk
     - APP_SECRET=123456789
     - APP_WEBSOCKET_BACKEND_PORT=8080
     - APP_WEBSOCKET_FRONTEND_PORT=3088

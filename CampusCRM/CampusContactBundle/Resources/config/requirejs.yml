@@ -2,3 +2,4 @@
 config:
     paths:
         'oro/datagrid/action/autoallocate-action': 'bundles/campuscontact/js/datagrid/action/autoallocate-action.js'
+        'oro/datagrid/action/resetreviewrequest-action': 'bundles/campuscontact/js/datagrid/action/resetreviewrequest-action.js'

@@ -1,5 +1,4 @@
 /*global define*/
-//CampusCRM/CampusContactBundle/Resources/public/js/datagrid/action/autoallocate-action.js
 define([
     'oro/datagrid/action/mass-action'
 ], function (MassAction) {
@@ -8,10 +7,8 @@ define([
     var AutoallocateAction;
 
     /**
-     * TEST123
-     *
-     * @export  oro/datagrid/action/autoallocate-Action
-     * @class   oro.datagrid.action.AutoallocateAction
+     * @export  oro/datagrid/action/autoallocate-action
+     * @class   oro.datagrid.action.AutoAllocateAction
      * @extends oro.datagrid.action.MassAction
      */
     AutoallocateAction = MassAction.extend({
