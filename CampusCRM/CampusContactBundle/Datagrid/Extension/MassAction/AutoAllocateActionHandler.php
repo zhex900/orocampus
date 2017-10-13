@@ -14,7 +14,6 @@ use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionResponse;
 use Oro\Bundle\EntityMergeBundle\Doctrine\DoctrineHelper;
 use Oro\Bundle\EntityMergeBundle\Exception\InvalidArgumentException;
 
-//CampusCRM/CampusContactBundle/Datagrid/Extension/MassAction/AutoAllocateActionHandler.php
 class AutoAllocateActionHandler implements MassActionHandlerInterface
 {
     const SUCCESS_MESSAGE = 'oro.contact.autoallocate.mass_action.success';
@@ -34,22 +33,16 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
     /** @var TranslatorInterface  */
     protected $translator;
 
-    /** @var string */
-    protected $responseMessage = 'oro.grid.mass_action.delete.success_message';
-
     /**
-     * @param WorkflowManager        $workflowmanager
      * @param ContainerInterface     $container
      * @param TranslatorInterface    $translator
      * @param DoctrineHelper $doctrineHelper
      */
     public function __construct(
-        WorkflowManager $workflowmanager,
         ContainerInterface $container,
         TranslatorInterface $translator,
         DoctrineHelper $doctrineHelper
     ) {
-        $this->workflowmanager = $workflowmanager;
         $this->container = $container;
         $this->translator = $translator;
         $this->doctrineHelper = $doctrineHelper;
@@ -78,14 +71,10 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
 
         foreach ($entities as $entity) {
             if ($entity instanceof Contact) {
-                // if the current work flow step is unassigned.
-                file_put_contents('/tmp/tag.log', 'handler:->' . $entity->getFirstName() . ' ' . $entity->getLastName() . PHP_EOL, FILE_APPEND);
-
                 // auto allocate owner when follow-up workflow step is unassigned.
                 if ($this->container
                     ->get('campus_contact.workflow.manager')
                     ->isUnassignedStep($entity)) {
-                    file_put_contents('/tmp/tag.log', $entity->getFirstName() . ' ' . $entity->getLastName() . ' is unassigned' . PHP_EOL, FILE_APPEND);
 
                     $count++;
                     $this->container
@@ -97,15 +86,10 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
                         ->get('campus_contact.workflow.manager')
                         ->transitFromTo($entity, self::FOLLOWUP_WORKFLOW, 'unassigned','assign');
 
-                    file_put_contents('/tmp/tag.log', $entity->getFirstName() . ' ' . $entity->getLastName() . ' flush' . PHP_EOL, FILE_APPEND);
-
                     $this->container->get('doctrine.orm.entity_manager')->flush();
                 }
             }
         }
-
-        file_put_contents('/tmp/tag.log', 'handler' . PHP_EOL, FILE_APPEND);
-
         return $this->generateResponse($count);
     }
 
@@ -119,7 +103,6 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
         if ($count > 0) {
             return new MassActionResponse(true, $this->translator->trans(self::SUCCESS_MESSAGE, ['%count%' => $count]));
         }
-
         return new MassActionResponse(false, $this->translator->trans(self::ERROR_MESSAGE, ['%count%' => $count]));
     }
 
