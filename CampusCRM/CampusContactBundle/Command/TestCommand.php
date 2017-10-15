@@ -16,19 +16,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 
-class TestCommand extends ContainerAwareCommand implements CronCommandInterface
+class TestCommand extends ContainerAwareCommand //implements CronCommandInterface
 {
     const STATUS_SUCCESS = 0;
-    const COMMAND_NAME = 'oro:cron:contact:test';
+    const COMMAND_NAME = 'oro:contact:test';
 
-    /**
-     * Run every 15 minute
-     * {@inheritdoc}
-     */
-    public function getDefaultDefinition()
-    {
-        return '*/15 * * * *';
-    }
+//    /**
+//     * Run every 15 minute
+//     * {@inheritdoc}
+//     */
+//    public function getDefaultDefinition()
+//    {
+//        return '*/15 * * * *';
+//    }
 
     /**
      * {@inheritdoc}
