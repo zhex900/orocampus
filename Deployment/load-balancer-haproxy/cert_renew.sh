@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SITE=orocampus.tk
+SITE=orocampus.com.au
 
 # move to the correct let's encrypt directory
 cd /etc/letsencrypt/live/$SITE

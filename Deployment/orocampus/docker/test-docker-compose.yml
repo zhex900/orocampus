@@ -47,7 +47,7 @@ orocrm:
     - CMD_INIT_BEFORE=
     - CMD_INIT_CLEAN=
     - CMD_INIT_INSTALLED=
-    - VIRTUAL_HOST=orocampus.tk
+    - VIRTUAL_HOST=orocampus.com.au
   image: 'zhex900/oromono:latest'
   links:
     - db

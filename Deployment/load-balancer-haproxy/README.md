@@ -8,13 +8,13 @@
 ####Install certbot
     apt-get install certbot
     systemctl stop haproxy
-    certbot certonly --standalone --preferred-challenges http --http-01-port 80 -d orocampus.tk --email=zhex900@gmail.com --agree-tos --non-interactive
+    certbot certonly --standalone --preferred-challenges http --http-01-port 80 -d orocampus.com.au --email=zhex900@gmail.com --agree-tos --non-interactive
     mkdir -p /etc/haproxy/certs
-    DOMAIN='orocampus.tk' bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'
+    DOMAIN='orocampus.com.au' bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'
     chmod -R go-rwx /etc/haproxy/certs
     echo '
     #!/usr/bin/env bash
-    SITE=orocampus.tk
+    SITE=orocampus.com.au
     
     # move to the correct let's encrypt directory
     cd /etc/letsencrypt/live/$SITE
@@ -40,10 +40,10 @@ https://www.digitalocean.com/community/tutorials/how-to-secure-haproxy-with-let-
     backend orocampus
       mode http
       balance roundrobin
-      option httpchk HEAD /app.php HTTP/1.1\r\nHost:\ orocampus.tk
+      option httpchk HEAD /app.php HTTP/1.1\r\nHost:\ orocampus.com.au
       cookie SERVERID insert indirect nocache
-      server web1 app1.orocampus.tk:80 check cookie web1
-      server web2 app2.orocampus.tk:80 check cookie web2
+      server web1 app1.orocampus.com.au:80 check cookie web1
+      server web2 app2.orocampus.com.au:80 check cookie web2
     listen stats
        bind *:1936
        mode http

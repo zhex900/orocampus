@@ -29,7 +29,7 @@
  phpmyadmin:
    image: 'phpmyadmin/phpmyadmin:latest'
    environment:
-     - VIRTUAL_HOST=db.orocampus.tk
+     - VIRTUAL_HOST=db.orocampus.com.au
    links:
      - db
    ports:

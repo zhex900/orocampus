@@ -1,12 +1,12 @@
 orocrm:
   environment:
     - APP_DB_DRIVER=pdo_mysql
-    - APP_DB_HOST=db.orocampus.tk
+    - APP_DB_HOST=db.orocampus.com.au
     - APP_DB_NAME=orocrm
     - APP_DB_PASSWORD=orocrm
     - APP_DB_PORT=3306
     - APP_DB_USER=orocrm
-    - APP_HOSTNAME=app1.orocampus.tk
+    - APP_HOSTNAME=app1.orocampus.com.au
     - APP_IS_INSTALLED=
     - APP_MAILER_ENCRYPTION=ssl
     - APP_MAILER_HOST=smtp.zoho.com
@@ -21,7 +21,7 @@ orocrm:
     - CMD_INIT_BEFORE=
     - CMD_INIT_CLEAN=
     - CMD_INIT_INSTALLED=
-    - VIRTUAL_HOST=*.orocampus.tk, orocampus.tk
+    - VIRTUAL_HOST=*.orocampus.com.au, orocampus.com.au
   image: 'zhex900/orocrm:v2.3'
   ports:
     - '80'

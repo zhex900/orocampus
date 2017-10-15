@@ -21,7 +21,7 @@ rm -r /var/www/app/cache/*
 php /var/www/app/console cache:clear --env=prod -vvv
 
 chown -R www-data:www-data /var/www/ /srv/app-data/
-php /var/www/app/console oro:install --env=prod --user-name=admin --timeout=3000 --user-email=zhex900@gmail.com --user-firstname=Jake --user-lastname=He --user-password=Fheman123 --sample-data=n --organization-name=OROCAMPUS --application-url=http://app.orocampus.tk
+php /var/www/app/console oro:install --env=prod --user-name=admin --timeout=3000 --user-email=zhex900@gmail.com --user-firstname=Jake --user-lastname=He --user-password=Fheman123 --sample-data=n --organization-name=OROCAMPUS --application-url=http://app.orocampus.com.au
 
 fix_parameters.sh
 
