@@ -1,19 +1,19 @@
 orocrm:
   environment:
-    - APP_DB_DRIVER=pdo_mysql
-    - APP_DB_HOST=db.orocampus.com.au
-    - APP_DB_NAME=orocrm
-    - APP_DB_PASSWORD=orocrm
+    - APP_DB_DRIVER=
+    - APP_DB_HOST=
+    - APP_DB_NAME=
+    - APP_DB_PASSWORD=
     - APP_DB_PORT=3306
-    - APP_DB_USER=orocrm
-    - APP_HOSTNAME=orocampus.com.au
+    - APP_DB_USER=
+    - APP_HOSTNAME=
     - APP_IS_INSTALLED=true
     - APP_MAILER_ENCRYPTION=tls
-    - APP_MAILER_HOST=smtp.mailgun.org
-    - APP_MAILER_PASSWORD=226dcb9d5230e8389b5a90dd91efa0d5
+    - APP_MAILER_HOST=
+    - APP_MAILER_PASSWORD=
     - APP_MAILER_PORT=587
     - APP_MAILER_TRANSPORT=smtp
-    - APP_MAILER_USER=postmaster@orocampus.com.au
+    - APP_MAILER_USER=
     - APP_SECRET=123456789
     - APP_WEBSOCKET_BACKEND_PORT=8080
     - APP_WEBSOCKET_FRONTEND_PORT=3088
