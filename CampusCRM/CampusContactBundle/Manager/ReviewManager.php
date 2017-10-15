@@ -20,7 +20,7 @@ class ReviewManager
      * array ( step name => number of days until the next review)
      */
     const REVIEW_LIMIT = ['unassigned' => 1, 'assigned' => 7, 'contacted' => 7, 'followup'=>28];
-    const SENDER = 'no-reply@orocampus.tk';
+    const SENDER = 'no-reply@orocampus.com.au';
     const SUBJECT = 'Review reminder';
 
     /* @var \DateTIme */
@@ -179,7 +179,7 @@ class ReviewManager
         $email = $this->container->get('oro_email.email.model.builder')->createEmailModel();
         $email->setSubject('orocampus review');
         $email->setType('html');
-        $email->setFrom('no-reply@orocampus.tk');
+        $email->setFrom('no-reply@orocampus.com.au');
         $email->setTo([$to]);
         return $email;
     }
