@@ -18,7 +18,7 @@ ARG GIT_URI="https://github.com/orocrm/crm-application.git"
 # branch name or tag 
 # master - for master branch
 # tags/1.9.1 - for 1.9.1 tag 
-ARG GIT_REF="tags/2.3.3"
+ARG GIT_REF="tags/2.4.1"
 COPY bin/install-application.sh          /usr/local/bin/install-application.sh
 COPY bin/install-oro.sh                  /usr/local/bin/install-oro.sh
 COPY bin/download-orocampus.sh           /usr/local/bin/download-orocampus.sh
