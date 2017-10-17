@@ -1,6 +1,4 @@
 // todo something wrong with jquery ($, console, and so on are all not defined)
-// importScripts('jquery-1.12.4.min.js');
-// importScripts('jquery-ui-1.12.1.min.js');
 // onmessage = function (e) {
 //     "use strict";
 //     console.log('Message received from main script club_registration');
@@ -18,7 +16,7 @@
 // };
 
 function mySelect2(json,field) {
-    console.log('myselect called')
+    console.log('myselect called');
     $.each(json, function(key,value) {
         $(field).select2({
             data: [

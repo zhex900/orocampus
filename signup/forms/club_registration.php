@@ -14,7 +14,7 @@ if (isset($_SESSION['form'])):
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
         <title> Registration Form | UNSW Christians </title>
-        <link rel="stylesheet" type="text/css" href="../css/select2-4.0.3.css">
+        <link rel="stylesheet" type="text/css" href="../css/select2-4.0.4.min.css">
         <link rel="stylesheet" type="text/css" media="all" href="../css/auto-complete-style.css">
         <link rel="stylesheet" type="text/css" href="../css/golden-forms.css"/>
         <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css"/>
@@ -22,10 +22,10 @@ if (isset($_SESSION['form'])):
         <link rel="stylesheet" type="text/css" href="../css/custom.css">
         <link rel="preload" href="../images/wooden.jpg" as="image">
         <link rel="preload" href="../images/CSAC4.png" as="image">
-        <script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="../js/jquery-2.1.0.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.12.1.min.js"></script>
         <!--<script src="../js/select2-4.0.3.min.js"></script>-->
-        <script src="../js/select2-4.0.3.js"></script>
+        <script src="../js/select2-4.0.4.js"></script>
         <script src="../js/mySelect2.js"></script>
         <!-- Automatically completes the address as the user is typing it -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQpSg-uWZkbaydLNvkXcwhNvIA6BfffJQ&libraries=places&callback=initAutocomplete"
