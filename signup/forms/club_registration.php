@@ -22,15 +22,16 @@ if (isset($_SESSION['form'])):
         <link rel="stylesheet" type="text/css" href="../css/custom.css">
         <link rel="preload" href="../images/wooden.jpg" as="image">
         <link rel="preload" href="../images/CSAC4.png" as="image">
-        <script src="../js/jquery-1.12.4.min.js"></script>
-        <script src="../js/jquery-ui-1.12.1.min.js"></script>
+        <script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="../js/jquery-ui-1.12.1.min.js"></script>
         <!--<script src="../js/select2-4.0.3.min.js"></script>-->
         <script src="../js/select2-4.0.3.js"></script>
         <script src="../js/mySelect2.js"></script>
         <!-- Automatically completes the address as the user is typing it -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQpSg-uWZkbaydLNvkXcwhNvIA6BfffJQ&libraries=places&callback=initAutocomplete"
                 async defer></script>
-        <script src="../js/address-autocomplete.js" async defer></script>`
+        <script src="../js/address-autocomplete.js" async defer></script>
+
         <script type="text/javascript">
             $(function () {
                 $("#datepicker").datepicker({
@@ -41,6 +42,14 @@ if (isset($_SESSION['form'])):
                 });
 
                 var json = <?php echo json_encode($_SESSION['dataCache']); ?>;
+
+                // worker
+//                var worker = new Worker('../js/mySelect2.js');
+//                worker.postMessage([json.levelofstudysources, '#degree']);
+//                worker.postMessage([json.institutionssources, '#uni']);
+//                worker.postMessage([json.countries, '#countryorigin']);
+//                worker.postMessage([json.degreessources, '#course']);
+
                 mySelect2(json.levelofstudysources, '#degree');
                 mySelect2(json.institutionssources, '#uni');
                 mySelect2(json.countries, '#countryorigin');
@@ -56,7 +65,7 @@ if (isset($_SESSION['form'])):
             <form name="inputForm" action="../register.php" method="post">
 
                 <div class="form-title">
-                    <img class="banner"  src="../images/CSAC4.png" alt="Christian Students at Curtin">
+                    <img class="banner" src="../images/CSAC4.png" alt="Christian Students at Curtin">
                     <!--  <h2>CSAC Registration</h2>-->
                 </div>
                 <!-- end .form-title section -->
