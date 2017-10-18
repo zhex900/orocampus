@@ -43,6 +43,20 @@ class RemoveDefaultData extends AbstractFixture implements ContainerAwareInterfa
                 $this->em->remove($entity);
             }
         }
+
+        $entities = $this->em->getRepository('OroDashboardBundle:Widget')->findAll();
+        foreach ($entities as $entity) {
+            if (!in_array($entity->getName(),
+                [
+                    'quick_launchpad',
+                    'my_calendar',
+                    'my_contacts_activity',
+                    'recent_calls',
+                    'recent_emails'
+                ])) {
+                $this->em->remove($entity);
+            }
+        }
         $this->em->flush();
     }
 

@@ -1,6 +1,6 @@
 oro:
     contact:
-            resetreviewrequest.label:   Reset Review Request
+            resetreviewrequest.label:     Keep
             resetreviewrequest:
                 mass_action.success:      Rest review request completed successfully on %count% contacts.
                 mass_action.failure:      Mass rest review request failed.

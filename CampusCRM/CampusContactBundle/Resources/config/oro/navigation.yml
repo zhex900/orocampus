@@ -5,6 +5,15 @@ navigation:
                 template: 'OroCalendarBundle:Calendar:Menu/contextMenu.html.twig'
                 root_class: 'dropdown-menu context-menu'
         items:
+            reports_tab:
+                label:   'Reports'
+            segments_divider:
+                display: false
+            manage_segments:
+                display: false
+            activities_tab:
+                display: false
+                display_children: false
             marketing_tab:
                 display: false
                 display_children: false
@@ -69,7 +78,7 @@ navigation:
                 extras:
                     position: 19
             campus_calendar_tab:
-                label: 'Calendar'
+                label: 'Events'
                 uri: '#'
                 extras:
                     position: 20
@@ -79,6 +88,9 @@ navigation:
                 extras:
                     position: 50
                     routes: ['oro_calendar_event_*']
+            task_list:
+                extras:
+                    position: 40
         tree:
             application_menu:
                 children:
@@ -95,7 +107,9 @@ navigation:
                                 campus_contact_transfer: ~
                                 campus_contact_closed: ~
                             campus_contact_review_list: ~
+                    oro_calendar_view_default: ~
                     campus_calendar_tab:
                         children:
-                            oro_calendar_view_default: ~
                             campus_calendar_event_list: ~
+                    call_list: ~
+                    task_list: ~

@@ -1,0 +1,10 @@
+dashboards:
+    widgets:
+        quick_launchpad:
+            items:
+                accounts:
+                    enabled: false
+                leads:
+                    enabled: false
+                opportunities:
+                    enabled: false
