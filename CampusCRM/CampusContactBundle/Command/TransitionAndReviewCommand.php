@@ -20,12 +20,12 @@ class TransitionAndReviewCommand extends ContainerAwareCommand implements CronCo
     const COMMAND_NAME = 'oro:cron:contact:transition_review';
 
     /**
-     * Daily at 4 am
+     * Daily at 4 am.
      * {@inheritdoc}
      */
     public function getDefaultDefinition()
     {
-        return '0 4 * * *';
+        return '0 15 * * *';
     }
 
     /**
