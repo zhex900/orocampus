@@ -80,6 +80,10 @@ else
     error "${APP_DIR}/composer.json not found!"
 fi
 
+# Change timezone to Australia/Sydney
+rm /etc/localtime
+ln -s /usr/share/zoneinfo/Australia/Sydney /etc/localtime
+
 rm -rf /tmp/*
 rm -rf ~/.ssh
 rm -rf ~/.composer
