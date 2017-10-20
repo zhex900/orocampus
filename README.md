@@ -14,7 +14,7 @@
   * [Or native install](#native-install)
     * [Setup OroCRM](#setup-orocrm)
     * [Install CampusCRM Application](#install-campuscrm-application)
-    * [Manually add some data](#manual-procedure)
+* [Useful commands](#useful_commands)
 
 # <a name="installation"></a>Installation
 ## Docker container
@@ -61,26 +61,24 @@ rm -rf app/cache/*
 php app/console cache:clear --env=dev -vvv
 ```
 
-### <a name="manual-procedure"></a>Manually add some data to the application
-1. *(instructions here)*
-2. *(all set. your application is ready to go)*
-
-
 [1]:    https://github.com/orocrm/crm
 [2]:    https://www.orocrm.com/documentation/index/current/system-requirements
 [3]:    https://github.com/orocrm/crm-application/blob/master/README.md
 
-# Useful commands
-## Reset user password
-    app/console oro:user:update admin --user-password=123456 --env=prod
-## 
-    chown -R www-data:www-data /var/www/ /srv/app-data/
-    
-    5. Load new database schema
-    ``` bash
-    php app/console oro:migration:load --show-queries --force
-    ```
-    6. Load fixtures or default data
-    ``` bash
-    php app/console oro:migration:data:load
-    ```
+# <a name="useful_commands"></a>Useful commands
+- Reset user password
+``` bash
+app/console oro:user:update admin --user-password=123456 --env=prod
+```    
+- Set permission
+``` bash
+chown -R www-data:www-data /var/www/ /srv/app-data/
+```
+- Load new database schema
+``` bash
+php app/console oro:migration:load --show-queries --force
+```
+- Load fixtures or default data
+``` bash
+php app/console oro:migration:data:load
+```
