@@ -15,10 +15,10 @@ session_start();
 
     <link type="text/css" rel="stylesheet" href="css/golden-forms.css"/>
     <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="./css/select2-4.0.3.css">
+    <link rel="stylesheet" type="text/css" href="./css/select2-4.0.4.min.css">
 
     <script src="./js/jquery-1.12.4.min.js"></script>
-    <script src="./js/select2-4.0.3.min.js"></script>
+    <script src="./js/select2-4.0.4.min.js"></script>
     <script src="./js/mySelect2.js"></script>
 
     <!-- Use jquery to load contact source json file and fill the drop down-->
