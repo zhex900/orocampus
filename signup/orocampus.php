@@ -18,7 +18,7 @@ define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
-define("APIKEY", "5f39c657c5f60ccdb04401b0ff4a96735fe0bac3");
+define("APIKEY", "b2ca1d9b96c0d81d64fe935a933d7a85112be89c");
 define("LOGIN", "admin");
 define("NUMBEROFTRY",5);
 define("EVENTS","rest/latest/calendarevents.json");
@@ -44,7 +44,7 @@ class orocampus
         $this->session = $session;
         $this->request = $request;
 
-        $this->logger =  new Logger('logger');
+        $this->logger = new Logger('logger');
         $this->logger->pushHandler(new StreamHandler(__DIR__.'/log/signup.log', Logger::DEBUG));
         $this->logger->pushHandler(new FirePHPHandler());
     }

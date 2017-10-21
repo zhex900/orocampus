@@ -12,7 +12,6 @@ if (isset($_SESSION['form'])):
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
         <title> Registration Form | UNSW Christians </title>
         <link rel="stylesheet" type="text/css" href="../css/select2-4.0.4.min.css">
         <link rel="stylesheet" type="text/css" media="all" href="../css/auto-complete-style.css">
@@ -20,12 +19,10 @@ if (isset($_SESSION['form'])):
         <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css"/>
         <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.11.0.css">
         <link rel="stylesheet" type="text/css" href="../css/custom.css">
-        <link rel="preload" href="../images/wooden.jpg" as="image">
         <link rel="preload" href="../images/CSAC4.png" as="image">
         <script type="text/javascript" src="../js/jquery-2.1.0.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.12.1.min.js"></script>
-        <!--<script src="../js/select2-4.0.3.min.js"></script>-->
-        <script src="../js/select2-4.0.4.js"></script>
+        <script src="../js/select2-4.0.4.min.js"></script>
         <script src="../js/mySelect2.js"></script>
         <!-- Automatically completes the address as the user is typing it -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQpSg-uWZkbaydLNvkXcwhNvIA6BfffJQ&libraries=places&callback=initAutocomplete"
@@ -41,20 +38,17 @@ if (isset($_SESSION['form'])):
                     yearRange: "-40:-5"
                 });
 
+                $(document).ready(function () {
+                    $(".select_max_width").select2({width: "100%"});
+                });
+
                 var json = <?php echo json_encode($_SESSION['dataCache']); ?>;
-
-                // worker
-//                var worker = new Worker('../js/mySelect2.js');
-//                worker.postMessage([json.levelofstudysources, '#degree']);
-//                worker.postMessage([json.institutionssources, '#uni']);
-//                worker.postMessage([json.countries, '#countryorigin']);
-//                worker.postMessage([json.degreessources, '#course']);
-
                 mySelect2(json.levelofstudysources, '#degree');
                 mySelect2(json.institutionssources, '#uni');
                 mySelect2(json.countries, '#countryorigin');
                 mySelect2(json.degreessources, '#course');
             });
+
         </script>
 
     </head>
@@ -245,7 +239,7 @@ if (isset($_SESSION['form'])):
 
                             <label for="countryorigin" class="lbl-text">Country of origin:<span
                                         id="required">*</span></label>
-                            <select class="countryorigin" id="countryorigin" name="countryorigin">
+                            <select class="select_max_width countryorigin" id="countryorigin" name="countryorigin">
                                 <option value="" disabled selected hidden>Select your country</option>
                             </select>
                             <!-- end .row section-->
@@ -292,7 +286,7 @@ if (isset($_SESSION['form'])):
                                 <div class="col6 first">
                                     <label for="degree" class="lbl-text">Degree Type:<span
                                                 id="required">*</span></label>
-                                    <select class="degree" id="degree" name="degree">
+                                    <select class="select_max_width degree" id="degree" name="degree">
                                         <option value="" disabled selected hidden>Select your degree</option>
                                     </select>
                                 </div>
@@ -300,7 +294,7 @@ if (isset($_SESSION['form'])):
 
                                 <div class="col6 last colspacer-two">
                                     <label for="course" class="lbl-text">Course:<span id="required">*</span></label>
-                                    <select class="course" id="course" name="course">
+                                    <select class="select_max_width course" id="course" name="course">
                                         <option value="" disabled selected hidden>Select your course</option>
                                     </select>
                                 </div>
@@ -314,7 +308,7 @@ if (isset($_SESSION['form'])):
                             <div class="row">
                                 <div class="col6 first">
                                     <label for="uni" class="lbl-text">University:<span id="required">*</span></label>
-                                    <select class="uni" id="uni" name="uni">
+                                    <select class="select_max_width uni" id="uni" name="uni">
                                         <option value="" disabled selected hidden>Select your university</option>
                                     </select>
                                 </div>
@@ -328,7 +322,6 @@ if (isset($_SESSION['form'])):
                                             <option value="2">2</option>
                                             <option value="3">3</option>
                                             <option value="4">4</option>
-                                            <option value="5">5</option>
                                         </select>
                                     </label>
                                 </div>
