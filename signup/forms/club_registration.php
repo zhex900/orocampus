@@ -48,6 +48,7 @@ if (isset($_SESSION['form'])):
                 mySelect2(json.countries, '#countryorigin');
                 mySelect2(json.degreessources, '#course');
             });
+
         </script>
 
     </head>
