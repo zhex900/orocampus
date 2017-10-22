@@ -57,7 +57,7 @@ class orocampus
      */
     function getUserIdbyUsername($username){
         $response = $this->curl_req('users?filter[username]='.$username.'&page[number]=1&page[size]=10&sort=id');
-        var_dump(print_r($response,true));
+       // var_dump(print_r($response,true));
         if (isset($response['data'][0]['id'])){
             return $response['data'][0]['id'];
         }
