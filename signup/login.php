@@ -23,7 +23,7 @@ session_start();
 
     <!-- Use jquery to load contact source json file and fill the drop down-->
     <script>
-        $(function() {
+        $(function () {
             var json =
                 <?php
                 //load drop-down values
@@ -36,20 +36,25 @@ session_start();
 
                 echo json_encode($_SESSION['dataCache']);
                 ?>;
-            mySelect2(json.contactsourcesources, '#source_of_contact');
-             json =
-                <?php
-                //load drop-down values
-                $file = './data/events.json';
-                if (!is_file($file) || !is_readable($file)) {
-                    die("File not accessible.");
-                }
-                $contents = file_get_contents($file);
-                $events = json_decode($contents, true);
-                $_SESSION['eventCache'] = array_flip($events);
 
-                echo json_encode($events);
-                ?>;
+            $(document).ready(function () {
+                $(".select_max_width").select2({width: "100%"});
+            });
+
+            mySelect2(json.contactsourcesources, '#source_of_contact');
+            json =
+            <?php
+            //load drop-down values
+            $file = './data/events.json';
+            if (!is_file($file) || !is_readable($file)) {
+                die("File not accessible.");
+            }
+            $contents = file_get_contents($file);
+            $events = json_decode($contents, true);
+            $_SESSION['eventCache'] = array_flip($events);
+
+            echo json_encode($events);
+            ?>;
             mySelect2(json, '#event');
         });
     </script>
@@ -86,7 +91,8 @@ session_start();
                     <section>
                         <label for="source_of_contact">
                             Contact Method:
-                            <select class="source_of_contact" id="source_of_contact" name="source_of_contact">
+                            <select class="select_max_width source_of_contact" id="source_of_contact"
+                                    name="source_of_contact">
                                 <!-- value must be the same as the source of contact values in zurmo -->
                             </select>
                         </label>
@@ -95,7 +101,7 @@ session_start();
                     <section>
                         <label for="event">
                             Events:
-                            <select class="event" id="event" name="event">
+                            <select class="select_max_width event" id="event" name="event">
                             </select>
                         </label>
                     </section>
