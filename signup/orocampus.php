@@ -258,7 +258,7 @@ class orocampus
                     'primaryEmail' => strtolower($this->request['email']),
                     'primaryPhone' => $this->request['mobile'],
                     'phones' => $phones,
-                    'first_contact_date' => new \DateTime(),
+                    'first_contact_date' => date('Y-m-d'),
                 ],
                 'relationships' => [
                     'owner' => [
