@@ -82,3 +82,7 @@ php app/console oro:migration:load --show-queries --force
 ``` bash
 php app/console oro:migration:data:load
 ```
+-- create symlinks for the resources to web folder
+```
+app/console assets:install web --symlink
+```
