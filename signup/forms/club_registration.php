@@ -25,7 +25,7 @@ if (isset($_SESSION['form'])):
         <script src="../js/select2-4.0.4.min.js"></script>
         <script src="../js/mySelect2.js"></script>
         <!-- Automatically completes the address as the user is typing it -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQpSg-uWZkbaydLNvkXcwhNvIA6BfffJQ&libraries=places&callback=initAutocomplete"
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAscRqKL1Uz9WqOUe185L0KXaIX64W-3Wc&libraries=places&callback=initAutocomplete"
                 async defer></script>
         <script src="../js/address-autocomplete.js" async defer></script>
 
