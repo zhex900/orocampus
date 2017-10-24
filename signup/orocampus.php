@@ -9,7 +9,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 session_start();
 
-define("URL", "http://localhost/app_dev.php/api/");
+define("URL", "https://orocampus.com.au/app_dev.php/api/");
 define("DEGREES", 'degreessources');
 define("INSTITUTIONS", 'institutionssources');
 define("LEVELOFSTUDY", 'levelofstudysources');
@@ -18,9 +18,10 @@ define("CONTACT", "contacts");
 define("COUNTRIES", "countries");
 define("SOURCE", "contactsourcesources");
 define("CONTACT_TEST", "contacts/50");
-define("APIKEY", "b2ca1d9b96c0d81d64fe935a933d7a85112be89c");
-define("LOGIN", "admin");
+define("APIKEY", "6a36ab7903e14c793d29d62fd1c08b0446d2b186");
+define("LOGIN", "web");
 define("NUMBEROFTRY",5);
+define("TIMEZONE","Australia/Sydney");
 define("EVENTS","rest/latest/calendarevents.json");
 
 use Monolog\Logger;
@@ -43,7 +44,7 @@ class orocampus
         $this->_apiKey = $apiUserKey;
         $this->session = $session;
         $this->request = $request;
-
+        date_default_timezone_set(TIMEZONE);
         $this->logger = new Logger('logger');
         $this->logger->pushHandler(new StreamHandler(__DIR__.'/log/signup.log', Logger::DEBUG));
         $this->logger->pushHandler(new FirePHPHandler());
@@ -57,7 +58,7 @@ class orocampus
      */
     function getUserIdbyUsername($username){
         $response = $this->curl_req('users?filter[username]='.$username.'&page[number]=1&page[size]=10&sort=id');
-       // var_dump(print_r($response,true));
+
         if (isset($response['data'][0]['id'])){
             return $response['data'][0]['id'];
         }
@@ -89,9 +90,9 @@ class orocampus
         // get a list of user calendars
         $calendars = $this->curl_req('rest/latest/calendars/all.json');
 
-        // set today's date in RFC 3339 format. Timezone is UTC.
-        $start=date('Y-m-d', strtotime('-1 day')).'T14:00:01-00:00';
-        $end=date('Y-m-d').'T13:59:59-00:00';
+        // set today's date in RFC 3339 format.
+        $start=date('Y-m-d').'T00:00:01-00:00';
+        $end=date('Y-m-d').'T23:59:59-00:00';
         $result=[];
 
         foreach ($calendars as $calendar){
@@ -109,15 +110,16 @@ class orocampus
             $records=[];
             foreach ($events as $event) {
                 if (isset($event['id'])) {
-                    $start = new DateTime($event['start']);
-                    $start = $start->setTimezone(new DateTimeZone('Australia/Sydney'))->format('D d/y/Y h:i A');
-                    $key = $event['title'] . ', ' . $start . ', '.$calendar['calendar_owner_name'] ;
+                    $event_start = new DateTime($event['start']);
+                    $event_start = $event_start->format('D d/y/Y h:i A');
+                    $key = $event['title'] . ', ' . $event_start . ', '.$calendar['calendar_owner_name'] ;
                     $value = $event['id'];
                     $records[] = [$key => $value];
                 }
             }
             $result = array_merge($result, $records);
         }
+        $this->getLogger()->info('result: '. print_r($result,true));
         return array_merge(["No event selected"=>"-1"],$this->array_flatten($result));
     }
 
@@ -397,7 +399,7 @@ class orocampus
     {
         $request = new \cURL\Request($this->_url . $path);
         $request->getOptions()
-            ->set(CURLOPT_TIMEOUT, 5)
+            ->set(CURLOPT_TIMEOUT, 50)
             ->set(CURLOPT_RETURNTRANSFER, true)
             ->set(CURLOPT_HEADER,false)
             ->set(CURLOPT_VERBOSE,true)
