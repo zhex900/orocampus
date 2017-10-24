@@ -69,7 +69,7 @@ session_start();
         <form action="init.php" method="post">
 
             <div class="form-title">
-                <h2>CSAC Sign-up Account Login</h2>
+                <h2>UNSW Christians Sign-up</h2>
             </div><!-- end .form-title section -->
 
             <div class="form-enclose">
