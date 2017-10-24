@@ -15,8 +15,6 @@ class FrequencyManager
     const BEFORE_SNAP_SHOT = 3;
     const AFTER_SNAP_SHOT = 2;
     const GAP = 5; // number of days
-    const FIRST_TIME = '1st';
-    const SECOND_TIME = '2st';
     const REGULAR = 'Regular';
     const IRREGULAR = 'Irregular';
     const DATE_FORMAT = 'Y-m-d';
@@ -27,6 +25,9 @@ class FrequencyManager
     /** @var Logger $logger */
     protected $logger;
 
+    /** @var string $current_semester */
+    protected $current_semester;
+
     /**
      * @param ContainerInterface $container
      */
@@ -34,6 +35,7 @@ class FrequencyManager
     {
         $this->em = $container->get('doctrine.orm.entity_manager');
         $this->logger = $container->get('logger');
+        $this->current_semester = $container->get('academic_calendar')->getCurrentSemester();
     }
 
     /**
@@ -47,11 +49,7 @@ class FrequencyManager
         /** @var CalendarEvent $calendar_event */
         $calendar_event = $attendee->getCalendarEvent();
         // Get all the same events that the contact have attended this semester
-        $reset_events = $this->findAttendedEvents($contact, $calendar_event, null);
-
-        // Get all events that after the current event date.
-        // Add the current event to the head of the array.
-        $date = $calendar_event->getStart();
+        $reset_events = $this->findAttendedEvents($contact, $calendar_event, $this->current_semester);
 
         $current_event = Array((0) => Array(
             'date' => $calendar_event->getStart()->format(self::DATE_FORMAT),
@@ -69,9 +67,6 @@ class FrequencyManager
                 return ($calendar_event->getId() != $val['event_id']);
             });
         }
-
-        file_put_contents('/tmp/event.log', PHP_EOL . '----- Events: ' . PHP_EOL, FILE_APPEND);
-
         // Find the event with the same event id and replace old event date with current event date.
         $reset_events = array_map(
             function ($v) use ($calendar_event) {
@@ -92,13 +87,6 @@ class FrequencyManager
             }
         );
 
-        file_put_contents('/tmp/event.log', 'Attendee: ' . $attendee->getDisplayName() . PHP_EOL, FILE_APPEND);
-        file_put_contents('/tmp/event.log', 'Current Event: ' . $calendar_event->getStart()->format(self::DATE_FORMAT) . ' id: ' . $calendar_event->getId(), FILE_APPEND);
-        file_put_contents('/tmp/event.log', PHP_EOL . 'Attended Events: ' . PHP_EOL, FILE_APPEND);
-
-        file_put_contents('/tmp/event.log', PHP_EOL . 'Reset_events: ' . PHP_EOL, FILE_APPEND);
-        file_put_contents('/tmp/event.log', PHP_EOL . '' . PHP_EOL, FILE_APPEND);
-
         $count = 0;
         foreach ($reset_events as $reset_event) {
             ++$count;
@@ -115,12 +103,9 @@ class FrequencyManager
                     ->find($reset_event['attendee_id']);
 
                 $this->commitChange($rest_attendee, $freq, $count);
-                file_put_contents('/tmp/event.log', $reset_event['date'] . ' N:' . $count . PHP_EOL, FILE_APPEND);
-
             } else {
                 // the current event have attendee_id as null
                 $this->commitChange($attendee, $freq, $count);
-                file_put_contents('/tmp/event.log', $reset_event['date'] . ' ' . $count . PHP_EOL, FILE_APPEND);
             }
 
         }
@@ -132,7 +117,6 @@ class FrequencyManager
      */
     private function commitChange(Attendee $attendee, $freq, $count)
     {
-
         $attendee->setFrequency($freq);
         $attendee->setAttendanceCount($count);
 
@@ -171,19 +155,19 @@ class FrequencyManager
                 FROM oro_calendar_event_attendee AS a 
                   INNER JOIN oro_calendar_event AS e ON e.id = a.calendar_event_id
                 WHERE a.contact_id= :id 
-                AND e.semester= :sem ' . (!isset($semester) ? 'AND e.title= :title' : '') . '
+                AND e.semester= :sem ' . (isset($calendar_event) ? 'AND e.title= :title ' : '') . '
                 ORDER BY date ASC
                 ';
 
-        $stmt = $this->em->getConnection()->prepare($sql);
         $param = array(
             'id' => $contact->getId(),
             'sem' => $semester);
 
-        if (!isset($semester)) {
-            $param = array_merge($param, array('title' => $calendar_event->getTitle()));
+        if (isset($calendar_event)) {
+            $param = array_merge($param, array('title' => $calendar_event->getTitle().''));
         }
 
+        $stmt = $this->em->getConnection()->prepare($sql);
         $stmt->execute($param);
 
         return $stmt->fetchAll();
@@ -229,6 +213,7 @@ class FrequencyManager
         if (count($search_events) == 0) {
             return self::IRREGULAR;
         }
+        $this->logger->debug('FrequencyManager: '. print_r($search_events,true));
         return $this->findAttendanceFrequencyCore($event_date, $event_teaching_week, $search_events, $algorithm);
     }
 
