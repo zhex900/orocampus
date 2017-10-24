@@ -111,7 +111,7 @@ class orocampus
             foreach ($events as $event) {
                 if (isset($event['id'])) {
                     $event_start = new DateTime($event['start']);
-                    $event_start = $event_start->format('D d/y/Y h:i A');
+                    $event_start = $event_start->format('D d/m/Y h:i A');
                     $key = $event['title'] . ', ' . $event_start . ', '.$calendar['calendar_owner_name'] ;
                     $value = $event['id'];
                     $records[] = [$key => $value];
