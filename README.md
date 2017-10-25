@@ -82,7 +82,12 @@ php app/console oro:migration:load --show-queries --force
 ``` bash
 php app/console oro:migration:data:load
 ```
--- create symlinks for the resources to web folder
+- create symlinks for the resources to web folder
 ``` bash
 app/console assets:install web --symlink
+```
+- If you make changes to twigs, you need to remove the cache to reflect your changes.
+``` bash
+rm -rf app/cache/prod/twig/*
+rm -rf app/cache/dev/twig/*
 ```
