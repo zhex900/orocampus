@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Util\Codes;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Oro\Bundle\ActivityBundle\Manager\ActivityManager;
 
 /**
  * @RouteResource("calendarevent")
@@ -49,7 +50,36 @@ class CalendarEventController extends BaseController
      */
     public function putAddAttendeeAction($eventId, $contactId)
     {
+        /*
+         * Both event and contact have to exist and
+         * Contact is not already an attendee
+         */
+        try {
+            $attendee = $this->addContactToCalendarEvent($contactId,$eventId);
+            $view = $this->view(['attendee_id' => $attendee->getId()], Codes::HTTP_OK);
+
+        } catch (ForbiddenException $forbiddenEx) {
+            $view = $this->view(['reason' => $forbiddenEx->getReason()], Codes::HTTP_FORBIDDEN);
+        }
+        return $this->buildResponse($view, self::ACTION_UPDATE, ['id' => $eventId, 'entity' => $event]);
+    }
+
+    /*
+     * Add contact to Calendar Event as an attendee
+     *
+     * @param int $contactId
+     * @param int $eventId
+     *
+     * @return Attendee
+     *
+     * @throws ForbiddenException if contact is already an attendee.
+     */
+    protected function addContactToCalendarEvent($contactId, $eventId)
+    {
         $em = $this->getDoctrine()->getManager();
+        /** @var ActivityManager */
+        $activityManager = $this->get('oro_activity.manager');
+
         /** @var CalendarEvent $event */
         $event = $em->getRepository('OroCalendarBundle:CalendarEvent')->find($eventId);
         /** @var Contact $contact */
@@ -60,25 +90,21 @@ class CalendarEventController extends BaseController
          * Both event and contact have to exist and
          * Contact is not already an attendee
          */
-        try {
-            if (isset($attendee)) {
-                $reason = 'Contact is already attending this event';
-                throw new ForbiddenException($reason);
-            }
-            $attendee = $this->createAttendee($contact);
-            $event->addAttendee($attendee);
 
-            $em->persist($attendee);
-            $em->persist($event);
-            $em->flush();
-
-            $view = $this->view(['attendee_id' => $attendee->getId()], Codes::HTTP_OK);
-
-        } catch (ForbiddenException $forbiddenEx) {
-            $view = $this->view(['reason' => $forbiddenEx->getReason()], Codes::HTTP_FORBIDDEN);
+        if (isset($attendee)) {
+            $reason = 'Contact is already attending this event';
+            throw new ForbiddenException($reason);
         }
-        return $this->buildResponse($view, self::ACTION_UPDATE, ['id' => $eventId, 'entity' => $event]);
+        $attendee = $this->createAttendee($contact);
+        $event->addAttendee($attendee);
+        $activityManager->addActivityTarget($event, $contact);
+        $em->persist($attendee);
+        $em->persist($event);
+        $em->flush();
+
+        return $attendee;
     }
+
 
     /**
      * Get attendee of Calendar Event by related User of Attendee.
