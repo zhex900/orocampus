@@ -1,3 +1,6 @@
 
 Deployment/.DS_Store
 .DS_Store
+signup/tests/_output/
+signup/tests/_support/
+signup/tests/_data
