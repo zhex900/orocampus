@@ -85,6 +85,11 @@ class CalendarEventAttendeesListener extends BaseListener
                 $this->updateCalendarEventUpdatedAt($entity->getCalendarEvent(), $unitOfWork);
             }
         }
+
+        // update follow-up status
+        $this->container
+            ->get('campus_contact.workflow.manager')
+            ->runTransitRulesForContactFollowup();
     }
 
     /**
