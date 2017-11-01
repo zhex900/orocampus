@@ -36,14 +36,17 @@ class ContactRepository extends BaseRepository
     /*
      * Find all contacts that have not started their workflow.
      *
+     * @param string $workflow Name of the workflow
      * @return Contact[]
      */
-    public function findByNotStartedWorkflow()
+    public function findByNotStartedWorkflow($workflow)
     {
         return $this->createQueryBuilder('c')
             ->select('c')
-            ->leftJoin('OroWorkflowBundle:WorkflowItem', 'wi', Join::WITH,'c.id = wi.entityId')
+            ->leftJoin('OroWorkflowBundle:WorkflowItem', 'wi',
+                Join::WITH,'c.id = wi.entityId AND wi.workflowName = :workflow')
             ->where('wi.id is NULL')
+            ->setParameter('workflow', $workflow)
             ->getQuery()
             ->execute();
     }
