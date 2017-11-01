@@ -268,7 +268,7 @@ class WorkflowManager extends BaseManager
     public function transitRuleUnassignedToAssign(Contact $contact)
     {
         return ($contact->getOwner() instanceof User &&
-            $contact->getOwner()->getRole('FULL_TIMER') != null);
+            $this->container->get('oro_user.manager')->hasRole($contact->getOwner(),'Full-timer'));
     }
 
     /*

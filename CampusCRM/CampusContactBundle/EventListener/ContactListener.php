@@ -7,6 +7,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Oro\Bundle\ContactBundle\EventListener\ContactListener as BaseListener;
+use Oro\Bundle\UserBundle\Entity\Role;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Oro\Bundle\ContactBundle\Entity\Contact;
@@ -60,7 +61,8 @@ class ContactListener extends BaseListener
         $entity = $args->getEntity();
 
         if ($this->transit) {
-            if ($entity instanceof Contact) {
+            if ($entity instanceof Contact  &&
+                $this->container->get('oro_user.manager')->hasRole($entity->getOwner(),'Full-timer')){
                 $this->container
                     ->get('campus_contact.workflow.manager')
                     ->transitFromTo($entity, 'contact_followup', 'unassigned', 'assign');
@@ -78,8 +80,7 @@ class ContactListener extends BaseListener
         $entity = $args->getEntity();
 
         if ($entity instanceof Contact) {
-            if ($args->hasChangedField('owner')) {
-                file_put_contents('/tmp/tag.log', 'owner: null. transit' . PHP_EOL, FILE_APPEND);
+            if ($args->hasChangedField('owner') ){
                 $this->transit = true;
             }
         }
