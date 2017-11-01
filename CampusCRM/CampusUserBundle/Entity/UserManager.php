@@ -3,6 +3,7 @@
 namespace CampusCRM\CampusUserBundle\Entity;
 
 use Oro\Bundle\OrganizationBundle\Entity\BusinessUnit;
+use Oro\Bundle\UserBundle\Entity\Role;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\UserBundle\Entity\UserInterface;
 use Oro\Bundle\UserBundle\Entity\UserManager as BaseManager;
@@ -26,5 +27,24 @@ class UserManager extends BaseManager
             }
         }
         return parent::updateUser($user, $flush);
+    }
+
+    /**
+     * Check if user has particular role
+     *
+     * @param User $user
+     * @param string $roleLabel Role Label
+     *
+     * @return bool
+     */
+    public function hasRole(User $user, $roleLabel)
+    {
+        /** @var Role $item */
+        foreach ($user->getRoles() as $item) {
+            if ($roleLabel === $item->getLabel()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
