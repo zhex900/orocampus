@@ -49,6 +49,10 @@ class CalendarEventAttendeesListener extends BaseListener
                     ->container
                     ->get('frequency_manager')
                     ->updateAttendanceFrequency($entity, 'ADD');
+                // update follow-up status
+                $this->container
+                    ->get('campus_contact.workflow.manager')
+                    ->runTransitRulesForContactFollowupByContact($entity->getContact());
             }
 
             if ($this->isAttendeeApplicable($entity, $unitOfWork)) {
@@ -63,6 +67,10 @@ class CalendarEventAttendeesListener extends BaseListener
                     ->container
                     ->get('frequency_manager')
                     ->updateAttendanceFrequency($entity, 'UPDATE');
+                // update follow-up status
+                $this->container
+                    ->get('campus_contact.workflow.manager')
+                    ->runTransitRulesForContactFollowupByContact($entity->getContact());
             }
 
             if ($this->isAttendeeApplicable($entity, $unitOfWork)) {
@@ -77,6 +85,10 @@ class CalendarEventAttendeesListener extends BaseListener
                     ->container
                     ->get('frequency_manager')
                     ->updateAttendanceFrequency($entity, 'DELETE');
+                // update follow-up status
+                $this->container
+                    ->get('campus_contact.workflow.manager')
+                    ->runTransitRulesForContactFollowupByContact($entity->getContact());
             }
 
             if ($this->isAttendeeApplicable($entity, $unitOfWork)
@@ -85,11 +97,6 @@ class CalendarEventAttendeesListener extends BaseListener
                 $this->updateCalendarEventUpdatedAt($entity->getCalendarEvent(), $unitOfWork);
             }
         }
-
-        // update follow-up status
-        $this->container
-            ->get('campus_contact.workflow.manager')
-            ->runTransitRulesForContactFollowup();
     }
 
     /**

@@ -147,6 +147,20 @@ class WorkflowManager extends BaseManager
         $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'contacted', 'rollover');
     }
 
+    public function runTransitRulesForContactFollowupByContact(Contact $contact)
+    {
+        $this->startNoInitWorkflow(self::CONTACT_FOLLOWUP);
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'unassigned', 'assign',$contact);
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'assigned', 'contacted',$contact);
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'contacted', 'followup',$contact);
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'assigned', 'followup',$contact);
+        //  $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'closed', 'reopen');
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'followup', 'stable',$contact);
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'stable', 'followup',$contact);
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'followup', 'rollover',$contact);
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'contacted', 'rollover',$contact);
+    }
+
     /*
      * Helper function to apply auto transition rules to all contacts at
      * the source step.
@@ -158,8 +172,9 @@ class WorkflowManager extends BaseManager
      *
      * @param string $from Source step name
      * @param string $to   Destination transition name
+     * @param Contact $search_contact Apply rules one contact only
      */
-    public function applyTransitRuleFromTo($workflow, $from, $to)
+    public function applyTransitRuleFromTo($workflow, $from, $to, Contact $search_contact=null)
     {
         $from = ucfirst(strtolower($from));
         $to = ucfirst(strtolower($to));
@@ -167,13 +182,18 @@ class WorkflowManager extends BaseManager
         if (!method_exists($this, $callback)) {
             return;
         }
-        // Get a list of all the contacts that are at step $from
-        /** @var Contact[] $contacts */
-        $contacts = $this
-            ->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('OroContactBundle:Contact')
-            ->findByWorkflowStep($workflow, $from);
+
+        if ($search_contact!=NULL){
+            $contacts = [$search_contact];
+        }else{
+            // Get a list of all the contacts that are at step $from
+            /** @var Contact[] $contacts */
+            $contacts = $this
+                ->container
+                ->get('doctrine.orm.entity_manager')
+                ->getRepository('OroContactBundle:Contact')
+                ->findByWorkflowStep($workflow, $from);
+        }
 
         $this->logger->debug('WorkflowManager. Apply transit rules ' . 'for workflow: ' . $workflow . ' '
             . $from . ' to ' . $to . '. contacts# ' . sizeof($contacts));
@@ -377,7 +397,7 @@ class WorkflowManager extends BaseManager
             ->container
             ->get('doctrine.orm.entity_manager')
             ->getRepository('OroContactBundle:Contact')
-            ->findByNotStartedWorkflow();
+            ->findByNotStartedWorkflow($workflow);
 
         $this->logger->debug('WorkflowManager. Try to start not started workflow: '
             . $workflow . '. Contacts#: ' . sizeof($contacts));
@@ -385,6 +405,8 @@ class WorkflowManager extends BaseManager
         foreach ($contacts as $contact) {
             $this->logger->debug('WorkflowManager. Start workflow: '
                 . $workflow . ' for ' . $contact->getFirstName() . ' ' . $contact->getLastName());
+
+            $this->activateWorkflow($workflow);
             $this->startWorkflow($workflow, $contact);
         }
     }
