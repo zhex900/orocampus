@@ -149,16 +149,39 @@ class WorkflowManager extends BaseManager
 
     public function runTransitRulesForContactFollowupByContact(Contact $contact)
     {
-        $this->startNoInitWorkflow(self::CONTACT_FOLLOWUP);
-        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'unassigned', 'assign',$contact);
-        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'assigned', 'contacted',$contact);
-        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'contacted', 'followup',$contact);
-        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'assigned', 'followup',$contact);
+        // exit if workflow is not active
+        if (!$this->isActiveWorkflow(self::CONTACT_FOLLOWUP)){
+            return;
+        }
+
+        // exit if workflow have not start
+        /** @var WorkflowItem $workflowitem */
+        $workflowitem = $this->getCurrentWorkFlowItem($contact, self::CONTACT_FOLLOWUP);
+        if (!isset($workflowitem) ){
+            return;
+        }
+
+        $current_step = $workflowitem->getCurrentStep()->getName();
+
+        if ( $current_step === 'unassigned' ){
+            $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'unassigned', 'assign',$contact);
+        }
+        elseif ( $current_step === 'assigned' ){
+            $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'assigned', 'contacted',$contact);
+            $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'assigned', 'followup',$contact);
+        }
+        elseif ( $current_step ==='followup' ){
+            $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'followup', 'stable',$contact);
+            $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'followup', 'rollover',$contact);
+        }
+        elseif ( $current_step === 'contacted' ){
+            $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'contacted', 'followup',$contact);
+            $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'contacted', 'rollover',$contact);
+        }
+        elseif ( $current_step ==='stable' ){
+            $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'stable', 'followup',$contact);
+        }
         //  $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'closed', 'reopen');
-        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'followup', 'stable',$contact);
-        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'stable', 'followup',$contact);
-        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'followup', 'rollover',$contact);
-        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'contacted', 'rollover',$contact);
     }
 
     /*
