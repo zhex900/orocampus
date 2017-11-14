@@ -41,16 +41,7 @@ sed -i s/HOST_URL/$HOST/g bap.conf
 
 cp bap.conf /etc/nginx/sites-enabled/
 
-# Install certbot
-if ! [ -x "$(command -v certonly)" ]; then
-    echo 'Error: certbot is not installed. Installing certbot'
-    apt-get install software-properties-common -y
-    add-apt-repository ppa:certbot/certbot
-    apt-get update
-    apt-get install certbot -y
-fi
-
-certbot certonly -a webroot --webroot-path=/var/www/web --email=zhex900@gmail.com -d $HOST --agree-tos --non-interactive --text --rsa-key-size 4096
+certbot certonly --standalone --preferred-challenges http --http-01-port 80 -d $HOST -d orocampus.com.au -d www.orocampus.com.au --email=zhex900@gmail.com --agree-tos --non-interactive
 
 supervisorctl restart nginx
 
