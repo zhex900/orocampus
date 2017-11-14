@@ -29,10 +29,10 @@ cp ca.pem cert.pem key.pem $HOST.keys
 
 if [ ! -d /etc/docker/ssl ]
 then
-    mkdir /etc/docker/ssl
+    sudo mkdir /etc/docker/ssl
 fi
 
-cp ca.pem server-* /etc/docker/ssl/
+sudo cp ca.pem server-* /etc/docker/ssl/
 
 echo '
 [Unit]
@@ -69,7 +69,8 @@ StartLimitInterval=60s
 
 [Install]
 WantedBy=multi-user.target
-' > /etc/systemd/system/docker.service
-rm *.pem *.srl extfile.cnf
-systemctl daemon-reload
-systemctl restart docker
+' > ./docker.service
+sudo mv docker.service /etc/systemd/system/
+sudo rm *.pem *.srl extfile.cnf
+sudo systemctl daemon-reload
+sudo systemctl restart docker
