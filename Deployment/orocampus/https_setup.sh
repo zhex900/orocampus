@@ -4,7 +4,7 @@
 if [ "$#" -gt 0 ]; then
   HOST="$1"
 else
-  echo " => ERROR: You must specify the host URL as the first arguement to this scripts! <="
+  echo " => ERROR: You must specify the host URL (aws1.orocampus.com.au) as the first arguement to this scripts! <="
   exit 1
 fi
 
@@ -41,7 +41,7 @@ sed -i s/HOST_URL/$HOST/g bap.conf
 
 cp bap.conf /etc/nginx/sites-enabled/
 
-certbot certonly --standalone --preferred-challenges http --http-01-port 80 -d $HOST -d orocampus.com.au -d www.orocampus.com.au --email=zhex900@gmail.com --agree-tos --non-interactive
+certbot certonly --standalone --preferred-challenges http --http-01-port 80 -d $HOST --email=zhex900@gmail.com --agree-tos --non-interactive
 
 supervisorctl restart nginx
 
