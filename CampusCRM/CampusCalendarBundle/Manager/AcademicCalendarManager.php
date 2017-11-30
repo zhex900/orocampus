@@ -12,15 +12,15 @@ use Doctrine\ORM\EntityManager;
 
 class AcademicCalendarManager
 {
-
     /** @var EntityManager */
     protected $em;
 
-    /** @var array $semesters */
-    // array ( key=>university name ,
-    //          value = array ( key=>'1',
-    //          value= array ('begin date', 'end date')))
-    // this year's semester dates.
+    /* @var string */
+    protected $current_semester;
+
+    /** @var \DateTime $now */
+    private $now;
+
     private $semester_dates;
     private $recess_dates;
 
@@ -29,9 +29,6 @@ class AcademicCalendarManager
     const RECESS = 'Teaching Recess';
     const SEMESTER_CODE = array('1' => 'A', '2' => 'B', '3' => 'C', '4' => 'D');
 
-    /** @var \DateTime $now */
-    private $now;
-
     /**
      * @param EntityManager $em
      */
@@ -39,43 +36,70 @@ class AcademicCalendarManager
     {
         $this->em = $em;
         $this->now = new \DateTime('now');
+        $this->current_semester = $this->getSemester($this->now, self::DEFAULT_UNIVERSITY);
     }
 
     /**
      * {@inheritdoc}
-     * This is assuming semester dates are within the same year.
+     *
+     * Find the semester dates of the year in a given date.
+     *
+     * Assumption: Semester dates are all within in the same year.
+     * However summer semesters rollover to the next year.
+     *
      * @param \Datetime $date
+     * @return array
      **/
     private function getSemesterDates(\Datetime $date)
     {
-
         return $this->searchSystemCalendar(self::SEMESTER, $date->format("Y"));
-
     }
 
     /**
      * {@inheritdoc}
-     * Find the recess week
-     * array(1) { ["UNSW"]=>
-     * array(1) { ["Teaching Recess"]=>
-     * array(2) { [0]=>
-     * array(2) { [0]=> object(DateTime)#2317 (3) { ["date"]=> string(26) "2017-04-17 00:00:00.000000" ["timezone_type"]=> int(3) ["timezone"]=> string(3) "UTC" }
-     *            [1]=> object(DateTime)#2309 (3) { ["date"]=> string(26) "2017-04-23 00:00:00.000000" ["timezone_type"]=> int(3) ["timezone"]=> string(3) "UTC" } }
-     *            [1]=>
-     * array(2) { [0]=> object(DateTime)#2360 (3) { ["date"]=> string(26) "2017-09-25 00:00:00.000000" ["timezone_type"]=> int(3) ["timezone"]=> string(3) "UTC" }
-     *            [1]=> object(DateTime)#2356 (3) { ["date"]=> string(26) "2017-10-01 00:00:00.000000" ["timezone_type"]=> int(3) ["timezone"]=> string(3) "UTC" }
-     * } } } }
+     *
+     * Find the recess dates of the year in a given date.
+     *
      * @param \Datetime $date
+     * @return array
      **/
     private function getRecessDates(\Datetime $date)
     {
-
         return $this->searchSystemCalendar(self::RECESS, $date->format("Y"));
-
     }
 
     /**
      * {@inheritdoc}
+     *
+     * Search the system calendar to find start and end date of
+     * matching event title of a given year.
+     *
+     * Example:
+     * searchSystemCalendar('Semester',2017)
+     * This is to find all the events will the title Semester in year 2017.
+     * If the system calendar have two calendars UNSW and USYD. This will be
+     * returned.
+     *
+     * Array (
+     *  [UNSW] =>   [1] =>
+     *                  [0] => [DateTime Object $start, DateTime Object $end]
+     *         =>   [2] =>
+     *                  [0] => [DateTime Object $start, DateTime Object $end]
+     *  [USYD] =>   [3] =>
+     *                  [0] => [DateTime Object $start, DateTime Object $end]
+     *         =>   [4] =>
+     *                  [0] => [DateTime Object $start, DateTime Object $end]
+     *
+     * The first array key is the system calendar name which represents the university.
+     *
+     * The second array key is the semester number. So Semester 1 will have the key 1
+     * Semester 4 will have the key 4. UNSW have Semester 1 and Semester 2. USYD have
+     * Semester 3 and Semester 4.
+     *
+     * The third array is redundant. Its hard to change, so leave it there.
+     *
+     * The fourth array is a pair of dates. The first element is start and the second end.
+     *
      * @param string $key
      * @param int $year
      * @return array
@@ -83,7 +107,6 @@ class AcademicCalendarManager
      **/
     private function searchSystemCalendar($key, $year)
     {
-
         $result = $this->em->getRepository('OroCalendarBundle:CalendarEvent')
             ->createQueryBuilder('ce')
             ->select('ce.title', 'ce.start', 'ce.end', 'sc.name')
@@ -109,50 +132,55 @@ class AcademicCalendarManager
                 = array($start->setTime(0, 0, 0),
                 $end->setTime(0, 0, 0));
         }
-            if (empty($array)) {
-                throw new \Exception($key . ' period cannot be find in ' . $year . ' System Calendar!');
-            }
-
+        if (empty($array)) {
+            throw new \Exception($key . ' period cannot be find in ' . $year . ' System Calendar!');
+        }
         return $array;
     }
 
     /**
      * {@inheritdoc}
-     * @param \DateTime $date
-     * @param String $university
-     * @return String
      *
      * Determines the academic semester of a given date.
      * Semester 1: 1 Jan to the date before the Semester 2.
      * Semester 2: Semester 2 until the date before the next Semester or 31 December.
      *
-     * Semester dates are stored in the System Calendar.
+     * Semester start and end dates are stored in the System Calendar.
      *
-     * Semester values are in this format: 2017A (Semester 1), 2017B (Semester 2), 2017C (Semester 3)
+     * return format: 2017A (Semester 1), 2017B (Semester 2), 2017C (Semester 3)
+     *
+     * @param \DateTime $date
+     * @param string $university
+     * @return string
      */
     public function getSemester($date, $university = self::DEFAULT_UNIVERSITY)
     {
+        $start = $this->getSemesterStartDate($date, $university);
+        return $start[0]->format("Y") . self::SEMESTER_CODE[$start[1]];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Given a date find the semester it belongs and return the start date of that
+     * semester with the semester code.
+     * Semester code: 1 refers to Semester 1. 2 refers to Semester 2.
+     *
+     * @param \DateTime $date
+     * @param string $university
+     * @return array [\DateTime, start date of the semester,
+     *                  string, semester code in numbers]
+     */
+    public function getSemesterStartDate($date, $university = self::DEFAULT_UNIVERSITY)
+    {
         $date->setTime(0, 0, 0);
-        // what if $university don't exsit
-
-        // what if $date year is different to the current year?
-
-        // what if the semester calendar is not setup?
-
-        // is the date fall within any semesters dates, if yes which semester
         $semester = null;
-        file_put_contents('/tmp/log.log', '$semester '.$semester.PHP_EOL, FILE_APPEND);
-
-        // what if no semester dates are available ?
         $this->semester_dates = $this->getSemesterDates($date);
         $semesters = array_keys($this->semester_dates[$university]);
 
         if (empty($semesters)) {
             throw new \Exception($university . ' Calendar does not exist.');
         }
-        //file_put_contents('/tmp/weeks.log', print_r($semesters).PHP_EOL, FILE_APPEND);
-
-
         for ($i = 0; $i < count($semesters); $i++) {
 
             if ( // first semester
@@ -167,7 +195,7 @@ class AcademicCalendarManager
                 break;
             }
         }
-        return $date->format("Y") . self::SEMESTER_CODE[$semester];
+        return array($this->semester_dates[$university][$semester][0][0], $semester);
     }
 
     /**
@@ -244,6 +272,31 @@ class AcademicCalendarManager
 
     public function getCurrentSemester()
     {
-        return $this->getSemester($this->now, self::DEFAULT_UNIVERSITY);
+        return $this->current_semester;
+    }
+
+    /*
+     * Find the start date of the next semester.
+     *
+     * return \DateTime
+     */
+    public function getNextSemesterStartDate()
+    {
+        $current_semester_code = array_flip(self::SEMESTER_CODE)[substr($this->current_semester, -1)];
+        $this_year = $this->getSemesterDates($this->now);
+        $next_sem = false;
+        // look for the next semester in the current year
+        foreach( $this_year[self::DEFAULT_UNIVERSITY] as $semester=>$dates ){
+            if ($semester == $current_semester_code){
+                $next_sem = true;
+                continue;
+            }
+            if ($next_sem){
+                return $dates[0][0];
+            }
+        }
+        $next_year_date = new \DateTime('1st January Next Year');
+
+        return $this->getSemesterStartDate($next_year_date)[0];
     }
 }
