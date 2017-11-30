@@ -37,6 +37,8 @@ class AcademicCalendarManager
         $this->em = $em;
         $this->now = new \DateTime('now');
         $this->current_semester = $this->getSemester($this->now, self::DEFAULT_UNIVERSITY);
+        $this->semester_dates = $this->searchSystemCalendar(self::SEMESTER, $this->now ->format("Y"));
+        $this->recess_dates =$this->searchSystemCalendar(self::RECESS, $this->now ->format("Y"));
     }
 
     /**
@@ -52,6 +54,12 @@ class AcademicCalendarManager
      **/
     private function getSemesterDates(\Datetime $date)
     {
+        if ( $this->now ->format("Y") == $date->format("Y")){
+            if (!isset($this->semester_dates)){
+                $this->semester_dates = $this->searchSystemCalendar(self::SEMESTER, $this->now ->format("Y"));
+            }
+            return $this->semester_dates;
+        }
         return $this->searchSystemCalendar(self::SEMESTER, $date->format("Y"));
     }
 
@@ -65,6 +73,12 @@ class AcademicCalendarManager
      **/
     private function getRecessDates(\Datetime $date)
     {
+        if ( $this->now ->format("Y") == $date->format("Y")){
+            if (!isset($this->recess_dates)){
+                $this->recess_dates = $this->searchSystemCalendar(self::RECESS, $this->now ->format("Y"));
+            }
+            return $this->recess_dates;
+        }
         return $this->searchSystemCalendar(self::RECESS, $date->format("Y"));
     }
 
@@ -175,8 +189,8 @@ class AcademicCalendarManager
     {
         $date->setTime(0, 0, 0);
         $semester = null;
-        $this->semester_dates = $this->getSemesterDates($date);
-        $semesters = array_keys($this->semester_dates[$university]);
+        $semester_dates = $this->getSemesterDates($date);
+        $semesters = array_keys($semester_dates[$university]);
 
         if (empty($semesters)) {
             throw new \Exception($university . ' Calendar does not exist.');
@@ -184,18 +198,18 @@ class AcademicCalendarManager
         for ($i = 0; $i < count($semesters); $i++) {
 
             if ( // first semester
-                ($i == 0 and $date < $this->semester_dates[$university][$semesters[$i]][0][0])
+                ($i == 0 and $date < $semester_dates[$university][$semesters[$i]][0][0])
                 // last semester
                 or ($i == count($semesters) - 1)
                 // semesters in between the first and the last.
-                or (($date < $this->semester_dates[$university][$semesters[$i + 1]][0][0]
-                    and $date >= $this->semester_dates[$university][$semesters[$i]][0][0]))
+                or (($date < $semester_dates[$university][$semesters[$i + 1]][0][0]
+                    and $date >= $semester_dates[$university][$semesters[$i]][0][0]))
             ) {
                 $semester = $semesters[$i];
                 break;
             }
         }
-        return array($this->semester_dates[$university][$semester][0][0], $semester);
+        return array($semester_dates[$university][$semester][0][0], $semester);
     }
 
     /**
@@ -205,67 +219,47 @@ class AcademicCalendarManager
      */
     public function getTeachingWeek($date, $sem = null, $university = self::DEFAULT_UNIVERSITY)
     {
-        file_put_contents('/tmp/weeks.log', 'date ' . $date->format('Y-m-d') . PHP_EOL, FILE_APPEND);
-
-        $this->semester_dates = $this->getSemesterDates($date);
-        $this->recess_dates = $this->getRecessDates($date);
+        $semester_dates = $this->getSemesterDates($date);
+        $recess_dates = $this->getRecessDates($date);
         $date->setTime(0, 0, 0);
 
         if ($sem == null) {
             // find the semester key
             $sem = substr($this->getSemester($date), 4);
         }
-
-        //  file_put_contents('/tmp/weeks.log', 'sem ' . $sem.PHP_EOL, FILE_APPEND);
-
         $sem_key = array_search($sem, self::SEMESTER_CODE);
-        //file_put_contents('/tmp/weeks.log', 'sem key ' . $sem_key.PHP_EOL, FILE_APPEND);
 
         // get the start and end dates of the semester
         /** @var \DateTime $sem_start */
-        $sem_start = $this->semester_dates[$university][$sem_key][0][0];
-        file_put_contents('/tmp/weeks.log', 'start ' . $sem_start->format('Y-m-d') . PHP_EOL, FILE_APPEND);
-
+        $sem_start = $semester_dates[$university][$sem_key][0][0];
         /** @var \DateTime $sem_end */
-        $sem_end = $this->semester_dates[$university][$sem_key][0][1];
-        file_put_contents('/tmp/weeks.log', '$sem_end ' . $sem_end->format('Y-m-d') . PHP_EOL, FILE_APPEND);
-
-        file_put_contents('/tmp/weeks.log', 'compare ' . sizeof($this->recess_dates[$university][self::RECESS]) . PHP_EOL, FILE_APPEND);
+        $sem_end = $semester_dates[$university][$sem_key][0][1];
 
         /** @var \DateTime $recess_start */
-        if ($sem_key <= sizeof($this->recess_dates[$university][self::RECESS])) {
-
-            $recess_start = $this->recess_dates[$university][self::RECESS][$sem_key - 1][0];
-        } else {
-            throw new \Exception($university . ' Calendar, semester (' . $this->getSemester($date) . ') recess dates does not exist.');
+        $recess_start = null;
+        if ($sem_key <= sizeof($recess_dates[$university][self::RECESS])) {
+            $recess_start = $recess_dates[$university][self::RECESS][$sem_key - 1][0];
         }
-        //file_put_contents('/tmp/weeks.log', '$recess_start ' . $recess_start->format('Y-m-d') . PHP_EOL, FILE_APPEND);
-
         /** @var \DateTime $recess_end */
-        $recess_end = $this->recess_dates[$university][self::RECESS][$sem_key - 1][1];
+        $recess_end = $recess_dates[$university][self::RECESS][$sem_key - 1][1];
 
         // Find the Monday of the week of the date.
         /** @var \Datetime $monday */
         $monday = new \DateTime();
         $monday->setTimestamp(strtotime("monday this week", $date->getTimestamp()));
         $monday->setTimezone($sem_start->getTimezone());
-        file_put_contents('/tmp/weeks.log', '$monday ' . $monday->format('Y-m-d') . PHP_EOL, FILE_APPEND);
-
         $weeks = ($sem_start->diff($monday)->format('%a')) / 7;
-        file_put_contents('/tmp/weeks.log', 'start ' . $sem_start->format('Y-m-d') . PHP_EOL, FILE_APPEND);
-        file_put_contents('/tmp/weeks.log', '$sem_end ' . $sem_end->format('Y-m-d') . PHP_EOL, FILE_APPEND);
-        file_put_contents('/tmp/weeks.log', 'date ' . $date->format('Y-m-d') . PHP_EOL, FILE_APPEND);
 
         // if the date is not within the semester period.
         if ($date < $sem_start or $date > $sem_end) {
             return -1;
         } // if the date is within recess period.
-        elseif ($date >= $recess_start and $date <= $recess_end) {
+        elseif (isset($recess_start) && $date >= $recess_start and $date <= $recess_end) {
             return self::RECESS;
         } // if the date is before recess
-        elseif ($date < $recess_start) {
+        elseif (isset($recess_start) && $date < $recess_start) {
             return $weeks;
-        } else {
+        }else {
             return $weeks - 1;
         }
     }
