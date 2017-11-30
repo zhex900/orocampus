@@ -52,6 +52,14 @@ oro:
                 #contact_status:
                 #    label: 'Close reason'
             transition:
+                keep_followup:
+                    label: Keep
+                keep_contacted:
+                    label: Keep
+                keep_assigned:
+                    label: Keep
+                keep_unassigned:
+                    label: Keep
                 transfer:
                     label: Transfer
                 contacted:
