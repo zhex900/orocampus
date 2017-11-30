@@ -8,13 +8,18 @@
 
 namespace CampusCRM\CampusContactBundle\Entity\Repository;
 
-use Oro\Bundle\ContactBundle\Entity\Contact;
-
 use Doctrine\ORM\Query\Expr\Join;
 use Oro\Bundle\ContactBundle\Entity\Repository\ContactRepository as BaseRepository;
 
 class ContactRepository extends BaseRepository
 {
+    /*
+     * Find all the contacts that are at a given workflow step.
+     *
+     * @param string $workflow Name of the workflow
+     * @param string $step Name of the workflow step
+     * @return Contact[]
+     */
     public function findByWorkflowStep($workflow, $step)
     {
         return $this->createQueryBuilder('c')
@@ -24,6 +29,21 @@ class ContactRepository extends BaseRepository
             ->innerJoin('wi.definition', 'workflowDefinition', Join::WITH, 'workflowDefinition.name = :workflow')
             ->setParameter('workflow', $workflow)
             ->setParameter('step',$step)
+            ->getQuery()
+            ->execute();
+    }
+
+    /*
+     * Find all contacts that have not started their workflow.
+     *
+     * @return Contact[]
+     */
+    public function findByNotStartedWorkflow()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c')
+            ->leftJoin('OroWorkflowBundle:WorkflowItem', 'wi', Join::WITH,'c.id = wi.entityId')
+            ->where('wi.id is NULL')
             ->getQuery()
             ->execute();
     }

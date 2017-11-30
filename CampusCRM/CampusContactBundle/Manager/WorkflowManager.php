@@ -9,8 +9,9 @@
 namespace CampusCRM\CampusContactBundle\Manager;
 
 use Monolog\Logger;
+use Oro\Bundle\CallBundle\Entity\Call;
 use Oro\Bundle\ContactBundle\Entity\Contact;
-use Oro\Bundle\WorkflowBundle\Model\WorkflowData;
+use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\WorkflowBundle\Model\WorkflowEntityConnector;
 use Oro\Bundle\WorkflowBundle\Model\WorkflowRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,8 +29,16 @@ class WorkflowManager extends BaseManager
     /** @var String */
     protected $current_semester;
 
+    /** @var \DateTime */
+    protected $today;
+
+    protected $teaching_week;
+
     /** @var Logger $logger */
     protected $logger;
+
+
+    const CONTACT_FOLLOWUP = 'contact_followup';
 
     /**
      * @param WorkflowRegistry $workflowRegistry
@@ -55,6 +64,10 @@ class WorkflowManager extends BaseManager
 
         $this->container = $container;
         $this->logger = $container->get('logger');
+        $this->current_semester = $this->container->get('academic_calendar')->getCurrentSemester();
+        $this->today = $this->container->get('frequency_manager')->today();
+        $this->teaching_week = $this->container->get('academic_calendar')->getTeachingWeek($this->today);
+
     }
 
     public function isUnassignedStep(Contact $contact)
@@ -76,8 +89,8 @@ class WorkflowManager extends BaseManager
 
         if (isset($workflowitem)) {
             $current_step = $workflowitem->getCurrentStep()->getName();
-            $this->logger->debug('WorkflowManager->isCurrentlyAtStep: $current_step: '.$current_step. ' compare with '. $step);
-            return $current_step === $step;
+       //     $this->logger->debug('WorkflowManager->isCurrentlyAtStep: $current_step: ' . $current_step . ' compare with ' . $step);
+            return strtolower($current_step) === strtolower($step);
         }
 
         return false;
@@ -92,30 +105,14 @@ class WorkflowManager extends BaseManager
     public function getCurrentWorkFlowItem(Contact $contact, $workflow)
     {
         $workflowItems = $this->getWorkflowItemsByEntity($contact);
-        file_put_contents('/tmp/tag.log', 'Enter workflow' . PHP_EOL, FILE_APPEND);
 
         foreach ($workflowItems as $workflowItem) {
-            file_put_contents('/tmp/tag.log', 'workflow: ' . $workflowItem->getWorkflowName() . PHP_EOL, FILE_APPEND);
-            file_put_contents('/tmp/tag.log', 'workflow step: ' . $workflowItem->getCurrentStep()->getName() . PHP_EOL, FILE_APPEND);
             //find the follow-up workflow
             if (preg_match('/' . $workflow . '/', $workflowItem->getWorkflowName())) {
-                file_put_contents('/tmp/tag.log', 'workflow Match!!!: ' . $workflowItem->getCurrentStep()->getName() . PHP_EOL, FILE_APPEND);
                 return $workflowItem; //->getCurrentStep()->getName();
             }
         }
         return null;
-    }
-
-    /*
-     * @param Contact $contact
-     * @param string $workflow
-     * @param string|Transition $transition
-     */
-
-    public function transitTo(Contact $contact, $workflow, $transition)
-    {
-        $workflowItem = $this->getCurrentWorkFlowItem($contact, $workflow);
-        $this->transit($workflowItem, $transition);
     }
 
     /*
@@ -136,28 +133,258 @@ class WorkflowManager extends BaseManager
         }
     }
 
-    /*
-     * @param Contact $contact
-     * @param string $workflow
-     */
-    public function autoTransit(Contact $contact, $workflow)
+    public function runTransitRulesForContactFollowup()
     {
-        /** @var WorkflowItem $workflowitem */
-        $workflowitem = $this->getCurrentWorkFlowItem($contact, $workflow);
+        $this->startNoInitWorkflow(self::CONTACT_FOLLOWUP);
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'unassigned', 'assign');
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'assigned', 'contacted');
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'contacted', 'followup');
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'assigned', 'followup');
+      //  $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'closed', 'reopen');
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'followup', 'stable');
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP, 'stable', 'followup');
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'followup', 'rollover');
+        $this->applyTransitRuleFromTo(self::CONTACT_FOLLOWUP,'contacted', 'rollover');
+    }
 
-        if (!isset($workflowitem)) {
-            return null;
+    /*
+     * Helper function to apply auto transition rules to all contacts at
+     * the source step.
+     *
+     * $from and $to are connected.
+     *
+     * This function looks for transit rule function name like this
+     * transitRule'.$from.'To'.$to;
+     *
+     * @param string $from Source step name
+     * @param string $to   Destination transition name
+     */
+    public function applyTransitRuleFromTo($workflow, $from, $to)
+    {
+        $from = ucfirst(strtolower($from));
+        $to = ucfirst(strtolower($to));
+        $callback = 'transitRule' . $from . 'To' . $to;
+        if (!method_exists($this, $callback)) {
+            return;
         }
+        // Get a list of all the contacts that are at step $from
+        /** @var Contact[] $contacts */
+        $contacts = $this
+            ->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('OroContactBundle:Contact')
+            ->findByWorkflowStep($workflow, $from);
 
-        $current_step = $workflowitem->getCurrentStep()->getName();
-        file_put_contents('/tmp/tag.log', 'current step: ->' . $current_step. PHP_EOL, FILE_APPEND);
+        $this->logger->debug('WorkflowManager. Apply transit rules ' . 'for workflow: ' . $workflow . ' '
+            . $from . ' to ' . $to . '. contacts# ' . sizeof($contacts));
 
-        switch ($current_step) {
-            case 'unassigned';
-                file_put_contents('/tmp/tag.log', 'current step: 2 ->' . $current_step. PHP_EOL, FILE_APPEND);
+        foreach ($contacts as $contact) {
+            $transit = 'NO';
+            if (call_user_func_array(array(__CLASS__, $callback), array($contact, $from, $to))) {
+                $this->transitFromTo($contact, $workflow, strtolower($from), strtolower($to));
+                $transit = 'YES';
+            }
+            $this->logger->debug('WorkflowManager. Transit ' . $from . ' to ' . $to . ': ' . $transit . ' for contact ' . $contact->getFirstName() . ' ' . $contact->getLastName());
+        }
+    }
 
-            case 'assigned';
+    /*
+     * Transitions: Followup to Stable
+     * Condition:   Satisfy stable criteria. For example:
+     *              Meet 3 times over 5 weeks. Each meeting is
+     *              5 days apart.
+     *
+     * Transitions: Stable to Followup
+     * Condition:   Fails stable criteria.
+     *
+     * @param Contact $contact
+     * @param string $from Source step name
+     * @param string $to Destination transition name
+     * @return bool
+     */
+    public function transitRuleFollowupAndStable(Contact $contact, $from, $to)
+    {
+        $events = $this
+            ->container
+            ->get('frequency_manager')->findAttendedEvents($contact, null, $this->current_semester);
 
+        $freq = $this
+            ->container
+            ->get('frequency_manager')->findAttendanceFrequency($this->today, $this->teaching_week, $events, 0);
+
+        $criteria = $this
+            ->container
+            ->get('frequency_manager')->getRegular();
+
+        $this->logger->debug('WorkflowManager. Contact ' . $contact->getFirstName() . ' ' . $contact->getLastName().
+        ' Freq: '.$freq);
+
+        // Transit if the contact is having regular meeting
+        return (
+            ($from == 'Followup' && $to == 'Stable' && $criteria === $freq) ||
+            ($from == 'Stable' && $to == 'Followup' && $criteria !== $freq)
+        );
+    }
+
+    public function transitRuleFollowupToStable(Contact $contact, $from, $to)
+    {
+        return $this->transitRuleFollowupAndStable($contact, $from, $to);
+    }
+
+    public function transitRuleStableToFollowup(Contact $contact, $from, $to)
+    {
+        return $this->transitRuleFollowupAndStable($contact, $from, $to);
+    }
+
+    /*
+     * Transition rule from unassigned to assign
+     *
+     * Rule: transit if the contact owner is a Full-timer
+     *
+     * @param Contact $contact
+     * @param return bool
+     */
+    public function transitRuleUnassignedToAssign(Contact $contact)
+    {
+        return ($contact->getOwner() instanceof User &&
+            $contact->getOwner()->getRole('FULL_TIMER') != null);
+    }
+
+    /*
+    * Transitions: Assigned to Contacted
+    * Condition:   At least one call within the current semester
+    *
+    * @param Contact $contact
+    * @return bool
+    */
+    public function transitRuleAssignedToContacted(Contact $contact)
+    {
+        /** @var Call[] $calls */
+        $calls = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('OroCallBundle:Call')
+            ->findBy(['related_contact'=>$contact->getId()]);
+        $calls = array_filter($calls, function ($call) {
+            /** @var Call $call */
+            return $this->current_semester ===
+                $this->container->get('academic_calendar')->getSemester($call->getCallDateTime());
+        });
+
+        // Transit if there is at least one contact this semester
+        return sizeof($calls)>0;
+    }
+
+    /*
+     * Transitions: Closed to Reopen
+     *
+     * Condition:   Meet at least once after the closed date.
+     *
+     * @param Contact $contact
+     * @return bool
+     */
+
+    public function transitRuleClosedToReopen(Contact $contact)
+    {
+        return $this->transitRuleMeetAtLastOnceAfterDate($contact,$contact->getClosedDate());
+    }
+
+    public function transitRuleMeetAtLastOnceAfterDate(Contact $contact, \DateTime $date)
+    {
+        // get attended events this semester
+        $events = $this
+            ->container
+            ->get('frequency_manager')->findAttendedEvents($contact, null, $this->current_semester);
+
+        $events = array_column($events, 'date');
+
+        // remove events after a given date
+        $events = array_filter($events, function ($val) use ($date) {
+            return $date < \DateTime::createFromFormat('Y-m-d', $val);
+        });
+        // Transit if there is at least one meeting left.
+        return sizeof($events) > 0;
+    }
+
+    /*
+     * Transitions: Assigned to Followup
+     *
+     * Condition:   Meet at least once this semester after the first contact date.
+     *
+     * @param Contact $contact
+     * @return bool
+     */
+    public function transitRuleAssignedToFollowup(Contact $contact)
+    {
+        return $this->transitRuleMeetAtLastOnceAfterDate($contact,$contact->getFirstContactDate());
+    }
+
+    /*
+     * Transitions: Contacted to Followup
+     *
+     * Condition:   Meet at least once this semester after the first contact date.
+     *
+     * @param Contact $contact
+     * @return bool
+     */
+    public function transitRuleContactedToFollowup(Contact $contact)
+    {
+        return $this->transitRuleMeetAtLastOnceAfterDate($contact,$contact->getFirstContactDate());
+    }
+
+    /*
+     * Transitions: Followup to Rollover
+     *              Contacted to Rollover
+     *
+     * Condition:   Not a church kid AND
+     *              Today        >= first date of next semester - 7 days
+     *              AND contact first contact date is before first date of next semester - 7 days
+     * Examples:    1 Jan 2017   >= 8 Feb 2017 - 7 days = 1 Feb (False)
+     *              2 Feb 2017   >= 8 Feb 2017 - 7 days = 1 Feb (True)
+     *
+     * @param Contact $contact
+     * @return bool
+     */
+    public function transitRuleRollover(Contact $contact)
+    {
+        if ($contact->getChurchKid()){
+            return false;
+        }
+        /** @var \DateTime $next_semester */
+        $next_semester_startdate = $this->container->get('academic_calendar')->getNextSemesterStartDate();
+        $next_semester_startdate->modify('-7 day');
+
+        return $this->today >= $next_semester_startdate &&
+            $contact->getFirstContactDate() < $next_semester_startdate;
+    }
+
+    public function transitRuleFollowupToRollover(Contact $contact)
+    {
+        return $this->transitRuleRollover($contact);
+    }
+
+    public function transitRuleContactedToRollover(Contact $contact)
+    {
+        return $this->transitRuleRollover($contact);
+    }
+
+    /*
+     * Start workflow for all the contacts have not started their workflow.
+     * @param string workflow
+     */
+    public function startNoInitWorkflow($workflow)
+    {
+        $contacts = $this
+            ->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('OroContactBundle:Contact')
+            ->findByNotStartedWorkflow();
+
+        $this->logger->debug('WorkflowManager. Try to start not started workflow: '
+            . $workflow . '. Contacts#: ' . sizeof($contacts));
+
+        foreach ($contacts as $contact) {
+            $this->logger->debug('WorkflowManager. Start workflow: '
+                . $workflow . ' for ' . $contact->getFirstName() . ' ' . $contact->getLastName());
+            $this->startWorkflow($workflow, $contact);
         }
     }
 }
