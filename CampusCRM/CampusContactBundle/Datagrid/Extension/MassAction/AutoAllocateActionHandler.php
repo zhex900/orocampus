@@ -19,7 +19,7 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
 {
     const SUCCESS_MESSAGE = 'oro.contact.autoallocate.mass_action.success';
     const ERROR_MESSAGE = 'oro.contact.autoallocate.mass_action.failure';
-    const FOLLOWUP_WORKFLOW = 'followup';
+    const FOLLOWUP_WORKFLOW = 'contact_followup';
     /**
      * @var DoctrineHelper
      */
@@ -95,7 +95,7 @@ class AutoAllocateActionHandler implements MassActionHandlerInterface
                     //move workflow step to assigned.
                     $this->container
                         ->get('campus_contact.workflow.manager')
-                        ->transitTo($entity, self::FOLLOWUP_WORKFLOW, 'assign');
+                        ->transitFromTo($entity, self::FOLLOWUP_WORKFLOW, 'unassigned','assign');
 
                     file_put_contents('/tmp/tag.log', $entity->getFirstName() . ' ' . $entity->getLastName() . ' flush' . PHP_EOL, FILE_APPEND);
 
