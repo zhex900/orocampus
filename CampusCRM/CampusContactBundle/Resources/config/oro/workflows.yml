@@ -140,14 +140,21 @@ workflows:
                 order: 10
                 allowed_transitions:
                     - assign
+                    - drop
+                    - keep_unassigned
             assigned:
                 order: 20
                 allowed_transitions:
                     - contacted
+                    - keep_assigned
+                    - drop
+                    - followup
             contacted:
                 order: 30
                 allowed_transitions:
                     - followup
+                    - keep_contacted
+                    - rollover
                     - drop
             followup:
                 order: 35
@@ -156,11 +163,11 @@ workflows:
                     - drop
                     - rollover
                     - transfer
+                    - keep_followup
             stable:
                 order: 40
                 allowed_transitions:
                     - followup
-                    - rollover
                     - transfer
             closed:
                 order: 50
@@ -224,6 +231,7 @@ workflows:
                 transition_definition: rollover_def
             reopen:
                 step_to: followup
+                is_hidden: true
                 frontend_options:
                     icon: 'fa-sign-in'
                     class: 'btn-success'
@@ -246,6 +254,30 @@ workflows:
                     icon: 'fa-times'
                     class: 'btn-danger'
                 transition_definition: close_def
+            keep_followup:
+                step_to: followup
+                frontend_options:
+                    icon: 'fa-sign-in'
+                    class: 'btn-success'
+                transition_definition: keep_def
+            keep_contacted:
+                step_to: contacted
+                frontend_options:
+                    icon: 'fa-sign-in'
+                    class: 'btn-success'
+                transition_definition: keep_def
+            keep_assigned:
+                step_to: assigned
+                frontend_options:
+                    icon: 'fa-sign-in'
+                    class: 'btn-success'
+                transition_definition: keep_def
+            keep_unassigned:
+                step_to: unassigned
+                frontend_options:
+                    icon: 'fa-sign-in'
+                    class: 'btn-success'
+                transition_definition: keep_def
             transfer:
                 step_to: transfer
                 frontend_options:
@@ -281,3 +313,7 @@ workflows:
                     @equal: [$request.church_kid, false]
              rollover_def: ~
              transfer_def: ~
+             keep_def: ~
+                # preconditions:
+                # review_request is true
+                # @equal: [$request.review_request, true]
